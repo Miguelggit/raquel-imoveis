@@ -40,11 +40,11 @@ public class AgenciamentoModel {
     @Column(nullable = false)
     private BigDecimal valorVenda;
 
-    @Max(100)
+    @Size(max = 100)
     @Column(nullable = false)
     private String cidade;
 
-    @Max(100)
+    @Size(max = 100)
     @Column(nullable = false)
     private String bairro;
 
@@ -92,26 +92,6 @@ public class AgenciamentoModel {
 
     public AgenciamentoModel() {
 
-    }
-
-    public AgenciamentoModel(String codigoAgs, String titulo, String descricao, TipoImovel tipoImovel, StatusAgenciamentos status, BigDecimal valorVenda, String cidade, String bairro, String rua, String numero, String complemento, BigDecimal areaM2, Integer quartos, Integer banheiros, Integer vagasGaragem, LocalDateTime criadoEM, LocalDateTime atualizadoEM) {
-        this.codigoAgs = codigoAgs;
-        this.titulo = titulo;
-        this.descricao = descricao;
-        this.tipoImovel = tipoImovel;
-        this.status = status;
-        this.valorVenda = valorVenda;
-        this.cidade = cidade;
-        this.bairro = bairro;
-        this.rua = rua;
-        this.numero = numero;
-        this.complemento = complemento;
-        this.areaM2 = areaM2;
-        this.quartos = quartos;
-        this.banheiros = banheiros;
-        this.vagasGaragem = vagasGaragem;
-        this.criadoEM = criadoEM;
-        this.atualizadoEM = atualizadoEM;
     }
 
     public Long getId() {
