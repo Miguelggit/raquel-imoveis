@@ -3,74 +3,49 @@ import com.api.raquelimoveis.agenciamento.controller.dto.AgenciamentoRequestDTO;
 import com.api.raquelimoveis.agenciamento.controller.dto.AgenciamentoResponseDTO;
 import com.api.raquelimoveis.agenciamento.database.model.AgenciamentoModel;
 import com.api.raquelimoveis.agenciamento.database.repository.AgenciamentoRepository;
+import com.api.raquelimoveis.agenciamento.enums.TipoImovel;
+import com.api.raquelimoveis.agenciamento.exceptions.ResourceNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import java.util.ArrayList;
-import java.util.List;
-@Service
-public class AgenciamentoService {
-    private AgenciamentoRepository repository;
 
-    private List<AgenciamentoModel> cadastroAGS = new ArrayList<>();
-    private List<Long> codAgsCahce = new ArrayList<>();
+@Service
+public class  AgenciamentoService {
+    private AgenciamentoRepository repository;
+    private static final Logger log = LoggerFactory.getLogger(AgenciamentoService.class);
 
     public AgenciamentoService(AgenciamentoRepository repository) {
         this.repository = repository;
     }
 
     public AgenciamentoResponseDTO cadastrarAgenciamento(AgenciamentoRequestDTO dto){
-        String cod = geradorDeCodigoAGS(dto);
-        dto.setCodigoAgs(cod);
-        AgenciamentoModel ags = new AgenciamentoModel(
-                dto.getCodigoAgs(),
-                dto.getTitulo(),
-                dto.getDescricao(),
-                dto.getTipoImovel(),
-                dto.getStatus(),
-                dto.getValorVenda(),
-                dto.getCidade(),
-                dto.getBairro(),
-                dto.getRua(),
-                dto.getNumero(),
-                dto.getComplemento(),
-                dto.getAreaM2(),
-                dto.getQuartos(),
-                dto.getBanheiros(),
-                dto.getVagasGaragem(),
-                dto.getCriadoEM(),
-                dto.getAtualizadoEM()
-        );
-        cadastroAGS.add(ags);
+        AgenciamentoModel ags = new AgenciamentoModel();
+        ags.setBairro(dto.getBairro());
+        ags.setValorVenda(dto.getValorVenda());
+        ags.setBanheiros(dto.getBanheiros());
+        ags.setCidade(dto.getCidade());
+        ags.setComplemento(dto.getComplemento());
+        ags.setDescricao(dto.getDescricao());
+        ags.setNumero(dto.getNumero());
+        ags.setQuartos(dto.getQuartos());
+        ags.setRua(dto.getRua());
+        ags.setAreaM2(dto.getAreaM2());
+        ags.setTitulo(dto.getTitulo());
+        ags.setTipoImovel(dto.getTipoImovel());
+        ags.setStatus(dto.getStatus());
+        String maxCodAgs = repository.findMaxCodigoAgs();
+        ags.setCodigoAgs(geradorDeCodigoAGS(maxCodAgs));
         AgenciamentoModel salvado = repository.save(ags);
-
-        return converterParaDTO(ags);
+        return converterParaDTO(salvado);
     }
-
-    public String geradorDeCodigoAGS(AgenciamentoRequestDTO dto){
-        if(cadastroAGS.isEmpty()){
-            codAgsCahce.add(1L);
+    public String geradorDeCodigoAGS(String cod){
+        if(cod == null){
             return "AGS-001";
         }
-        long getValue = codAgsCahce.stream()
-                .mapToLong(Long::longValue)
-                .max()
-                .getAsLong();
-
-        if(getValue > 1 && getValue < 10) {
-            getValue = getValue + 1;
-            codAgsCahce.add(getValue);
-            String cod = String.valueOf(getValue);
-            return "AGS-00"+cod;
-        } else if (getValue >= 10 && getValue < 100){
-            getValue = getValue + 1;
-            codAgsCahce.add(getValue);
-            String cod = String.valueOf(getValue);
-            return "AGS-0"+cod;
-        } else {
-            getValue = getValue + 1;
-            codAgsCahce.add(getValue);
-            String cod = String.valueOf(getValue);
-            return "AGS-0"+cod;
-        }
+        Long codConvertido = Long.parseLong(cod.replaceAll("[^\\d]", ""));
+        log.info("Codigo convertido para Long: {}", codConvertido);
+        codConvertido++;
+        return String.format("AGS-%03d", codConvertido);
     }
     public AgenciamentoResponseDTO converterParaDTO(AgenciamentoModel model){
         return new AgenciamentoResponseDTO(
@@ -94,4 +69,5 @@ public class AgenciamentoService {
                 model.getAtualizadoEM()
         );
     }
+
 }
