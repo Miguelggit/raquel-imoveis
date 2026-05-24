@@ -1,13 +1,13 @@
-package br.com.raquelimoveis.api;
+package com.api.raquelimoveis;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ApiApplication {
+public class RaquelimoveisApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ApiApplication.class, args);
+		SpringApplication.run(RaquelimoveisApplication.class, args);
 	}
 
 }
