@@ -2,39 +2,44 @@ package com.api.raquelimoveis.agenciamento.controller.dto;
 
 import com.api.raquelimoveis.agenciamento.enums.StatusAgenciamentos;
 import com.api.raquelimoveis.agenciamento.enums.TipoImovel;
+import jakarta.validation.constraints.*;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
-
-@Component
 public class AgenciamentoRequestDTO {
-    private String codigoAgs;
+    @NotBlank
+    @Size(min = 5, max = 150)
     private String titulo;
     private String descricao;
+    @NotNull
     private TipoImovel tipoImovel;
     private StatusAgenciamentos status;
+    @NotNull
+    @DecimalMin(value = "1.00")
     private BigDecimal valorVenda;
+    @NotBlank
+    @Size(max = 100)
     private String cidade;
+    @NotBlank
+    @Size(max = 100)
     private String bairro;
+    @Size(max = 150)
     private String rua;
+    @Size(max = 20)
     private String numero;
+    @Size(max = 100)
     private String complemento;
+    @NotNull
+    @DecimalMin(value = "1.00")
     private BigDecimal areaM2;
+    @Min(value = 0)
     private Integer quartos;
+    @Min(value = 0)
     private Integer banheiros;
+    @Min(value = 0)
     private Integer vagasGaragem;
-    private LocalDateTime criadoEM;
-    private LocalDateTime atualizadoEM;
-
-    public String getCodigoAgs() {
-        return codigoAgs;
-    }
-
-    public void setCodigoAgs(String codigoAgs) {
-        this.codigoAgs = codigoAgs;
-    }
 
     public String getTitulo() {
         return titulo;
@@ -104,7 +109,7 @@ public class AgenciamentoRequestDTO {
         return numero;
     }
 
-    public void sewtNumero(String numero) {
+    public void setNumero(String numero) {
         this.numero = numero;
     }
 
@@ -148,38 +153,9 @@ public class AgenciamentoRequestDTO {
         this.vagasGaragem = vagasGaragem;
     }
 
-    public LocalDateTime getCriadoEM() {
-        return criadoEM;
-    }
-
-    public void setCriadoEM(LocalDateTime criadoEM) {
-        this.criadoEM = criadoEM;
-    }
-
-    public LocalDateTime getAtualizadoEM() {
-        return atualizadoEM;
-    }
-
-    public void setAtualizadoEM(LocalDateTime atualizadoEM) {
-        this.atualizadoEM = atualizadoEM;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        AgenciamentoRequestDTO that = (AgenciamentoRequestDTO) o;
-        return Objects.equals(codigoAgs, that.codigoAgs);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(codigoAgs);
-    }
-
     @Override
     public String toString() {
         return "AgenciamentoRequestDTO{" +
-                "codigoAgs='" + codigoAgs + '\'' +
                 ", titulo='" + titulo + '\'' +
                 ", descricao='" + descricao + '\'' +
                 ", tipoImovel=" + tipoImovel +
@@ -194,8 +170,6 @@ public class AgenciamentoRequestDTO {
                 ", quartos=" + quartos +
                 ", banheiros=" + banheiros +
                 ", vagasGaragem=" + vagasGaragem +
-                ", criadoEM=" + criadoEM +
-                ", atualizadoEM=" + atualizadoEM +
                 '}';
     }
 }
