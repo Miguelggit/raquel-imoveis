@@ -83,13 +83,12 @@ public class AgenciamentoModel {
     protected void onCreate(){
         this.criadoEM = LocalDateTime.now();
     }
+    @Column(name = "DT_HR_ATUALIZADO")
+    private LocalDateTime atualizadoEM;
     @PreUpdate
     protected void onUpdate() {
         this.atualizadoEM = LocalDateTime.now();
     }
-    @Column(name = "DT_HR_ATUALIZADO")
-    private LocalDateTime atualizadoEM;
-
     public AgenciamentoModel() {
 
     }
