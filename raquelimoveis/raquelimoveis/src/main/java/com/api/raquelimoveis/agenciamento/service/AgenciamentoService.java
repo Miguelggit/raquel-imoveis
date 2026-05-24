@@ -3,8 +3,7 @@ import com.api.raquelimoveis.agenciamento.controller.dto.AgenciamentoRequestDTO;
 import com.api.raquelimoveis.agenciamento.controller.dto.AgenciamentoResponseDTO;
 import com.api.raquelimoveis.agenciamento.database.model.AgenciamentoModel;
 import com.api.raquelimoveis.agenciamento.database.repository.AgenciamentoRepository;
-import com.api.raquelimoveis.agenciamento.enums.TipoImovel;
-import com.api.raquelimoveis.agenciamento.exceptions.ResourceNotFoundException;
+import com.api.raquelimoveis.agenciamento.enums.StatusAgenciamentos;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -19,24 +18,27 @@ public class  AgenciamentoService {
     }
 
     public AgenciamentoResponseDTO cadastrarAgenciamento(AgenciamentoRequestDTO dto){
-        AgenciamentoModel ags = new AgenciamentoModel();
-        ags.setBairro(dto.getBairro());
-        ags.setValorVenda(dto.getValorVenda());
-        ags.setBanheiros(dto.getBanheiros());
-        ags.setCidade(dto.getCidade());
-        ags.setComplemento(dto.getComplemento());
-        ags.setDescricao(dto.getDescricao());
-        ags.setNumero(dto.getNumero());
-        ags.setQuartos(dto.getQuartos());
-        ags.setRua(dto.getRua());
-        ags.setAreaM2(dto.getAreaM2());
-        ags.setTitulo(dto.getTitulo());
-        ags.setTipoImovel(dto.getTipoImovel());
-        ags.setStatus(dto.getStatus());
-        String maxCodAgs = repository.findMaxCodigoAgs();
-        ags.setCodigoAgs(geradorDeCodigoAGS(maxCodAgs));
-        AgenciamentoModel salvado = repository.save(ags);
-        return converterParaDTO(salvado);
+            if(dto.getStatus() == null) {
+                dto.setStatus(StatusAgenciamentos.DISPONIVEL);
+            }
+            AgenciamentoModel ags = new AgenciamentoModel();
+            ags.setBairro(dto.getBairro());
+            ags.setValorVenda(dto.getValorVenda());
+            ags.setBanheiros(dto.getBanheiros());
+            ags.setCidade(dto.getCidade());
+            ags.setComplemento(dto.getComplemento());
+            ags.setDescricao(dto.getDescricao());
+            ags.setNumero(dto.getNumero());
+            ags.setQuartos(dto.getQuartos());
+            ags.setRua(dto.getRua());
+            ags.setAreaM2(dto.getAreaM2());
+            ags.setTitulo(dto.getTitulo());
+            ags.setTipoImovel(dto.getTipoImovel());
+            ags.setStatus(dto.getStatus());
+            String maxCodAgs = repository.findMaxCodigoAgs();
+            ags.setCodigoAgs(geradorDeCodigoAGS(maxCodAgs));
+            AgenciamentoModel salvado = repository.save(ags);
+            return converterParaDTO(salvado);
     }
     public String geradorDeCodigoAGS(String cod){
         if(cod == null){
