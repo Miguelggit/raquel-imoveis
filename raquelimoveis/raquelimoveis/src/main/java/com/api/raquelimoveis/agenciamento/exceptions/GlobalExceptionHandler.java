@@ -1,5 +1,5 @@
 package com.api.raquelimoveis.agenciamento.exceptions;
-import com.api.raquelimoveis.agenciamento.controller.dto.ErroResponseDTO;
+import com.api.raquelimoveis.agenciamento.controller.dto.ErrorResponseDTO;
 import com.api.raquelimoveis.agenciamento.controller.dto.FieldErrorDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -15,14 +15,14 @@ import java.util.List;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErroResponseDTO> handleCamposObrigatoriosException(MethodArgumentNotValidException exc, HttpServletRequest request){
+    public ResponseEntity<ErrorResponseDTO> handleCamposObrigatoriosException(MethodArgumentNotValidException exc, HttpServletRequest request){
         List<FieldErrorDTO> fieldErrors = exc.getBindingResult().getAllErrors().stream()
                 .map(error -> new FieldErrorDTO(
                         ((FieldError) error).getField(),
                         error.getDefaultMessage()
                 ))
                 .toList();
-        ErroResponseDTO erroResponseDTO = new ErroResponseDTO(
+        ErrorResponseDTO erroResponseDTO = new ErrorResponseDTO(
                 LocalDateTime.now(),
                 HttpStatus.BAD_REQUEST.value(),
                 "Campos obrigatorios não foram preenchidos",
@@ -32,4 +32,27 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erroResponseDTO);
     }
 
+    @ExceptionHandler(CadastroDeStatusException.class)
+    public ResponseEntity<ErrorResponseDTO> handleCadastroDeStatusException(CadastroDeStatusException ex, HttpServletRequest request){
+        ErrorResponseDTO erroResponseDTO = new ErrorResponseDTO(
+                LocalDateTime.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                ex.getMessage(),
+                request.getRequestURI(),
+                null
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erroResponseDTO);
+    }
+
+    @ExceptionHandler(CadastroNaoEncontradoException.class)
+    public ResponseEntity<ErrorResponseDTO> handleCadastroNaoEncontradoException(CadastroNaoEncontradoException ex, HttpServletRequest rq){
+        ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(
+                LocalDateTime.now(),
+                HttpStatus.NOT_FOUND.value(),
+                ex.getMessage(),
+                rq.getRequestURI(),
+                null
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponseDTO);
+    }
 }

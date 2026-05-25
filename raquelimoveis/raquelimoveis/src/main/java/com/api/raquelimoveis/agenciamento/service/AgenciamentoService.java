@@ -5,10 +5,13 @@ import com.api.raquelimoveis.agenciamento.controller.dto.AgenciamentoResponseSem
 import com.api.raquelimoveis.agenciamento.database.model.AgenciamentoModel;
 import com.api.raquelimoveis.agenciamento.database.repository.AgenciamentoRepository;
 import com.api.raquelimoveis.agenciamento.enums.StatusAgenciamentos;
+import com.api.raquelimoveis.agenciamento.exceptions.CadastroDeStatusException;
+import com.api.raquelimoveis.agenciamento.exceptions.CadastroNaoEncontradoException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class  AgenciamentoService {
@@ -22,6 +25,9 @@ public class  AgenciamentoService {
     public AgenciamentoResponseDTO cadastrarAgenciamento(AgenciamentoRequestDTO dto){
             if(dto.getStatus() == null) {
                 dto.setStatus(StatusAgenciamentos.DISPONIVEL);
+            }
+            if(dto.getStatus().equals(StatusAgenciamentos.INATIVO)){
+                throw new CadastroDeStatusException("O status não pode ser cadastrado com o status INATIVO");
             }
             AgenciamentoModel ags = new AgenciamentoModel();
             ags.setBairro(dto.getBairro());
@@ -97,5 +103,10 @@ public class  AgenciamentoService {
                 .filter(status -> !status.getStatus().equals(StatusAgenciamentos.INATIVO))
                 .map(this::converterParaDTOSemDetahles)
                 .toList();
+    }
+
+    public AgenciamentoResponseDTO listarPorId(Long id){
+        Optional<AgenciamentoModel> ags = repository.findById(id);
+        return converterParaDTO(ags.orElseThrow(() -> new CadastroNaoEncontradoException("Agenciamento não encontrado com id: "+ id)));
     }
 }

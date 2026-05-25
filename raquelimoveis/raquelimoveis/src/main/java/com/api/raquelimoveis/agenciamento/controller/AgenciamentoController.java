@@ -29,4 +29,9 @@ public class AgenciamentoController {
     public ResponseEntity<List<AgenciamentoResponseSemDetalhesDTO>> listarTodosAgenciamentos(){
         return ResponseEntity.ok(service.listarTodosAgs());
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<AgenciamentoResponseDTO> listarPorId(@Valid @PathVariable Long id){
+        return ResponseEntity.ok(service.listarPorId(id));
+    }
 }
