@@ -7,8 +7,6 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
-
-@Component
 public class AgenciamentoResponseSemDetalhesDTO {
     private  Long id;
     private  String codigoAgs;
@@ -39,10 +37,10 @@ public class AgenciamentoResponseSemDetalhesDTO {
         this.areaM2 = areaM2;
         this.quartos = quartos;
         this.banheiros = banheiros;
-        this.vagasGaragem = vagasGaragem; 
+        this.vagasGaragem = vagasGaragem;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
