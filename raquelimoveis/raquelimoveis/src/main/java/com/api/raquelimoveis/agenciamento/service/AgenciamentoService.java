@@ -8,6 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class  AgenciamentoService {
     private AgenciamentoRepository repository;
@@ -72,4 +75,11 @@ public class  AgenciamentoService {
         );
     }
 
+    public List<AgenciamentoResponseDTO> listarTodosAgs(){
+        List<AgenciamentoModel> listaAgs = repository.findAll();
+        return listaAgs.stream()
+                .filter(status -> !status.getStatus().equals(StatusAgenciamentos.INATIVO))
+                .map(this::converterParaDTO)
+                .toList();
+    }
 }
