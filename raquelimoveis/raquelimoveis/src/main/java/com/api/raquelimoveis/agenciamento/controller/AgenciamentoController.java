@@ -1,6 +1,7 @@
 package com.api.raquelimoveis.agenciamento.controller;
 import com.api.raquelimoveis.agenciamento.controller.dto.AgenciamentoRequestDTO;
 import com.api.raquelimoveis.agenciamento.controller.dto.AgenciamentoResponseDTO;
+import com.api.raquelimoveis.agenciamento.controller.dto.AgenciamentoResponseSemDetalhesDTO;
 import com.api.raquelimoveis.agenciamento.service.AgenciamentoService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -25,7 +26,7 @@ public class AgenciamentoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<AgenciamentoResponseDTO>> listarTodosAgenciamentos(){
+    public ResponseEntity<List<AgenciamentoResponseSemDetalhesDTO>> listarTodosAgenciamentos(){
         return ResponseEntity.ok(service.listarTodosAgs());
     }
 }
