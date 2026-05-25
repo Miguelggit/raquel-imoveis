@@ -32,4 +32,15 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erroResponseDTO);
     }
 
+    @ExceptionHandler(CadastroDeStatusException.class)
+    public ResponseEntity<ErroResponseDTO> handleCadastroDeStatusException(CadastroDeStatusException ex, HttpServletRequest request){
+        ErroResponseDTO erroResponseDTO = new ErroResponseDTO(
+                LocalDateTime.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                ex.getMessage(),
+                request.getRequestURI(),
+                null
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erroResponseDTO);
+    }
 }

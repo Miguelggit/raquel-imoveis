@@ -5,6 +5,7 @@ import com.api.raquelimoveis.agenciamento.controller.dto.AgenciamentoResponseSem
 import com.api.raquelimoveis.agenciamento.database.model.AgenciamentoModel;
 import com.api.raquelimoveis.agenciamento.database.repository.AgenciamentoRepository;
 import com.api.raquelimoveis.agenciamento.enums.StatusAgenciamentos;
+import com.api.raquelimoveis.agenciamento.exceptions.CadastroDeStatusException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,9 @@ public class  AgenciamentoService {
     public AgenciamentoResponseDTO cadastrarAgenciamento(AgenciamentoRequestDTO dto){
             if(dto.getStatus() == null) {
                 dto.setStatus(StatusAgenciamentos.DISPONIVEL);
+            }
+            if(dto.getStatus().equals(StatusAgenciamentos.INATIVO)){
+                throw new CadastroDeStatusException("O status não pode ser cadastrado com o status INATIVO");
             }
             AgenciamentoModel ags = new AgenciamentoModel();
             ags.setBairro(dto.getBairro());
