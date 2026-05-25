@@ -1,15 +1,14 @@
 package com.api.raquelimoveis.agenciamento.service;
 import com.api.raquelimoveis.agenciamento.controller.dto.AgenciamentoRequestDTO;
 import com.api.raquelimoveis.agenciamento.controller.dto.AgenciamentoResponseDTO;
+import com.api.raquelimoveis.agenciamento.controller.dto.AgenciamentoResponseSemDetalhesDTO;
 import com.api.raquelimoveis.agenciamento.database.model.AgenciamentoModel;
 import com.api.raquelimoveis.agenciamento.database.repository.AgenciamentoRepository;
 import com.api.raquelimoveis.agenciamento.enums.StatusAgenciamentos;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class  AgenciamentoService {
@@ -38,6 +37,7 @@ public class  AgenciamentoService {
             ags.setTitulo(dto.getTitulo());
             ags.setTipoImovel(dto.getTipoImovel());
             ags.setStatus(dto.getStatus());
+            ags.setVagasGaragem(dto.getVagasGaragem());
             String maxCodAgs = repository.findMaxCodigoAgs();
             ags.setCodigoAgs(geradorDeCodigoAGS(maxCodAgs));
             AgenciamentoModel salvado = repository.save(ags);
@@ -74,12 +74,28 @@ public class  AgenciamentoService {
                 model.getAtualizadoEM()
         );
     }
+    public AgenciamentoResponseSemDetalhesDTO converterParaDTOSemDetahles(AgenciamentoModel model){
+        return new AgenciamentoResponseSemDetalhesDTO(
+                model.getId(),
+                model.getCodigoAgs(),
+                model.getTitulo(),
+                model.getTipoImovel(),
+                model.getStatus(),
+                model.getValorVenda(),
+                model.getCidade(),
+                model.getBairro(),
+                model.getAreaM2(),
+                model.getQuartos(),
+                model.getBanheiros(),
+                model.getVagasGaragem()
+        );
+    }
 
-    public List<AgenciamentoResponseDTO> listarTodosAgs(){
+    public List<AgenciamentoResponseSemDetalhesDTO> listarTodosAgs(){
         List<AgenciamentoModel> listaAgs = repository.findAll();
         return listaAgs.stream()
                 .filter(status -> !status.getStatus().equals(StatusAgenciamentos.INATIVO))
-                .map(this::converterParaDTO)
+                .map(this::converterParaDTOSemDetahles)
                 .toList();
     }
 }
