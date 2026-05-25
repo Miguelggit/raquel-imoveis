@@ -4,10 +4,13 @@ import com.api.raquelimoveis.agenciamento.controller.dto.AgenciamentoResponseDTO
 import com.api.raquelimoveis.agenciamento.service.AgenciamentoService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/api/agenciamento")
+@RequestMapping("/api/agenciamentos")
 public class AgenciamentoController {
     private final AgenciamentoService service;
 
@@ -19,5 +22,10 @@ public class AgenciamentoController {
     @ResponseStatus(HttpStatus.CREATED)
     public AgenciamentoResponseDTO cadastrarAGS(@Valid @RequestBody AgenciamentoRequestDTO dto){
         return service.cadastrarAgenciamento(dto);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<AgenciamentoResponseDTO>> listarTodosAgenciamentos(){
+        return ResponseEntity.ok(service.listarTodosAgs());
     }
 }
