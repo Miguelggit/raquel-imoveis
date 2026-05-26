@@ -55,4 +55,16 @@ public class GlobalExceptionHandler {
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponseDTO);
     }
+
+    @ExceptionHandler(IdentificadoAGSException.class)
+    public ResponseEntity<ErrorResponseDTO> handleCadastroNaoEncontradoException(IdentificadoAGSException ex, HttpServletRequest rq){
+        ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(
+                LocalDateTime.now(),
+                HttpStatus.NOT_FOUND.value(),
+                ex.getMessage(),
+                rq.getRequestURI(),
+                null
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponseDTO);
+    }
 }

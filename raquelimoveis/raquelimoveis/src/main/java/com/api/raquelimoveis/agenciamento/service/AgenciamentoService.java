@@ -7,9 +7,11 @@ import com.api.raquelimoveis.agenciamento.database.repository.AgenciamentoReposi
 import com.api.raquelimoveis.agenciamento.enums.StatusAgenciamentos;
 import com.api.raquelimoveis.agenciamento.exceptions.CadastroDeStatusException;
 import com.api.raquelimoveis.agenciamento.exceptions.CadastroNaoEncontradoException;
+import com.api.raquelimoveis.agenciamento.exceptions.IdentificadoAGSException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -108,5 +110,31 @@ public class  AgenciamentoService {
     public AgenciamentoResponseDTO listarPorId(Long id){
         Optional<AgenciamentoModel> ags = repository.findById(id);
         return converterParaDTO(ags.orElseThrow(() -> new CadastroNaoEncontradoException("Agenciamento não encontrado com id: "+ id)));
+    }
+
+    public AgenciamentoResponseDTO editarAgenciamento(Long id, AgenciamentoRequestDTO dto){
+        log.info("Iniciando metodo de editar com sucesso");
+        Optional<AgenciamentoModel> teste = repository.findById(id);
+        if(teste.isEmpty()){
+            throw new IdentificadoAGSException("O ID: " + id + " não foi encontrado!");
+        }
+       AgenciamentoModel target = repository.findById(id).get();
+        target.setBairro(dto.getBairro());
+        target.setValorVenda(dto.getValorVenda());
+        target.setBanheiros(dto.getBanheiros());
+        target.setCidade(dto.getCidade());
+        target.setComplemento(dto.getComplemento());
+        target.setDescricao(dto.getDescricao());
+        target.setNumero(dto.getNumero());
+        target.setQuartos(dto.getQuartos());
+        target.setRua(dto.getRua());
+        target.setAreaM2(dto.getAreaM2());
+        target.setTitulo(dto.getTitulo());
+        target.setTipoImovel(dto.getTipoImovel());
+        target.setStatus(dto.getStatus());
+        target.setVagasGaragem(dto.getVagasGaragem());
+        target.setAtualizadoEM(LocalDateTime.now());
+        AgenciamentoModel saved = repository.save(target);
+        return converterParaDTO(saved);
     }
 }

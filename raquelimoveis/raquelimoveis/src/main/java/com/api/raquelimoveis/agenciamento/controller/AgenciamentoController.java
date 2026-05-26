@@ -34,4 +34,9 @@ public class AgenciamentoController {
     public ResponseEntity<AgenciamentoResponseDTO> listarPorId(@Valid @PathVariable Long id){
         return ResponseEntity.ok(service.listarPorId(id));
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<AgenciamentoResponseDTO> atualziarAgenciamento(@PathVariable Long id, @RequestBody AgenciamentoRequestDTO rqDTO){
+        return ResponseEntity.ok(service.editarAgenciamento(id, rqDTO));
+    }
 }
