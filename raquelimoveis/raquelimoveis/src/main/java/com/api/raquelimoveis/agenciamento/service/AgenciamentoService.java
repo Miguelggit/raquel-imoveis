@@ -77,4 +77,7 @@ public class  AgenciamentoService {
         ags.setStatus(StatusAgenciamentos.INATIVO);
         repository.save(ags);
     }
+    public AgenciamentoModel buscarAgenciamentoPorId(Long id){
+        return repository.findById(id).orElseThrow( () -> new IdentificadorNaoEncontradoException("O ID: " + id + " não foi encontrado"));
+    }
 }
