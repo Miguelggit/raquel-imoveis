@@ -7,8 +7,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.lang.Long;
-@Component
-public class AgenciamentoResponseDTO {
+public class
+AgenciamentoResponseDTO {
     private  Long id;
     private  String codigoAgs;
     private  String titulo;

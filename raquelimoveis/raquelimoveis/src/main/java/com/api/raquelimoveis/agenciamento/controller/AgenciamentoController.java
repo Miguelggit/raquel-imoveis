@@ -36,7 +36,13 @@ public class AgenciamentoController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<AgenciamentoResponseDTO> atualziarAgenciamento(@PathVariable Long id, @RequestBody AgenciamentoRequestDTO rqDTO){
+    public ResponseEntity<AgenciamentoResponseDTO> atualizarAgenciamento(@PathVariable Long id, @Valid @RequestBody AgenciamentoRequestDTO rqDTO){
         return ResponseEntity.ok(service.editarAgenciamento(id, rqDTO));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> softDeleteById(@PathVariable Long id){
+        service.softDelete(id);
+        return ResponseEntity.noContent().build();
     }
 }
