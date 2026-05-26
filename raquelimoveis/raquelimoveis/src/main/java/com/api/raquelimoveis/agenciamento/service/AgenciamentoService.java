@@ -56,21 +56,18 @@ public class  AgenciamentoService {
                 .toList();
     }
     public AgenciamentoResponseDTO listarPorId(Long id){
-        Optional<AgenciamentoModel> ags = repository.findById(id);
-        return mapper.converterParaDTO(ags.orElseThrow(() -> new IdentificadorNaoEncontradoException("Agenciamento não encontrado com id: "+ id)));
+        AgenciamentoModel ags = buscarAgenciamentoPorId(id);
+        return mapper.converterParaDTO(ags);
     }
     public AgenciamentoResponseDTO editarAgenciamento(Long id, AgenciamentoRequestDTO dto){
         log.info("Iniciando metodo de editar com sucesso");
-        Optional<AgenciamentoModel> teste = repository.findById(id);
-        if(teste.isEmpty()){
-            throw new IdentificadorNaoEncontradoException("O ID: " + id + " não foi encontrado!");
-        }
-        AgenciamentoModel target = mapper.converterParaModel(dto);
-        AgenciamentoModel saved = repository.save(target);
+        AgenciamentoModel ags = buscarAgenciamentoPorId(id);
+        ags = mapper.converterParaModel(dto);
+        AgenciamentoModel saved = repository.save(ags);
         return mapper.converterParaDTO(saved);
     }
     public void softDelete(Long id){
-        AgenciamentoModel ags = repository.findById(id).orElseThrow( () -> new IdentificadorNaoEncontradoException("O ID: " + id + " não foi encontrado"));
+        AgenciamentoModel ags = buscarAgenciamentoPorId(id);
         if(ags.getStatus().equals(StatusAgenciamentos.INATIVO)){
             throw new InativarAgenciamentoException("ID: "+ id + " já esta INATIVO" );
         }
