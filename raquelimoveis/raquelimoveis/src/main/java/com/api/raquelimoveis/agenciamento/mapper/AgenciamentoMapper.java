@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AgenciamentoMapper {
-    public AgenciamentoResponseSemDetalhesDTO converterParaDTOSemDetahles(AgenciamentoModel model){
+    public AgenciamentoResponseSemDetalhesDTO converterParaDTOSemDetalhes(AgenciamentoModel model){
         return new AgenciamentoResponseSemDetalhesDTO(
                 model.getId(),
                 model.getCodigoAgs(),
@@ -46,23 +46,42 @@ public class AgenciamentoMapper {
                 model.getAtualizadoEM()
         );
     }
-    public AgenciamentoModel converterParaModel(AgenciamentoRequestDTO requestDTOdto){
+    public AgenciamentoModel converterParaModel(AgenciamentoRequestDTO requestDTO){
         AgenciamentoModel ags = new AgenciamentoModel();
-        ags.setBairro(requestDTOdto.getBairro());
-        ags.setValorVenda(requestDTOdto.getValorVenda());
-        ags.setBanheiros(requestDTOdto.getBanheiros());
-        ags.setCidade(requestDTOdto.getCidade());
-        ags.setComplemento(requestDTOdto.getComplemento());
-        ags.setDescricao(requestDTOdto.getDescricao());
-        ags.setNumero(requestDTOdto.getNumero());
-        ags.setQuartos(requestDTOdto.getQuartos());
-        ags.setRua(requestDTOdto.getRua());
-        ags.setAreaM2(requestDTOdto.getAreaM2());
-        ags.setTitulo(requestDTOdto.getTitulo());
-        ags.setTipoImovel(requestDTOdto.getTipoImovel());
-        ags.setStatus(requestDTOdto.getStatus());
-        ags.setVagasGaragem(requestDTOdto.getVagasGaragem());
+        ags.setBairro(requestDTO.getBairro());
+        ags.setStatus(requestDTO.getStatus());
+        ags.setValorVenda(requestDTO.getValorVenda());
+        ags.setBanheiros(requestDTO.getBanheiros());
+        ags.setCidade(requestDTO.getCidade());
+        ags.setComplemento(requestDTO.getComplemento());
+        ags.setDescricao(requestDTO.getDescricao());
+        ags.setNumero(requestDTO.getNumero());
+        ags.setQuartos(requestDTO.getQuartos());
+        ags.setRua(requestDTO.getRua());
+        ags.setAreaM2(requestDTO.getAreaM2());
+        ags.setTitulo(requestDTO.getTitulo());
+        ags.setTipoImovel(requestDTO.getTipoImovel());
+        ags.setStatus(requestDTO.getStatus());
+        ags.setVagasGaragem(requestDTO.getVagasGaragem());
         return ags;
+    }
+
+    public void atualizarModel(AgenciamentoModel model, AgenciamentoRequestDTO requestDTO){
+        model.setBairro(requestDTO.getBairro());
+        model.setStatus(requestDTO.getStatus());
+        model.setValorVenda(requestDTO.getValorVenda());
+        model.setBanheiros(requestDTO.getBanheiros());
+        model.setCidade(requestDTO.getCidade());
+        model.setComplemento(requestDTO.getComplemento());
+        model.setDescricao(requestDTO.getDescricao());
+        model.setNumero(requestDTO.getNumero());
+        model.setQuartos(requestDTO.getQuartos());
+        model.setRua(requestDTO.getRua());
+        model.setAreaM2(requestDTO.getAreaM2());
+        model.setTitulo(requestDTO.getTitulo());
+        model.setTipoImovel(requestDTO.getTipoImovel());
+        model.setStatus(requestDTO.getStatus());
+        model.setVagasGaragem(requestDTO.getVagasGaragem());
     }
 
 }
