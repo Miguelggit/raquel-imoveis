@@ -8,48 +8,36 @@ import com.api.raquelimoveis.agenciamento.enums.StatusAgenciamentos;
 import com.api.raquelimoveis.agenciamento.exceptions.CadastroDeStatusException;
 import com.api.raquelimoveis.agenciamento.exceptions.IdentificadorNaoEncontradoException;
 import com.api.raquelimoveis.agenciamento.exceptions.InativarAgenciamentoException;
+import com.api.raquelimoveis.agenciamento.mapper.AgenciamentoMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class  AgenciamentoService {
     private AgenciamentoRepository repository;
+    private AgenciamentoMapper mapper;
     private static final Logger log = LoggerFactory.getLogger(AgenciamentoService.class);
 
-    public AgenciamentoService(AgenciamentoRepository repository) {
+    public AgenciamentoService(AgenciamentoRepository repository, AgenciamentoMapper mapper) {
         this.repository = repository;
+        this.mapper = mapper;
     }
 
     public AgenciamentoResponseDTO cadastrarAgenciamento(AgenciamentoRequestDTO dto){
             if(dto.getStatus() == null) {
                 dto.setStatus(StatusAgenciamentos.DISPONIVEL);
             }
-            if(dto.getStatus().equals(StatusAgenciamentos.INATIVO)){
-                throw new CadastroDeStatusException("O status não pode ser cadastrado com o status INATIVO");
+            if(dto.getStatus().equals(StatusAgenciamentos.INATIVO) || dto.getStatus().equals(StatusAgenciamentos.VENDIDO)) {
+                throw new CadastroDeStatusException("Este status não pode ser cadastrado");
             }
-            AgenciamentoModel ags = new AgenciamentoModel();
-            ags.setBairro(dto.getBairro());
-            ags.setValorVenda(dto.getValorVenda());
-            ags.setBanheiros(dto.getBanheiros());
-            ags.setCidade(dto.getCidade());
-            ags.setComplemento(dto.getComplemento());
-            ags.setDescricao(dto.getDescricao());
-            ags.setNumero(dto.getNumero());
-            ags.setQuartos(dto.getQuartos());
-            ags.setRua(dto.getRua());
-            ags.setAreaM2(dto.getAreaM2());
-            ags.setTitulo(dto.getTitulo());
-            ags.setTipoImovel(dto.getTipoImovel());
-            ags.setStatus(dto.getStatus());
-            ags.setVagasGaragem(dto.getVagasGaragem());
+            AgenciamentoModel ags = mapper.converterParaModel(dto);
             String maxCodAgs = repository.findMaxCodigoAgs();
             ags.setCodigoAgs(geradorDeCodigoAGS(maxCodAgs));
             AgenciamentoModel salvado = repository.save(ags);
-            return converterParaDTO(salvado);
+            return mapper.converterParaDTO(salvado);
     }
     public String geradorDeCodigoAGS(String cod){
         if(cod == null){
@@ -60,89 +48,33 @@ public class  AgenciamentoService {
         codConvertido++;
         return String.format("AGS-%03d", codConvertido);
     }
-    public AgenciamentoResponseDTO converterParaDTO(AgenciamentoModel model){
-        return new AgenciamentoResponseDTO(
-                model.getId(),
-                model.getCodigoAgs(),
-                model.getTitulo(),
-                model.getDescricao(),
-                model.getTipoImovel(),
-                model.getStatus(),
-                model.getValorVenda(),
-                model.getCidade(),
-                model.getBairro(),
-                model.getRua(),
-                model.getNumero(),
-                model.getComplemento(),
-                model.getAreaM2(),
-                model.getQuartos(),
-                model.getBanheiros(),
-                model.getVagasGaragem(),
-                model.getCriadoEM(),
-                model.getAtualizadoEM()
-        );
-    }
-    public AgenciamentoResponseSemDetalhesDTO converterParaDTOSemDetahles(AgenciamentoModel model){
-        return new AgenciamentoResponseSemDetalhesDTO(
-                model.getId(),
-                model.getCodigoAgs(),
-                model.getTitulo(),
-                model.getTipoImovel(),
-                model.getStatus(),
-                model.getValorVenda(),
-                model.getCidade(),
-                model.getBairro(),
-                model.getAreaM2(),
-                model.getQuartos(),
-                model.getBanheiros(),
-                model.getVagasGaragem()
-        );
-    }
-
     public List<AgenciamentoResponseSemDetalhesDTO> listarTodosAgs(){
         List<AgenciamentoModel> listaAgs = repository.findAll();
         return listaAgs.stream()
                 .filter(status -> !status.getStatus().equals(StatusAgenciamentos.INATIVO))
-                .map(this::converterParaDTOSemDetahles)
+                .map(agenciamentoModel -> mapper.converterParaDTOSemDetalhes(agenciamentoModel))
                 .toList();
     }
-
     public AgenciamentoResponseDTO listarPorId(Long id){
-        Optional<AgenciamentoModel> ags = repository.findById(id);
-        return converterParaDTO(ags.orElseThrow(() -> new IdentificadorNaoEncontradoException("Agenciamento não encontrado com id: "+ id)));
+        AgenciamentoModel ags = buscarAgenciamentoPorId(id);
+        return mapper.converterParaDTO(ags);
     }
-
     public AgenciamentoResponseDTO editarAgenciamento(Long id, AgenciamentoRequestDTO dto){
         log.info("Iniciando metodo de editar com sucesso");
-        Optional<AgenciamentoModel> teste = repository.findById(id);
-        if(teste.isEmpty()){
-            throw new IdentificadorNaoEncontradoException("O ID: " + id + " não foi encontrado!");
-        }
-       AgenciamentoModel target = teste.get();
-        target.setBairro(dto.getBairro());
-        target.setValorVenda(dto.getValorVenda());
-        target.setBanheiros(dto.getBanheiros());
-        target.setCidade(dto.getCidade());
-        target.setComplemento(dto.getComplemento());
-        target.setDescricao(dto.getDescricao());
-        target.setNumero(dto.getNumero());
-        target.setQuartos(dto.getQuartos());
-        target.setRua(dto.getRua());
-        target.setAreaM2(dto.getAreaM2());
-        target.setTitulo(dto.getTitulo());
-        target.setTipoImovel(dto.getTipoImovel());
-        target.setStatus(dto.getStatus());
-        target.setVagasGaragem(dto.getVagasGaragem());
-        AgenciamentoModel saved = repository.save(target);
-        return converterParaDTO(saved);
+        AgenciamentoModel ags = buscarAgenciamentoPorId(id);
+        mapper.atualizarModel(ags, dto);
+        AgenciamentoModel saved = repository.save(ags);
+        return mapper.converterParaDTO(saved);
     }
-
     public void softDelete(Long id){
-        AgenciamentoModel ags = repository.findById(id).orElseThrow( () -> new IdentificadorNaoEncontradoException("O ID: " + id + " não foi encontrado"));
+        AgenciamentoModel ags = buscarAgenciamentoPorId(id);
         if(ags.getStatus().equals(StatusAgenciamentos.INATIVO)){
             throw new InativarAgenciamentoException("ID: "+ id + " já esta INATIVO" );
         }
         ags.setStatus(StatusAgenciamentos.INATIVO);
         repository.save(ags);
+    }
+    public AgenciamentoModel buscarAgenciamentoPorId(Long id){
+        return repository.findById(id).orElseThrow( () -> new IdentificadorNaoEncontradoException("O ID: " + id + " não foi encontrado"));
     }
 }
