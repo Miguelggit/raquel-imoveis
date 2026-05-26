@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class  AgenciamentoService {
@@ -22,18 +21,19 @@ public class  AgenciamentoService {
     private AgenciamentoMapper mapper;
     private static final Logger log = LoggerFactory.getLogger(AgenciamentoService.class);
 
-    public AgenciamentoService(AgenciamentoRepository repository) {
+    public AgenciamentoService(AgenciamentoRepository repository, AgenciamentoMapper mapper) {
         this.repository = repository;
+        this.mapper = mapper;
     }
 
     public AgenciamentoResponseDTO cadastrarAgenciamento(AgenciamentoRequestDTO dto){
             if(dto.getStatus() == null) {
                 dto.setStatus(StatusAgenciamentos.DISPONIVEL);
             }
-            if(dto.getStatus().equals(StatusAgenciamentos.INATIVO)){
-                throw new CadastroDeStatusException("O status não pode ser cadastrado com o status INATIVO");
+            if(dto.getStatus().equals(StatusAgenciamentos.INATIVO) || dto.getStatus().equals(StatusAgenciamentos.VENDIDO)) {
+                throw new CadastroDeStatusException("Este status não pode ser cadastrado");
             }
-           AgenciamentoModel ags = mapper.converterParaModel(dto);
+            AgenciamentoModel ags = mapper.converterParaModel(dto);
             String maxCodAgs = repository.findMaxCodigoAgs();
             ags.setCodigoAgs(geradorDeCodigoAGS(maxCodAgs));
             AgenciamentoModel salvado = repository.save(ags);
@@ -52,7 +52,7 @@ public class  AgenciamentoService {
         List<AgenciamentoModel> listaAgs = repository.findAll();
         return listaAgs.stream()
                 .filter(status -> !status.getStatus().equals(StatusAgenciamentos.INATIVO))
-                .map(agenciamentoModel -> mapper.converterParaDTOSemDetahles(agenciamentoModel))
+                .map(agenciamentoModel -> mapper.converterParaDTOSemDetalhes(agenciamentoModel))
                 .toList();
     }
     public AgenciamentoResponseDTO listarPorId(Long id){
@@ -62,7 +62,7 @@ public class  AgenciamentoService {
     public AgenciamentoResponseDTO editarAgenciamento(Long id, AgenciamentoRequestDTO dto){
         log.info("Iniciando metodo de editar com sucesso");
         AgenciamentoModel ags = buscarAgenciamentoPorId(id);
-        ags = mapper.converterParaModel(dto);
+        mapper.atualizarModel(ags, dto);
         AgenciamentoModel saved = repository.save(ags);
         return mapper.converterParaDTO(saved);
     }
