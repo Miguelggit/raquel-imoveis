@@ -79,4 +79,31 @@ class AgenciamentoServiceTest {
         verify(repository).save(captor.capture());
         assertEquals("AGS-001", captor.getValue().getCodigoAgs());
     }
+    @Test
+    @DisplayName("Deve fazer o cadastro do Agenciamento mesmo o status sendo como RESERVADO")
+    void deveCadastrarComSucesso_quandoStatusForReservado(){
+        AgenciamentoRequestDTO requestDTO = new AgenciamentoRequestDTO();
+        requestDTO.setTitulo("Casa no Lourdes com piscina");
+        requestDTO.setDescricao("Casa em condomínio fechado com portaria 24h");
+        requestDTO.setTipoImovel(TipoImovel.CASA);
+        requestDTO.setValorVenda(new BigDecimal(680000));
+        requestDTO.setCidade("Caxias do Sul");
+        requestDTO.setBairro("Lourdes");
+        requestDTO.setRua("Rua das Hortênsias");
+        requestDTO.setNumero("420");
+        requestDTO.setAreaM2(new BigDecimal(180));
+        requestDTO.setQuartos(3);
+        requestDTO.setBanheiros(2);
+        requestDTO.setVagasGaragem(1);
+        requestDTO.setStatus(StatusAgenciamentos.RESERVADO);
+        Mockito.when(repository.findMaxCodigoAgs()).thenReturn("AGS-001");
+        Mockito.when(repository.save(any())).thenReturn(new AgenciamentoModel());
+        Mockito.when(mapper.converterParaModel(any())).thenReturn(new AgenciamentoModel());
+        Mockito.when(mapper.converterParaDTO(any())).thenReturn(new AgenciamentoResponseDTO());
+        AgenciamentoResponseDTO test = service.cadastrarAgenciamento(requestDTO);
+        ArgumentCaptor<AgenciamentoModel> captor = ArgumentCaptor.forClass(AgenciamentoModel.class);
+        assertEquals(StatusAgenciamentos.RESERVADO, requestDTO.getStatus());
+        verify(repository).save(captor.capture());
+        assertEquals("AGS-002", captor.getValue().getCodigoAgs());
+    }
 }
