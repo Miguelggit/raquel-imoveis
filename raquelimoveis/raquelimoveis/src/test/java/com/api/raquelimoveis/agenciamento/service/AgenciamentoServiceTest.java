@@ -1,19 +1,30 @@
 package com.api.raquelimoveis.agenciamento.service;
 
+import com.api.raquelimoveis.agenciamento.controller.dto.AgenciamentoRequestDTO;
+import com.api.raquelimoveis.agenciamento.controller.dto.AgenciamentoResponseDTO;
+import com.api.raquelimoveis.agenciamento.database.model.AgenciamentoModel;
 import com.api.raquelimoveis.agenciamento.database.repository.AgenciamentoRepository;
+import com.api.raquelimoveis.agenciamento.enums.StatusAgenciamentos;
+import com.api.raquelimoveis.agenciamento.enums.TipoImovel;
 import com.api.raquelimoveis.agenciamento.mapper.AgenciamentoMapper;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.math.BigDecimal;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
-@ExtendWith(MockitoExtension.class) // Faz a inicialização dos mocks
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+
+@ExtendWith(MockitoExtension.class)
 class AgenciamentoServiceTest {
-    @Mock // Mockando os atributos
+    @Mock
     private AgenciamentoRepository repository;
     @Mock
     private AgenciamentoMapper mapper;
@@ -27,7 +38,6 @@ class AgenciamentoServiceTest {
         String test = service.geradorDeCodigoAGS(input);
         assertEquals("AGS-001", test);
     }
-
     @Test
     @DisplayName("Deve dar sequencia no numeral recebendo AGS-001 e retornando AGS-002")
     void geradorDeCodigoAGSCase2() {
@@ -43,4 +53,30 @@ class AgenciamentoServiceTest {
         assertEquals("AGS-100", test);
     }
 
+    @Test
+    @DisplayName("Deve cadastrar um novo agenciamento com o status DISPONIVEL")
+    void cadastrarAgenciamentoCase1() {
+        AgenciamentoRequestDTO requestDTO = new AgenciamentoRequestDTO();
+        requestDTO.setTitulo("Casa no Lourdes com piscina");
+        requestDTO.setDescricao("Casa em condomínio fechado com portaria 24h");
+        requestDTO.setTipoImovel(TipoImovel.CASA);
+        requestDTO.setValorVenda(new BigDecimal(680000));
+        requestDTO.setCidade("Caxias do Sul");
+        requestDTO.setBairro("Lourdes");
+        requestDTO.setRua("Rua das Hortênsias");
+        requestDTO.setNumero("420");
+        requestDTO.setAreaM2(new BigDecimal(180));
+        requestDTO.setQuartos(3);
+        requestDTO.setBanheiros(2);
+        requestDTO.setVagasGaragem(1);
+        Mockito.when(repository.findMaxCodigoAgs()).thenReturn(null);
+        Mockito.when(repository.save(any())).thenReturn(new AgenciamentoModel());
+        Mockito.when(mapper.converterParaModel(any())).thenReturn(new AgenciamentoModel());
+        Mockito.when(mapper.converterParaDTO(any())).thenReturn(new AgenciamentoResponseDTO());
+        AgenciamentoResponseDTO test = service.cadastrarAgenciamento(requestDTO);
+        ArgumentCaptor<AgenciamentoModel> captor = ArgumentCaptor.forClass(AgenciamentoModel.class);
+        assertEquals(StatusAgenciamentos.DISPONIVEL, requestDTO.getStatus());
+        verify(repository).save(captor.capture());
+        assertEquals("AGS-001", captor.getValue().getCodigoAgs());
+    }
 }
