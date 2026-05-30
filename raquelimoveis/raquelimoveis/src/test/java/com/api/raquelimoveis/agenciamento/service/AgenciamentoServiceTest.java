@@ -118,4 +118,15 @@ class AgenciamentoServiceTest {
         ArgumentCaptor<AgenciamentoModel> captor = ArgumentCaptor.forClass(AgenciamentoModel.class);
         verify(repository, Mockito.never()).save(any());
     }
+    @Test
+    @DisplayName("Lança uma exceção caso o status for VENDIDO")
+    void deveLancarExcecao_quandoStatusForVendido(){
+        AgenciamentoRequestDTO rqDTO = new AgenciamentoRequestDTO();
+        rqDTO.setStatus(StatusAgenciamentos.VENDIDO);
+        CadastroDeStatusException excecao = assertThrows(CadastroDeStatusException.class, () -> {
+            service.cadastrarAgenciamento(rqDTO);
+        });
+        assertEquals("Este status não pode ser cadastrado", excecao.getMessage());
+        verify(repository, Mockito.never()).save(any());
+    }
 }
