@@ -6,19 +6,19 @@ import com.api.raquelimoveis.agenciamento.database.model.AgenciamentoModel;
 import com.api.raquelimoveis.agenciamento.database.repository.AgenciamentoRepository;
 import com.api.raquelimoveis.agenciamento.enums.StatusAgenciamentos;
 import com.api.raquelimoveis.agenciamento.enums.TipoImovel;
+import com.api.raquelimoveis.agenciamento.exceptions.CadastroDeStatusException;
 import com.api.raquelimoveis.agenciamento.mapper.AgenciamentoMapper;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 
@@ -73,7 +73,7 @@ class AgenciamentoServiceTest {
         Mockito.when(repository.save(any())).thenReturn(new AgenciamentoModel());
         Mockito.when(mapper.converterParaModel(any())).thenReturn(new AgenciamentoModel());
         Mockito.when(mapper.converterParaDTO(any())).thenReturn(new AgenciamentoResponseDTO());
-        AgenciamentoResponseDTO test = service.cadastrarAgenciamento(requestDTO);
+        service.cadastrarAgenciamento(requestDTO);
         ArgumentCaptor<AgenciamentoModel> captor = ArgumentCaptor.forClass(AgenciamentoModel.class);
         assertEquals(StatusAgenciamentos.DISPONIVEL, requestDTO.getStatus());
         verify(repository).save(captor.capture());
@@ -100,10 +100,22 @@ class AgenciamentoServiceTest {
         Mockito.when(repository.save(any())).thenReturn(new AgenciamentoModel());
         Mockito.when(mapper.converterParaModel(any())).thenReturn(new AgenciamentoModel());
         Mockito.when(mapper.converterParaDTO(any())).thenReturn(new AgenciamentoResponseDTO());
-        AgenciamentoResponseDTO test = service.cadastrarAgenciamento(requestDTO);
+        service.cadastrarAgenciamento(requestDTO);
         ArgumentCaptor<AgenciamentoModel> captor = ArgumentCaptor.forClass(AgenciamentoModel.class);
         assertEquals(StatusAgenciamentos.RESERVADO, requestDTO.getStatus());
         verify(repository).save(captor.capture());
         assertEquals("AGS-002", captor.getValue().getCodigoAgs());
+    }
+    @Test
+    @DisplayName("Lança uma exceção caso o status for INATIVO")
+    void deveLancarExcecao_quandoStatusForInativo(){
+        AgenciamentoRequestDTO requestDTO = new AgenciamentoRequestDTO();
+        requestDTO.setStatus(StatusAgenciamentos.INATIVO);
+        CadastroDeStatusException ex = assertThrows(CadastroDeStatusException.class, () ->
+                service.cadastrarAgenciamento(requestDTO
+        ));
+        assertEquals("Este status não pode ser cadastrado", ex.getMessage());
+        ArgumentCaptor<AgenciamentoModel> captor = ArgumentCaptor.forClass(AgenciamentoModel.class);
+        verify(repository, Mockito.never()).save(any());
     }
 }
