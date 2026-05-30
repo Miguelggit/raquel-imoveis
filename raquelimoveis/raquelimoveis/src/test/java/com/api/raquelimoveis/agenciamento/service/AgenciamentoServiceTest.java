@@ -52,7 +52,6 @@ class AgenciamentoServiceTest {
         String test = service.geradorDeCodigoAGS(input);
         assertEquals("AGS-100", test);
     }
-
     @Test
     @DisplayName("Deve cadastrar um novo agenciamento com o status DISPONIVEL")
     void cadastrarAgenciamentoCase1() {
@@ -128,5 +127,30 @@ class AgenciamentoServiceTest {
         });
         assertEquals("Este status não pode ser cadastrado", excecao.getMessage());
         verify(repository, Mockito.never()).save(any());
+    }
+    @Test
+    @DisplayName("Deve gerar um novo codigo ao ser cadastrado um novo agenciamento")
+    void deveGerarCodigoAgs_quandoCadastrarNovoAgenciamento(){
+        AgenciamentoRequestDTO requestDTO = new AgenciamentoRequestDTO();
+        requestDTO.setTitulo("Casa no Lourdes com piscina");
+        requestDTO.setDescricao("Casa em condomínio fechado com portaria 24h");
+        requestDTO.setTipoImovel(TipoImovel.CASA);
+        requestDTO.setValorVenda(new BigDecimal(680000));
+        requestDTO.setCidade("Caxias do Sul");
+        requestDTO.setBairro("Lourdes");
+        requestDTO.setRua("Rua das Hortênsias");
+        requestDTO.setNumero("420");
+        requestDTO.setAreaM2(new BigDecimal(180));
+        requestDTO.setQuartos(3);
+        requestDTO.setBanheiros(2);
+        requestDTO.setVagasGaragem(1);
+        Mockito.when(repository.findMaxCodigoAgs()).thenReturn("AGS-034");
+        Mockito.when(repository.save(any())).thenReturn(new AgenciamentoModel());
+        Mockito.when(mapper.converterParaModel(any())).thenReturn(new AgenciamentoModel());
+        Mockito.when(mapper.converterParaDTO(any())).thenReturn(new AgenciamentoResponseDTO());
+        service.cadastrarAgenciamento(requestDTO);
+        ArgumentCaptor<AgenciamentoModel> captor = ArgumentCaptor.forClass(AgenciamentoModel.class);
+        verify(repository).save(captor.capture());
+        assertEquals("AGS-035", captor.getValue().getCodigoAgs());
     }
 }
