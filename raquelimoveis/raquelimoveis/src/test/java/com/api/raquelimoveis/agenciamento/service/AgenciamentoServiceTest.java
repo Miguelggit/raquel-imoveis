@@ -9,6 +9,7 @@ import com.api.raquelimoveis.agenciamento.enums.StatusAgenciamentos;
 import com.api.raquelimoveis.agenciamento.enums.TipoImovel;
 import com.api.raquelimoveis.agenciamento.exceptions.CadastroDeStatusException;
 import com.api.raquelimoveis.agenciamento.exceptions.IdentificadorNaoEncontradoException;
+import com.api.raquelimoveis.agenciamento.exceptions.InativarAgenciamentoException;
 import com.api.raquelimoveis.agenciamento.mapper.AgenciamentoMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -250,6 +251,7 @@ class AgenciamentoServiceTest {
         verify(repository).save(any());
     }
     @Test
+    @DisplayName("Lança exceção caso o ID não seja encontrado quando for editar um Agenciamento")
     void deveLancarExcecao_quandoIdNaoExistirNoEdit(){
         AgenciamentoRequestDTO dto = new AgenciamentoRequestDTO();
         when(repository.findById(1L)).thenReturn(Optional.empty());
@@ -257,5 +259,35 @@ class AgenciamentoServiceTest {
             service.editarAgenciamento(1L, dto);
         });
         assertEquals("O ID: " +  1L  + " não foi encontrado", excecao.getMessage());
+    }
+    @Test
+    @DisplayName("Deve inativar o agenciamento caso exista")
+    void deveInativarAgenciamento_quandoIdExistir(){
+        AgenciamentoModel model = new AgenciamentoModel();
+        model.setStatus(StatusAgenciamentos.DISPONIVEL);
+        when(repository.findById(1L)).thenReturn(Optional.of(model));
+        service.softDelete(1L);
+        verify(repository).save(any());
+        assertEquals(StatusAgenciamentos.INATIVO, model.getStatus());
+    }
+    @Test
+    @DisplayName("Lança excecao caso o ID não exista no soft delete")
+    void deveLancarExcecao_qunadoIdNaoExistirNoDelete(){
+        when(repository.findById(99L)).thenReturn(Optional.empty());
+        IdentificadorNaoEncontradoException excecao = assertThrows(IdentificadorNaoEncontradoException.class, () -> {
+            service.softDelete(99L);
+        });
+        assertEquals("O ID: " + 99L + " não foi encontrado", excecao.getMessage());
+    }
+    @Test
+    @DisplayName("Lança exceção quando o agenciamento já for INATIVO")
+    void deveLancarExcecao_quandoAgenciamentoForInativo(){
+        AgenciamentoModel model = new AgenciamentoModel();
+        model.setStatus(StatusAgenciamentos.INATIVO);
+        when(repository.findById(22L)).thenReturn(Optional.of(model));
+        InativarAgenciamentoException excecao = assertThrows(InativarAgenciamentoException.class, () -> {
+            service.softDelete(22L);
+        });
+        assertEquals("ID: "+ 22L + " já esta INATIVO", excecao.getMessage());
     }
 }
