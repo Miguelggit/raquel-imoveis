@@ -2,6 +2,7 @@ package com.api.raquelimoveis.agenciamento.service;
 
 import com.api.raquelimoveis.agenciamento.controller.dto.AgenciamentoRequestDTO;
 import com.api.raquelimoveis.agenciamento.controller.dto.AgenciamentoResponseDTO;
+import com.api.raquelimoveis.agenciamento.controller.dto.AgenciamentoResponseSemDetalhesDTO;
 import com.api.raquelimoveis.agenciamento.database.model.AgenciamentoModel;
 import com.api.raquelimoveis.agenciamento.database.repository.AgenciamentoRepository;
 import com.api.raquelimoveis.agenciamento.enums.StatusAgenciamentos;
@@ -11,17 +12,22 @@ import com.api.raquelimoveis.agenciamento.exceptions.IdentificadorNaoEncontradoE
 import com.api.raquelimoveis.agenciamento.mapper.AgenciamentoMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class AgenciamentoServiceTest {
@@ -180,6 +186,7 @@ class AgenciamentoServiceTest {
         verify(repository).findById(1L);
     }
     @Test
+    @DisplayName("Lança uma exceção csao o ID não seja encontrado")
     void deveLancarExcecao_quandoIdNaoExistir(){
         Long idTestCase = 99L;
         Mockito.when(repository.findById(idTestCase)).thenReturn(Optional.empty());
@@ -188,5 +195,32 @@ class AgenciamentoServiceTest {
         });
         assertEquals("O ID: " +  idTestCase + " não foi encontrado", excecao.getMessage());
         verify(repository, Mockito.never()).save(any());
+    }
+    @Test
+    @DisplayName("Deve buscar todos os agenciamentos que não são inativos")
+    void deveRetornarAgsSemInativos_quandoExistirAgenciamentos() {
+        List<AgenciamentoResponseSemDetalhesDTO> listResponse = new ArrayList<>();
+        AgenciamentoModel model1 = new AgenciamentoModel();
+        model1.setStatus(StatusAgenciamentos.INATIVO);
+        AgenciamentoModel model2 = new AgenciamentoModel();
+        model2.setStatus(StatusAgenciamentos.RESERVADO);
+        AgenciamentoModel model3 = new AgenciamentoModel();
+        model3.setStatus(StatusAgenciamentos.DISPONIVEL);
+        AgenciamentoModel model4 = new AgenciamentoModel();
+        model4.setStatus(StatusAgenciamentos.DISPONIVEL);
+        List<AgenciamentoModel> lisModel = new ArrayList<>(List.of(model1, model2, model3, model4));
+        Mockito.when(repository.findAll()).thenReturn(lisModel);
+        Mockito.when(mapper.converterParaDTOSemDetalhes(any())).thenReturn(new AgenciamentoResponseSemDetalhesDTO());
+        listResponse = service.listarTodosAgs();
+        assertEquals(3, listResponse.size());
+    }
+    @Test
+    @DisplayName("Deve retornar uma lsita vazia caso não tenha nenhum cadastro de Agenciamentos")
+    void deveRetornarListaVazia_quandoNaoExistirAgenciamentos(){
+        List<AgenciamentoResponseSemDetalhesDTO> listResponse =  new ArrayList<>();
+        List<AgenciamentoModel> listAgs = new ArrayList<>();
+        when(repository.findAll()).thenReturn(listAgs);
+        listResponse = service.listarTodosAgs();
+        assertTrue(listResponse.isEmpty());
     }
 }
