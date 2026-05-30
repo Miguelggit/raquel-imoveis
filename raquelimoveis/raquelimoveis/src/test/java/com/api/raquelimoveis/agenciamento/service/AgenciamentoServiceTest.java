@@ -223,4 +223,39 @@ class AgenciamentoServiceTest {
         listResponse = service.listarTodosAgs();
         assertTrue(listResponse.isEmpty());
     }
+    @Test
+    @DisplayName("Deve editar os dados do agenciamento cadastrado")
+    void deveEditarComSucesso_qunadoIdExistir(){
+        AgenciamentoRequestDTO request = new AgenciamentoRequestDTO();
+        request.setTitulo("Casa no Lourdes com piscina");
+        request.setDescricao("Casa em condomínio fechado com portaria 24h");
+        request.setTipoImovel(TipoImovel.CASA);
+        request.setValorVenda(new BigDecimal(680000));
+        request.setCidade("Caxias do Sul");
+        request.setBairro("Lourdes");
+        request.setRua("Rua das Hortênsias");
+        request.setNumero("420");
+        request.setAreaM2(new BigDecimal(180));
+        request.setQuartos(3);
+        request.setBanheiros(2);
+        request.setVagasGaragem(1);
+        request.setStatus(StatusAgenciamentos.DISPONIVEL);
+        AgenciamentoModel model = new AgenciamentoModel();
+        model.setId(1L);
+        when(repository.findById(1L)).thenReturn(Optional.of(model));
+        when(repository.save(any())).thenReturn(model);
+        when(mapper.converterParaDTO(any())).thenReturn(new AgenciamentoResponseDTO());
+        AgenciamentoResponseDTO response = service.editarAgenciamento(1L, request);
+        assertNotNull(response);
+        verify(repository).save(any());
+    }
+    @Test
+    void deveLancarExcecao_quandoIdNaoExistirNoEdit(){
+        AgenciamentoRequestDTO dto = new AgenciamentoRequestDTO();
+        when(repository.findById(1L)).thenReturn(Optional.empty());
+        IdentificadorNaoEncontradoException excecao = assertThrows(IdentificadorNaoEncontradoException.class, () -> {
+            service.editarAgenciamento(1L, dto);
+        });
+        assertEquals("O ID: " +  1L  + " não foi encontrado", excecao.getMessage());
+    }
 }
