@@ -7,6 +7,7 @@ import com.api.raquelimoveis.agenciamento.database.repository.AgenciamentoReposi
 import com.api.raquelimoveis.agenciamento.enums.StatusAgenciamentos;
 import com.api.raquelimoveis.agenciamento.enums.TipoImovel;
 import com.api.raquelimoveis.agenciamento.exceptions.CadastroDeStatusException;
+import com.api.raquelimoveis.agenciamento.exceptions.IdentificadorNaoEncontradoException;
 import com.api.raquelimoveis.agenciamento.mapper.AgenciamentoMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -16,9 +17,9 @@ import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 
@@ -152,5 +153,40 @@ class AgenciamentoServiceTest {
         ArgumentCaptor<AgenciamentoModel> captor = ArgumentCaptor.forClass(AgenciamentoModel.class);
         verify(repository).save(captor.capture());
         assertEquals("AGS-035", captor.getValue().getCodigoAgs());
+    }
+    @Test
+    @DisplayName("Deve retornar o Agenciamentio caso exista o ID no banco")
+    void deveRetornarAgenciamento_quandoIdExistir(){
+        AgenciamentoResponseDTO response = new AgenciamentoResponseDTO();
+        AgenciamentoModel model = new AgenciamentoModel();
+        model.setId(1L);
+        model.setTitulo("Casa no Lourdes com piscina");
+        model.setDescricao("Casa em condomínio fechado com portaria 24h");
+        model.setTipoImovel(TipoImovel.CASA);
+        model.setValorVenda(new BigDecimal(680000));
+        model.setCidade("Caxias do Sul");
+        model.setBairro("Lourdes");
+        model.setRua("Rua das Hortênsias");
+        model.setNumero("420");
+        model.setAreaM2(new BigDecimal(180));
+        model.setQuartos(3);
+        model.setBanheiros(2);
+        model.setVagasGaragem(1);
+        model.setStatus(StatusAgenciamentos.RESERVADO);
+        Mockito.when(repository.findById(1L)).thenReturn(Optional.of(model));
+        Mockito.when(mapper.converterParaDTO(any())).thenReturn(new AgenciamentoResponseDTO());
+        response = service.listarPorId(1L);
+        assertNotNull(response);
+        verify(repository).findById(1L);
+    }
+    @Test
+    void deveLancarExcecao_quandoIdNaoExistir(){
+        Long idTestCase = 99L;
+        Mockito.when(repository.findById(idTestCase)).thenReturn(Optional.empty());
+        IdentificadorNaoEncontradoException excecao = assertThrows(IdentificadorNaoEncontradoException.class, () -> {
+            service.buscarAgenciamentoPorId(idTestCase);
+        });
+        assertEquals("O ID: " +  idTestCase + " não foi encontrado", excecao.getMessage());
+        verify(repository, Mockito.never()).save(any());
     }
 }
