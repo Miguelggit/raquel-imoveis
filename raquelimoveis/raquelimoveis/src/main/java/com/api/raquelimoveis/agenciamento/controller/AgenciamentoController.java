@@ -1,4 +1,5 @@
 package com.api.raquelimoveis.agenciamento.controller;
+import com.api.raquelimoveis.agenciamento.controller.dto.AgenciamentoPageResponseDTO;
 import com.api.raquelimoveis.agenciamento.controller.dto.AgenciamentoRequestDTO;
 import com.api.raquelimoveis.agenciamento.controller.dto.AgenciamentoResponseDTO;
 import com.api.raquelimoveis.agenciamento.controller.dto.AgenciamentoResponseSemDetalhesDTO;
@@ -32,14 +33,14 @@ public class AgenciamentoController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<AgenciamentoModel>> listarTodosAgenciamentos(@RequestParam(required = false) TipoImovel tipoImovel,
-                                                                            @RequestParam(required = false) StatusAgenciamentos status,
-                                                                            @RequestParam(required = false) String cidade,
-                                                                            @RequestParam(required = false) String bairro,
-                                                                            @RequestParam(required = false) BigDecimal precoMin,
-                                                                            @RequestParam(required = false) BigDecimal precoMax,
-                                                                            Pageable pageable){
-        return ResponseEntity.ok(service.filtragem(tipoImovel, status, cidade, bairro, precoMin, precoMax, pageable));
+    public ResponseEntity<AgenciamentoPageResponseDTO> listarTodosAgenciamentos(@RequestParam(required = false) StatusAgenciamentos status,
+                                                                                @RequestParam(required = false) TipoImovel tipoImovel,
+                                                                                @RequestParam(required = false) String bairro,
+                                                                                @RequestParam(required = false) String cidade,
+                                                                                @RequestParam(required = false) BigDecimal precoMin,
+                                                                                @RequestParam(required = false) BigDecimal precoMax,
+                                                                                Pageable pageable){
+        return ResponseEntity.ok(service.filtros(tipoImovel, status, cidade, bairro, precoMin, precoMax, pageable));
     }
 
     @GetMapping("/{id}")
