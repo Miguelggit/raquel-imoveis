@@ -1,10 +1,14 @@
 package com.api.raquelimoveis.agenciamento.mapper;
 
+import com.api.raquelimoveis.agenciamento.controller.dto.AgenciamentoPageResponseDTO;
 import com.api.raquelimoveis.agenciamento.controller.dto.AgenciamentoRequestDTO;
 import com.api.raquelimoveis.agenciamento.controller.dto.AgenciamentoResponseDTO;
 import com.api.raquelimoveis.agenciamento.controller.dto.AgenciamentoResponseSemDetalhesDTO;
 import com.api.raquelimoveis.agenciamento.database.model.AgenciamentoModel;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class AgenciamentoMapper {
@@ -65,7 +69,6 @@ public class AgenciamentoMapper {
         ags.setVagasGaragem(requestDTO.getVagasGaragem());
         return ags;
     }
-
     public void atualizarModel(AgenciamentoModel model, AgenciamentoRequestDTO requestDTO){
         model.setBairro(requestDTO.getBairro());
         model.setStatus(requestDTO.getStatus());
@@ -82,6 +85,18 @@ public class AgenciamentoMapper {
         model.setTipoImovel(requestDTO.getTipoImovel());
         model.setStatus(requestDTO.getStatus());
         model.setVagasGaragem(requestDTO.getVagasGaragem());
+    }
+    public AgenciamentoPageResponseDTO converterPageParaDTO(Page<AgenciamentoModel> page ){
+        List<AgenciamentoResponseSemDetalhesDTO> content = page.getContent().stream()
+                                                                         .map(this::converterParaDTOSemDetalhes)
+                                                                         .toList();
+        return new AgenciamentoPageResponseDTO(
+                content,
+                page.getNumber(),
+                page.getSize(),
+                page.getTotalElements(),
+                page.getTotalPages()
+        );
     }
 
 }
