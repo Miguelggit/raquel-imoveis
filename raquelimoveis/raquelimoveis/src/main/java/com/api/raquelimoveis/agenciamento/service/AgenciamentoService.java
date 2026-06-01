@@ -1,4 +1,5 @@
 package com.api.raquelimoveis.agenciamento.service;
+import com.api.raquelimoveis.agenciamento.controller.dto.AgenciamentoPageResponseDTO;
 import com.api.raquelimoveis.agenciamento.controller.dto.AgenciamentoRequestDTO;
 import com.api.raquelimoveis.agenciamento.controller.dto.AgenciamentoResponseDTO;
 import com.api.raquelimoveis.agenciamento.controller.dto.AgenciamentoResponseSemDetalhesDTO;
@@ -80,19 +81,19 @@ public class  AgenciamentoService {
         ags.setStatus(StatusAgenciamentos.INATIVO);
         repository.save(ags);
     }
-    public AgenciamentoModel buscarAgenciamentoPorId(Long id){
-        return repository.findById(id).orElseThrow( () -> new IdentificadorNaoEncontradoException("O ID: " + id + " não foi encontrado"));
+    public AgenciamentoModel buscarAgenciamentoPorId(Long id) {
+        return repository.findById(id).orElseThrow(() -> new IdentificadorNaoEncontradoException("O ID: " + id + " não foi encontrado"));
     }
-    public Page<AgenciamentoModel> filtragem(TipoImovel tipoImovel,
-                                             StatusAgenciamentos status,
-                                             String cidade,
-                                             String bairro,
-                                             BigDecimal precoMin,
-                                             BigDecimal precoMax,
-                                             Pageable pageable){
-        Specification<AgenciamentoModel> spec = AgenciamentoSpecification.statusDiferenteDe(StatusAgenciamentos.INATIVO);
+    public AgenciamentoPageResponseDTO filtros(TipoImovel tipoImovel,
+                                               StatusAgenciamentos status,
+                                               String cidade,
+                                               String bairro,
+                                               BigDecimal precoMin,
+                                               BigDecimal precoMax,
+                                               Pageable pageable){
+        Specification<AgenciamentoModel> spec = AgenciamentoSpecification.statusDiferentesDe(StatusAgenciamentos.INATIVO);
         if(tipoImovel != null){
-            spec = spec.and(AgenciamentoSpecification.porTipoImovel(tipoImovel));
+            spec = spec.and(AgenciamentoSpecification.porTipoDeImovel(tipoImovel));
         }
         if(status != null){
             spec = spec.and(AgenciamentoSpecification.porStatus(status));
@@ -109,6 +110,7 @@ public class  AgenciamentoService {
         if(precoMax != null){
             spec = spec.and(AgenciamentoSpecification.porPrecoMaximo(precoMax));
         }
-        return repository.findAll(spec, pageable);
+        return mapper.converterPageParaDTO(repository.findAll(spec, pageable));
     }
+
 }
