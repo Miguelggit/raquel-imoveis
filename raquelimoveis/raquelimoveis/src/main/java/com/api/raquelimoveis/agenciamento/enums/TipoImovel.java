@@ -3,7 +3,10 @@ package com.api.raquelimoveis.agenciamento.enums;
 public enum TipoImovel {
     CASA("Casa"),
     APARTAMENTO("Apartamento"),
-    SOBRADO("Sobrado");
+    SOBRADO("Sobrado"),
+    LOFT("Loft"),
+    TERRENO("Terreno"),
+    CASA_GERMINADA("Casa Germinada");
 
     private final String tipo;
 

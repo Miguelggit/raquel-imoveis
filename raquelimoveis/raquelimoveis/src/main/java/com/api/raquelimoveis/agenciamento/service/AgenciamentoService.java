@@ -1,18 +1,25 @@
 package com.api.raquelimoveis.agenciamento.service;
+import com.api.raquelimoveis.agenciamento.controller.dto.AgenciamentoPageResponseDTO;
 import com.api.raquelimoveis.agenciamento.controller.dto.AgenciamentoRequestDTO;
 import com.api.raquelimoveis.agenciamento.controller.dto.AgenciamentoResponseDTO;
 import com.api.raquelimoveis.agenciamento.controller.dto.AgenciamentoResponseSemDetalhesDTO;
 import com.api.raquelimoveis.agenciamento.database.model.AgenciamentoModel;
 import com.api.raquelimoveis.agenciamento.database.repository.AgenciamentoRepository;
 import com.api.raquelimoveis.agenciamento.enums.StatusAgenciamentos;
+import com.api.raquelimoveis.agenciamento.enums.TipoImovel;
 import com.api.raquelimoveis.agenciamento.exceptions.CadastroDeStatusException;
 import com.api.raquelimoveis.agenciamento.exceptions.IdentificadorNaoEncontradoException;
 import com.api.raquelimoveis.agenciamento.exceptions.InativarAgenciamentoException;
 import com.api.raquelimoveis.agenciamento.mapper.AgenciamentoMapper;
+import com.api.raquelimoveis.agenciamento.specification.AgenciamentoSpecification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -74,7 +81,36 @@ public class  AgenciamentoService {
         ags.setStatus(StatusAgenciamentos.INATIVO);
         repository.save(ags);
     }
-    public AgenciamentoModel buscarAgenciamentoPorId(Long id){
-        return repository.findById(id).orElseThrow( () -> new IdentificadorNaoEncontradoException("O ID: " + id + " não foi encontrado"));
+    public AgenciamentoModel buscarAgenciamentoPorId(Long id) {
+        return repository.findById(id).orElseThrow(() -> new IdentificadorNaoEncontradoException("O ID: " + id + " não foi encontrado"));
     }
+    public AgenciamentoPageResponseDTO filtros(TipoImovel tipoImovel,
+                                               StatusAgenciamentos status,
+                                               String cidade,
+                                               String bairro,
+                                               BigDecimal precoMin,
+                                               BigDecimal precoMax,
+                                               Pageable pageable){
+        Specification<AgenciamentoModel> spec = AgenciamentoSpecification.statusDiferentesDe(StatusAgenciamentos.INATIVO);
+        if(tipoImovel != null){
+            spec = spec.and(AgenciamentoSpecification.porTipoDeImovel(tipoImovel));
+        }
+        if(status != null){
+            spec = spec.and(AgenciamentoSpecification.porStatus(status));
+        }
+        if(cidade != null){
+            spec = spec.and(AgenciamentoSpecification.porCidade(cidade));
+        }
+        if(bairro != null){
+            spec = spec.and(AgenciamentoSpecification.porBairro(bairro));
+        }
+        if(precoMin != null){
+            spec = spec.and(AgenciamentoSpecification.porPrecoMinimo(precoMin));
+        }
+        if(precoMax != null){
+            spec = spec.and(AgenciamentoSpecification.porPrecoMaximo(precoMax));
+        }
+        return mapper.converterPageParaDTO(repository.findAll(spec, pageable));
+    }
+
 }
