@@ -1,5 +1,6 @@
 package com.api.raquelimoveis.agenciamento.service;
 
+import com.api.raquelimoveis.agenciamento.controller.dto.AgenciamentoPageResponseDTO;
 import com.api.raquelimoveis.agenciamento.controller.dto.AgenciamentoRequestDTO;
 import com.api.raquelimoveis.agenciamento.controller.dto.AgenciamentoResponseDTO;
 import com.api.raquelimoveis.agenciamento.controller.dto.AgenciamentoResponseSemDetalhesDTO;
@@ -18,6 +19,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -289,5 +295,61 @@ class AgenciamentoServiceTest {
             service.softDelete(22L);
         });
         assertEquals("ID: "+ 22L + " já esta INATIVO", excecao.getMessage());
+    }
+    @Test
+    @DisplayName("Deve retornar uma consulta paginada caso os filtros sejam nulos")
+    void deveRetornarPaginado_quandoFitlrosForemNulos() {
+        List<AgenciamentoModel> lista = List.of(new AgenciamentoModel(), new AgenciamentoModel());
+        Page<AgenciamentoModel> responsePage = new PageImpl<>(lista);
+        when(repository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(responsePage);
+        when(mapper.converterPageParaDTO(any())).thenReturn(new AgenciamentoPageResponseDTO());
+        AgenciamentoPageResponseDTO filtros = service.filtros(null, null, null, null, null, null, PageRequest.of(0, 12));
+        assertNotNull(filtros);
+        verify(repository).findAll(any(Specification.class), any(Pageable.class));
+    }
+    @Test
+    @DisplayName("Deve retornar um objeto filtrado caso seja passado um tipo de imovel")
+    void deveRetornarFiltrado_quandoTipoImovelInformado(){
+        List<AgenciamentoModel> listaAGS = List.of(new AgenciamentoModel(), new AgenciamentoModel());
+        Page<AgenciamentoModel> page = new PageImpl<>(listaAGS);
+        when(repository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(page);
+        when(mapper.converterPageParaDTO(any())).thenReturn(new AgenciamentoPageResponseDTO());
+        AgenciamentoPageResponseDTO response = service.filtros(TipoImovel.CASA, null, null, null, null, null, PageRequest.of(0, 12));
+        assertNotNull(response); // Verifica se o valor passado não é nulo
+        verify(repository).findAll(any(Specification.class), any(Pageable.class));
+        verify(mapper).converterPageParaDTO(any());
+    }
+    @Test
+    @DisplayName("Deve retornar sucesso tendo o valor do bairro")
+    void deveRetornarFiltrado_quandoBairroInformado(){
+        List<AgenciamentoModel> listaAgs = List.of(new AgenciamentoModel(), new AgenciamentoModel());
+        Page<AgenciamentoModel> page = new PageImpl<>(listaAgs);
+        when(repository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(page);
+        when(mapper.converterPageParaDTO(page)).thenReturn(new AgenciamentoPageResponseDTO());
+        AgenciamentoPageResponseDTO response = service.filtros(null, null, null, "Lourdes", null, null, PageRequest.of(0, 12));
+        assertNotNull(response);
+        verify(repository).findAll(any(Specification.class), any(Pageable.class)); // Faz o teste dos metodos que mockamos
+        verify(mapper).converterPageParaDTO(any());
+    }
+    @Test
+    @DisplayName("Deve retornar sucesso tendo a faixa de preço")
+    void deveRetornarFiltrado_quandoFaixaDePrecoForInformada(){
+        Page<AgenciamentoModel> page = new PageImpl<>(List.of(new AgenciamentoModel(), new AgenciamentoModel()));
+        when(mapper.converterPageParaDTO(page)).thenReturn(new AgenciamentoPageResponseDTO());
+        when(repository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(page);
+        AgenciamentoPageResponseDTO response = service.filtros(null, null,null, null, new BigDecimal(400_000), new BigDecimal(600_000), PageRequest.of(0, 12));
+        assertNotNull(response);
+        verify(repository).findAll(any(Specification.class), any(Pageable.class));
+        verify(mapper).converterPageParaDTO(any());
+    }
+    @Test
+    @DisplayName("Deve retornar um objeto vazio caso não tiver nenhum page passado")
+    void deveRetornarVazio_quandoNenhumResultado(){
+        when(mapper.converterPageParaDTO(Page.empty())).thenReturn(new AgenciamentoPageResponseDTO());
+        when(repository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(Page.empty());
+        AgenciamentoPageResponseDTO response = service.filtros(null, null, null, null, null, null, PageRequest.of(0, 12));
+        assertEquals(List.of(), response.getContent());
+        verify(repository).findAll(any(Specification.class), any(Pageable.class));
+        verify(mapper).converterPageParaDTO(any());
     }
 }
