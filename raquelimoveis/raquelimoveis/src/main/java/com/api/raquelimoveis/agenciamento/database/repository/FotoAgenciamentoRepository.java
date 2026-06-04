@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface FotoAgenciamentoRepository extends JpaRepository<FotoAgenciamentoModel, Long> {
     List<FotoAgenciamentoModel> findByAgenciamentoModelId(Long agenciamentoId);
+    FotoAgenciamentoModel findByNomeArmazenado(String nomeArmazenado);
 }
