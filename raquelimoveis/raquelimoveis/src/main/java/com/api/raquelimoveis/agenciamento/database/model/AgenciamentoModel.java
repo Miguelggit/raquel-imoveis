@@ -10,6 +10,8 @@ import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.Set;
 
 @Entity
 @Table(name = "TB_AGENCIAMENTOS")
@@ -92,6 +94,8 @@ public class AgenciamentoModel {
     public AgenciamentoModel() {
 
     }
+    @OneToMany(mappedBy = "agenciamentoModel", fetch = FetchType.LAZY)
+    private Set<FotoAgenciamentoModel> fotoAgenciamentoModel;
 
     public Long getId() {
         return id;
@@ -235,5 +239,13 @@ public class AgenciamentoModel {
 
     public void setAtualizadoEM(LocalDateTime atualizadoEM) {
         this.atualizadoEM = atualizadoEM;
+    }
+
+    public Set<FotoAgenciamentoModel> getFotoAgenciamentoModel() {
+        return fotoAgenciamentoModel;
+    }
+
+    public void setFotoAgenciamentoModel(Set<FotoAgenciamentoModel> fotoAgenciamentoModel) {
+        this.fotoAgenciamentoModel = fotoAgenciamentoModel;
     }
 }
