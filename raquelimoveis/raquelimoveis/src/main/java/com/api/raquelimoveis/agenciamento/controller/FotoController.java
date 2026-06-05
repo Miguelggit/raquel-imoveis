@@ -2,11 +2,8 @@ package com.api.raquelimoveis.agenciamento.controller;
 
 import com.api.raquelimoveis.agenciamento.controller.dto.FotoAgenciamentoResponseDTO;
 import com.api.raquelimoveis.agenciamento.controller.dto.FotoArquivoDTO;
-import com.api.raquelimoveis.agenciamento.database.model.FotoAgenciamentoModel;
-import com.api.raquelimoveis.agenciamento.service.FotoAgenciamentoService;
-import org.springframework.http.HttpHeaders;
+import com.api.raquelimoveis.agenciamento.service.FotoService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -17,11 +14,11 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/api/agenciamentos")
-public class FotoAgenciamentoController {
+public class FotoController {
 
-    private FotoAgenciamentoService service;
+    private FotoService service;
 
-    public FotoAgenciamentoController(FotoAgenciamentoService service) {
+    public FotoController(FotoService service) {
         this.service = service;
     }
 
