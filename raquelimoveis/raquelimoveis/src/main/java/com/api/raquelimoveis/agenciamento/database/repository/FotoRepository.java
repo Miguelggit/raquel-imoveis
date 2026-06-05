@@ -1,13 +1,13 @@
 package com.api.raquelimoveis.agenciamento.database.repository;
 
-import com.api.raquelimoveis.agenciamento.database.model.FotoAgenciamentoModel;
+import com.api.raquelimoveis.agenciamento.database.model.FotoModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface FotoAgenciamentoRepository extends JpaRepository<FotoAgenciamentoModel, Long> {
-    List<FotoAgenciamentoModel> findByAgenciamentoModelId(Long agenciamentoId);
-    FotoAgenciamentoModel findByNomeArmazenado(String nomeArmazenado);
+public interface FotoRepository extends JpaRepository<FotoModel, Long> {
+    List<FotoModel> findByAgenciamentoModelId(Long agenciamentoId);
+    FotoModel findByNomeArmazenado(String nomeArmazenado);
 }

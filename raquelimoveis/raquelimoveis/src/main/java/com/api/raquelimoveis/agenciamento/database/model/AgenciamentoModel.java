@@ -4,13 +4,11 @@ import com.api.raquelimoveis.agenciamento.enums.StatusAgenciamentos;
 import com.api.raquelimoveis.agenciamento.enums.TipoImovel;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.Set;
 
 @Entity
@@ -95,7 +93,7 @@ public class AgenciamentoModel {
 
     }
     @OneToMany(mappedBy = "agenciamentoModel", fetch = FetchType.LAZY)
-    private Set<FotoAgenciamentoModel> fotoAgenciamentoModel;
+    private Set<FotoModel> fotoModel;
 
     public Long getId() {
         return id;
@@ -241,11 +239,11 @@ public class AgenciamentoModel {
         this.atualizadoEM = atualizadoEM;
     }
 
-    public Set<FotoAgenciamentoModel> getFotoAgenciamentoModel() {
-        return fotoAgenciamentoModel;
+    public Set<FotoModel> getFotoAgenciamentoModel() {
+        return fotoModel;
     }
 
-    public void setFotoAgenciamentoModel(Set<FotoAgenciamentoModel> fotoAgenciamentoModel) {
-        this.fotoAgenciamentoModel = fotoAgenciamentoModel;
+    public void setFotoAgenciamentoModel(Set<FotoModel> fotoModel) {
+        this.fotoModel = fotoModel;
     }
 }

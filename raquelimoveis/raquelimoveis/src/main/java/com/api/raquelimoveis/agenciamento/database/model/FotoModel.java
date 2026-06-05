@@ -3,11 +3,10 @@ package com.api.raquelimoveis.agenciamento.database.model;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "TB_FOTOS")
-public class FotoAgenciamentoModel {
+public class FotoModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,11 +30,11 @@ public class FotoAgenciamentoModel {
 
     }
 
-    public FotoAgenciamentoModel() {
+    public FotoModel() {
 
     }
 
-    public FotoAgenciamentoModel(String nomeArquivo, String nomeArmazenado, String contentType, Long tamanho, String url, AgenciamentoModel agenciamentoModel, LocalDateTime criadoEM) {
+    public FotoModel(String nomeArquivo, String nomeArmazenado, String contentType, Long tamanho, String url, AgenciamentoModel agenciamentoModel, LocalDateTime criadoEM) {
         this.nomeArquivo = nomeArquivo;
         this.nomeArmazenado = nomeArmazenado;
         this.contentType = contentType;
