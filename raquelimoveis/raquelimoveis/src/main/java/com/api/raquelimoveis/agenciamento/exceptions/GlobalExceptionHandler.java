@@ -79,4 +79,28 @@ public class GlobalExceptionHandler {
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponseDTO);
     }
+
+    @ExceptionHandler(FormatoInvalidoException.class)
+    public ResponseEntity<ErrorResponseDTO> handleFormatoInvalidoException(FormatoInvalidoException ex, HttpServletRequest rq){
+        ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(
+                LocalDateTime.now(),
+                HttpStatus.NOT_FOUND.value(),
+                ex.getMessage(),
+                rq.getRequestURI(),
+                null
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponseDTO);
+    }
+
+    @ExceptionHandler(ArquivoVazioException.class)
+    public ResponseEntity<ErrorResponseDTO> handleArquivoVazioException(ArquivoVazioException exc, HttpServletRequest rq){
+        ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(
+                LocalDateTime.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                exc.getMessage(),
+                rq.getRequestURI(),
+                null
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponseDTO);
+    }
 }

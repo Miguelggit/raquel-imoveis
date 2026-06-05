@@ -1,7 +1,7 @@
 package com.api.raquelimoveis.agenciamento.exceptions;
 
-public class AgenciamentoNaoEncontradoException extends RuntimeException {
-    public AgenciamentoNaoEncontradoException(String message) {
+public class FormatoInvalidoException extends RuntimeException {
+    public FormatoInvalidoException(String message) {
         super(message);
     }
 }
