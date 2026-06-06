@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1700" font-family="Arial, Helvetica, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M2 1 L8 5 L2 9" fill="none" stroke="#444" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <marker id="arrSolo" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M2 1 L8 5 L2 9" fill="none" stroke="#185FA5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="1700" fill="#FAFAF7"/>
+
+  <!-- Title -->
+  <text x="600" y="50" text-anchor="middle" font-size="26" font-weight="700" fill="#1A1A1A">Fluxograma de processos — Software House</text>
+  <text x="600" y="78" text-anchor="middle" font-size="14" fill="#5F5E5A">Do primeiro contato com o cliente até o pós-venda</text>
+
+  <!-- Legend -->
+  <g transform="translate(40, 110)">
+    <rect x="0" y="0" width="320" height="56" rx="8" fill="#FFFFFF" stroke="#D3D1C7" stroke-width="0.5"/>
+    <text x="14" y="20" font-size="11" font-weight="600" fill="#444441">LEGENDA</text>
+    <rect x="14" y="30" width="14" height="14" rx="3" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+    <text x="34" y="41" font-size="11" fill="#0C447C">Etapa do processo</text>
+    <circle cx="150" cy="37" r="7" fill="#FAEEDA" stroke="#854F0B" stroke-width="0.5"/>
+    <text x="162" y="41" font-size="11" fill="#633806">Regra crítica</text>
+    <rect x="234" y="30" width="14" height="14" rx="7" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+    <text x="254" y="41" font-size="11" fill="#085041">Saída/Entrega</text>
+  </g>
+
+  <!-- Phase 1: CAPTAÇÃO -->
+  <g transform="translate(40, 200)">
+    <rect x="0" y="0" width="1120" height="180" rx="14" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.8"/>
+    <text x="20" y="30" font-size="16" font-weight="700" fill="#0C447C">1. CAPTAÇÃO DE CLIENTES</text>
+    <text x="20" y="50" font-size="12" fill="#185FA5">Gerar leads qualificados e visibilidade de marca</text>
+
+    <!-- Steps -->
+    <g transform="translate(20, 70)">
+      <rect x="0" y="0" width="170" height="90" rx="8" fill="#FFFFFF" stroke="#185FA5" stroke-width="0.5"/>
+      <text x="85" y="22" text-anchor="middle" font-size="12" font-weight="600" fill="#0C447C">Definir ICP</text>
+      <text x="85" y="42" text-anchor="middle" font-size="10" fill="#5F5E5A">Perfil de Cliente</text>
+      <text x="85" y="56" text-anchor="middle" font-size="10" fill="#5F5E5A">Ideal</text>
+      <text x="85" y="78" text-anchor="middle" font-size="9" fill="#888780">Revisar a cada 6m</text>
+    </g>
+    <g transform="translate(210, 70)">
+      <rect x="0" y="0" width="170" height="90" rx="8" fill="#FFFFFF" stroke="#185FA5" stroke-width="0.5"/>
+      <text x="85" y="22" text-anchor="middle" font-size="12" font-weight="600" fill="#0C447C">Presença digital</text>
+      <text x="85" y="42" text-anchor="middle" font-size="10" fill="#5F5E5A">Site, LinkedIn,</text>
+      <text x="85" y="56" text-anchor="middle" font-size="10" fill="#5F5E5A">conteúdo técnico</text>
+      <text x="85" y="78" text-anchor="middle" font-size="9" fill="#888780">SEO básico</text>
+    </g>
+    <g transform="translate(400, 70)">
+      <rect x="0" y="0" width="170" height="90" rx="8" fill="#FFFFFF" stroke="#185FA5" stroke-width="0.5"/>
+      <text x="85" y="22" text-anchor="middle" font-size="12" font-weight="600" fill="#0C447C">Prospecção ativa</text>
+      <text x="85" y="42" text-anchor="middle" font-size="10" fill="#5F5E5A">Outbound LinkedIn</text>
+      <text x="85" y="56" text-anchor="middle" font-size="10" fill="#5F5E5A">e e-mail frio</text>
+      <text x="85" y="78" text-anchor="middle" font-size="9" fill="#888780">5 touchpoints</text>
+    </g>
+    <g transform="translate(590, 70)">
+      <rect x="0" y="0" width="170" height="90" rx="8" fill="#FFFFFF" stroke="#185FA5" stroke-width="0.5"/>
+      <text x="85" y="22" text-anchor="middle" font-size="12" font-weight="600" fill="#0C447C">Inbound</text>
+      <text x="85" y="42" text-anchor="middle" font-size="10" fill="#5F5E5A">Landing pages,</text>
+      <text x="85" y="56" text-anchor="middle" font-size="10" fill="#5F5E5A">cases, indicação</text>
+      <text x="85" y="78" text-anchor="middle" font-size="9" fill="#888780">Receita orgânica</text>
+    </g>
+    <g transform="translate(780, 70)">
+      <rect x="0" y="0" width="170" height="90" rx="8" fill="#FFFFFF" stroke="#185FA5" stroke-width="0.5"/>
+      <text x="85" y="22" text-anchor="middle" font-size="12" font-weight="600" fill="#0C447C">Qualificação</text>
+      <text x="85" y="42" text-anchor="middle" font-size="10" fill="#5F5E5A">Discovery 30min</text>
+      <text x="85" y="56" text-anchor="middle" font-size="10" fill="#5F5E5A">com BANT</text>
+      <text x="85" y="78" text-anchor="middle" font-size="9" fill="#888780">Score no CRM</text>
+    </g>
+    <g transform="translate(940, 70)">
+      <circle cx="80" cy="45" r="42" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1"/>
+      <text x="80" y="42" text-anchor="middle" font-size="12" font-weight="700" fill="#085041">Lead</text>
+      <text x="80" y="58" text-anchor="middle" font-size="12" font-weight="700" fill="#085041">qualificado</text>
+    </g>
+  </g>
+
+  <!-- Arrow 1 -> 2 -->
+  <line x1="600" y1="400" x2="600" y2="440" stroke="#444" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Phase 2: PRÉ-VENDA -->
+  <g transform="translate(40, 450)">
+    <rect x="0" y="0" width="1120" height="180" rx="14" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.8"/>
+    <text x="20" y="30" font-size="16" font-weight="700" fill="#085041">2. PRÉ-VENDA E PROPOSTA</text>
+    <text x="20" y="50" font-size="12" fill="#0F6E56">Transformar interesse em proposta aprovada</text>
+
+    <g transform="translate(20, 70)">
+      <rect x="0" y="0" width="170" height="90" rx="8" fill="#FFFFFF" stroke="#0F6E56" stroke-width="0.5"/>
+      <text x="85" y="22" text-anchor="middle" font-size="12" font-weight="600" fill="#085041">Discovery</text>
+      <text x="85" y="42" text-anchor="middle" font-size="10" fill="#5F5E5A">Entender o problema</text>
+      <text x="85" y="56" text-anchor="middle" font-size="10" fill="#5F5E5A">de negócio</text>
+      <text x="85" y="78" text-anchor="middle" font-size="9" fill="#888780">Reunião 60min</text>
+    </g>
+    <g transform="translate(210, 70)">
+      <rect x="0" y="0" width="170" height="90" rx="8" fill="#FFFFFF" stroke="#0F6E56" stroke-width="0.5"/>
+      <text x="85" y="22" text-anchor="middle" font-size="12" font-weight="600" fill="#085041">Levantamento</text>
+      <text x="85" y="42" text-anchor="middle" font-size="10" fill="#5F5E5A">Requisitos,</text>
+      <text x="85" y="56" text-anchor="middle" font-size="10" fill="#5F5E5A">integrações, volumes</text>
+      <text x="85" y="78" text-anchor="middle" font-size="9" fill="#888780">Documento técnico</text>
+    </g>
+    <g transform="translate(400, 70)">
+      <rect x="0" y="0" width="170" height="90" rx="8" fill="#FFFFFF" stroke="#0F6E56" stroke-width="0.5"/>
+      <text x="85" y="22" text-anchor="middle" font-size="12" font-weight="600" fill="#085041">Estimativa</text>
+      <text x="85" y="42" text-anchor="middle" font-size="10" fill="#5F5E5A">Esforço + buffer</text>
+      <text x="85" y="56" text-anchor="middle" font-size="10" fill="#5F5E5A">de 20–30%</text>
+      <text x="85" y="78" text-anchor="middle" font-size="9" fill="#888780">Histórico ajuda</text>
+    </g>
+    <g transform="translate(590, 70)">
+      <rect x="0" y="0" width="170" height="90" rx="8" fill="#FFFFFF" stroke="#0F6E56" stroke-width="0.5"/>
+      <text x="85" y="22" text-anchor="middle" font-size="12" font-weight="600" fill="#085041">Proposta</text>
+      <text x="85" y="42" text-anchor="middle" font-size="10" fill="#5F5E5A">Escopo, prazos,</text>
+      <text x="85" y="56" text-anchor="middle" font-size="10" fill="#5F5E5A">valor, premissas</text>
+      <text x="85" y="78" text-anchor="middle" font-size="9" fill="#888780">Template padrão</text>
+    </g>
+    <g transform="translate(780, 70)">
+      <rect x="0" y="0" width="170" height="90" rx="8" fill="#FFFFFF" stroke="#0F6E56" stroke-width="0.5"/>
+      <text x="85" y="22" text-anchor="middle" font-size="12" font-weight="600" fill="#085041">Negociação</text>
+      <text x="85" y="42" text-anchor="middle" font-size="10" fill="#5F5E5A">Flexibilizar escopo,</text>
+      <text x="85" y="56" text-anchor="middle" font-size="10" fill="#5F5E5A">não preço</text>
+      <text x="85" y="78" text-anchor="middle" font-size="9" fill="#888780">Aprovação formal</text>
+    </g>
+    <g transform="translate(940, 70)">
+      <circle cx="80" cy="45" r="42" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1"/>
+      <text x="80" y="42" text-anchor="middle" font-size="12" font-weight="700" fill="#085041">Proposta</text>
+      <text x="80" y="58" text-anchor="middle" font-size="12" font-weight="700" fill="#085041">aprovada</text>
+    </g>
+  </g>
+
+  <!-- Arrow 2 -> 3 -->
+  <line x1="600" y1="650" x2="600" y2="690" stroke="#444" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Phase 3: CONTRATAÇÃO -->
+  <g transform="translate(40, 700)">
+    <rect x="0" y="0" width="1120" height="160" rx="14" fill="#FAEEDA" stroke="#854F0B" stroke-width="0.8"/>
+    <text x="20" y="30" font-size="16" font-weight="700" fill="#633806">3. CONTRATAÇÃO E ONBOARDING</text>
+    <text x="20" y="50" font-size="12" fill="#854F0B">Formalizar engajamento e preparar terreno para execução</text>
+    <text x="20" y="68" font-size="10" font-style="italic" fill="#854F0B">⚠ Etapa contratual: delegar a advogado quando crescer</text>
+
+    <g transform="translate(20, 78)">
+      <rect x="0" y="0" width="220" height="70" rx="8" fill="#FFFFFF" stroke="#854F0B" stroke-width="0.5"/>
+      <text x="110" y="22" text-anchor="middle" font-size="12" font-weight="600" fill="#633806">Contrato &amp; assinatura</text>
+      <text x="110" y="42" text-anchor="middle" font-size="10" fill="#5F5E5A">Assinatura digital,</text>
+      <text x="110" y="56" text-anchor="middle" font-size="10" fill="#5F5E5A">adiantamento recebido</text>
+    </g>
+    <g transform="translate(260, 78)">
+      <rect x="0" y="0" width="220" height="70" rx="8" fill="#FFFFFF" stroke="#854F0B" stroke-width="0.5"/>
+      <text x="110" y="22" text-anchor="middle" font-size="12" font-weight="600" fill="#633806">Kickoff interno</text>
+      <text x="110" y="42" text-anchor="middle" font-size="10" fill="#5F5E5A">Alinhar time, stack,</text>
+      <text x="110" y="56" text-anchor="middle" font-size="10" fill="#5F5E5A">cerimônias, milestones</text>
+    </g>
+    <g transform="translate(500, 78)">
+      <rect x="0" y="0" width="220" height="70" rx="8" fill="#FFFFFF" stroke="#854F0B" stroke-width="0.5"/>
+      <text x="110" y="22" text-anchor="middle" font-size="12" font-weight="600" fill="#633806">Kickoff com cliente</text>
+      <text x="110" y="42" text-anchor="middle" font-size="10" fill="#5F5E5A">Apresentar metodologia,</text>
+      <text x="110" y="56" text-anchor="middle" font-size="10" fill="#5F5E5A">canais, expectativas</text>
+    </g>
+    <g transform="translate(740, 78)">
+      <rect x="0" y="0" width="220" height="70" rx="8" fill="#FFFFFF" stroke="#854F0B" stroke-width="0.5"/>
+      <text x="110" y="22" text-anchor="middle" font-size="12" font-weight="600" fill="#633806">Setup de ferramentas</text>
+      <text x="110" y="42" text-anchor="middle" font-size="10" fill="#5F5E5A">Repo, Jira/Linear,</text>
+      <text x="110" y="56" text-anchor="middle" font-size="10" fill="#5F5E5A">ambientes dev/staging</text>
+    </g>
+    <g transform="translate(980, 78)">
+      <circle cx="60" cy="35" r="32" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1"/>
+      <text x="60" y="34" text-anchor="middle" font-size="11" font-weight="700" fill="#085041">Projeto</text>
+      <text x="60" y="48" text-anchor="middle" font-size="11" font-weight="700" fill="#085041">iniciado</text>
+    </g>
+  </g>
+
+  <!-- Arrow 3 -> 4 -->
+  <line x1="600" y1="880" x2="600" y2="920" stroke="#444" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Phase 4: EXECUÇÃO -->
+  <g transform="translate(40, 930)">
+    <rect x="0" y="0" width="1120" height="200" rx="14" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.8"/>
+    <text x="20" y="30" font-size="16" font-weight="700" fill="#3C3489">4. DESENVOLVIMENTO E EXECUÇÃO</text>
+    <text x="20" y="50" font-size="12" fill="#534AB7">Ciclo central — entregas incrementais com controle de qualidade</text>
+
+    <!-- Sprint cycle -->
+    <g transform="translate(20, 70)">
+      <rect x="0" y="0" width="170" height="110" rx="8" fill="#FFFFFF" stroke="#534AB7" stroke-width="0.5"/>
+      <text x="85" y="22" text-anchor="middle" font-size="12" font-weight="600" fill="#3C3489">Refinamento</text>
+      <text x="85" y="42" text-anchor="middle" font-size="10" fill="#5F5E5A">Épicos →</text>
+      <text x="85" y="56" text-anchor="middle" font-size="10" fill="#5F5E5A">histórias com</text>
+      <text x="85" y="70" text-anchor="middle" font-size="10" fill="#5F5E5A">aceite claro</text>
+      <text x="85" y="94" text-anchor="middle" font-size="9" fill="#888780">Story points</text>
+    </g>
+    <g transform="translate(210, 70)">
+      <rect x="0" y="0" width="170" height="110" rx="8" fill="#FFFFFF" stroke="#534AB7" stroke-width="0.5"/>
+      <text x="85" y="22" text-anchor="middle" font-size="12" font-weight="600" fill="#3C3489">Sprint planning</text>
+      <text x="85" y="42" text-anchor="middle" font-size="10" fill="#5F5E5A">Selecionar</text>
+      <text x="85" y="56" text-anchor="middle" font-size="10" fill="#5F5E5A">histórias,</text>
+      <text x="85" y="70" text-anchor="middle" font-size="10" fill="#5F5E5A">meta do sprint</text>
+      <text x="85" y="94" text-anchor="middle" font-size="9" fill="#888780">1–2 semanas</text>
+    </g>
+    <g transform="translate(400, 70)">
+      <rect x="0" y="0" width="170" height="110" rx="8" fill="#FFFFFF" stroke="#534AB7" stroke-width="0.5"/>
+      <text x="85" y="22" text-anchor="middle" font-size="12" font-weight="600" fill="#3C3489">Desenvolvimento</text>
+      <text x="85" y="42" text-anchor="middle" font-size="10" fill="#5F5E5A">GitFlow, PRs,</text>
+      <text x="85" y="56" text-anchor="middle" font-size="10" fill="#5F5E5A">code review,</text>
+      <text x="85" y="70" text-anchor="middle" font-size="10" fill="#5F5E5A">commits convenc.</text>
+      <text x="85" y="94" text-anchor="middle" font-size="9" fill="#888780">Daily 15min</text>
+    </g>
+    <g transform="translate(590, 70)">
+      <rect x="0" y="0" width="170" height="110" rx="8" fill="#FFFFFF" stroke="#534AB7" stroke-width="0.5"/>
+      <text x="85" y="22" text-anchor="middle" font-size="12" font-weight="600" fill="#3C3489">Testes &amp; QA</text>
+      <text x="85" y="42" text-anchor="middle" font-size="10" fill="#5F5E5A">Unitários,</text>
+      <text x="85" y="56" text-anchor="middle" font-size="10" fill="#5F5E5A">integração,</text>
+      <text x="85" y="70" text-anchor="middle" font-size="10" fill="#5F5E5A">QA em staging</text>
+      <text x="85" y="94" text-anchor="middle" font-size="9" fill="#888780">Coverage &gt; 70%</text>
+    </g>
+    <g transform="translate(780, 70)">
+      <rect x="0" y="0" width="170" height="110" rx="8" fill="#FFFFFF" stroke="#534AB7" stroke-width="0.5"/>
+      <text x="85" y="22" text-anchor="middle" font-size="12" font-weight="600" fill="#3C3489">Review &amp; retro</text>
+      <text x="85" y="42" text-anchor="middle" font-size="10" fill="#5F5E5A">Demo ao</text>
+      <text x="85" y="56" text-anchor="middle" font-size="10" fill="#5F5E5A">cliente,</text>
+      <text x="85" y="70" text-anchor="middle" font-size="10" fill="#5F5E5A">retro interna</text>
+      <text x="85" y="94" text-anchor="middle" font-size="9" fill="#888780">Melhoria contínua</text>
+    </g>
+    <g transform="translate(970, 70)">
+      <rect x="0" y="0" width="130" height="110" rx="8" fill="#FAC775" stroke="#854F0B" stroke-width="0.5"/>
+      <text x="65" y="22" text-anchor="middle" font-size="12" font-weight="600" fill="#633806">Change</text>
+      <text x="65" y="38" text-anchor="middle" font-size="12" font-weight="600" fill="#633806">Request</text>
+      <text x="65" y="60" text-anchor="middle" font-size="10" fill="#854F0B">Mudança de</text>
+      <text x="65" y="74" text-anchor="middle" font-size="10" fill="#854F0B">escopo formal</text>
+      <text x="65" y="94" text-anchor="middle" font-size="9" fill="#854F0B">Aprovação obrig.</text>
+    </g>
+
+    <!-- Loop arrow -->
+    <path d="M 105 187 Q 60 195 60 60 Q 60 50 105 50" fill="none" stroke="#534AB7" stroke-width="1.2" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+    <text x="35" y="125" font-size="9" fill="#534AB7" transform="rotate(-90 35 125)">repete cada sprint</text>
+  </g>
+
+  <!-- Arrow 4 -> 5 -->
+  <line x1="600" y1="1150" x2="600" y2="1190" stroke="#444" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Phase 5: ENTREGA -->
+  <g transform="translate(40, 1200)">
+    <rect x="0" y="0" width="1120" height="160" rx="14" fill="#FAECE7" stroke="#993C1D" stroke-width="0.8"/>
+    <text x="20" y="30" font-size="16" font-weight="700" fill="#712B13">5. ENTREGA E DEPLOY</text>
+    <text x="20" y="50" font-size="12" fill="#993C1D">Produto em produção, documentado e operável</text>
+
+    <g transform="translate(20, 70)">
+      <rect x="0" y="0" width="200" height="80" rx="8" fill="#FFFFFF" stroke="#993C1D" stroke-width="0.5"/>
+      <text x="100" y="22" text-anchor="middle" font-size="12" font-weight="600" fill="#712B13">Homologação</text>
+      <text x="100" y="42" text-anchor="middle" font-size="10" fill="#5F5E5A">Cliente valida</text>
+      <text x="100" y="56" text-anchor="middle" font-size="10" fill="#5F5E5A">na staging</text>
+    </g>
+    <g transform="translate(240, 70)">
+      <rect x="0" y="0" width="200" height="80" rx="8" fill="#FFFFFF" stroke="#993C1D" stroke-width="0.5"/>
+      <text x="100" y="22" text-anchor="middle" font-size="12" font-weight="600" fill="#712B13">Punch list</text>
+      <text x="100" y="42" text-anchor="middle" font-size="10" fill="#5F5E5A">Ajustes finais,</text>
+      <text x="100" y="56" text-anchor="middle" font-size="10" fill="#5F5E5A">sem novas features</text>
+    </g>
+    <g transform="translate(460, 70)">
+      <rect x="0" y="0" width="200" height="80" rx="8" fill="#FFFFFF" stroke="#993C1D" stroke-width="0.5"/>
+      <text x="100" y="22" text-anchor="middle" font-size="12" font-weight="600" fill="#712B13">Deploy produção</text>
+      <text x="100" y="42" text-anchor="middle" font-size="10" fill="#5F5E5A">Checklist, backup,</text>
+      <text x="100" y="56" text-anchor="middle" font-size="10" fill="#5F5E5A">smoke tests</text>
+    </g>
+    <g transform="translate(680, 70)">
+      <rect x="0" y="0" width="200" height="80" rx="8" fill="#FFFFFF" stroke="#993C1D" stroke-width="0.5"/>
+      <text x="100" y="22" text-anchor="middle" font-size="12" font-weight="600" fill="#712B13">Treinamento</text>
+      <text x="100" y="42" text-anchor="middle" font-size="10" fill="#5F5E5A">Usuários finais,</text>
+      <text x="100" y="56" text-anchor="middle" font-size="10" fill="#5F5E5A">documentação</text>
+    </g>
+    <g transform="translate(900, 70)">
+      <rect x="0" y="0" width="200" height="80" rx="8" fill="#FFFFFF" stroke="#993C1D" stroke-width="0.5"/>
+      <text x="100" y="22" text-anchor="middle" font-size="12" font-weight="600" fill="#712B13">Aceite formal</text>
+      <text x="100" y="42" text-anchor="middle" font-size="10" fill="#5F5E5A">Documento assinado,</text>
+      <text x="100" y="56" text-anchor="middle" font-size="10" fill="#5F5E5A">saldo liberado</text>
+    </g>
+  </g>
+
+  <!-- Arrow 5 -> 6 -->
+  <line x1="600" y1="1380" x2="600" y2="1420" stroke="#444" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Phase 6: PÓS-VENDA -->
+  <g transform="translate(40, 1430)">
+    <rect x="0" y="0" width="1120" height="180" rx="14" fill="#EAF3DE" stroke="#3B6D11" stroke-width="0.8"/>
+    <text x="20" y="30" font-size="16" font-weight="700" fill="#27500A">6. PÓS-VENDA E RELACIONAMENTO</text>
+    <text x="20" y="50" font-size="12" fill="#3B6D11">Manter, expandir e transformar clientes em promotores</text>
+
+    <g transform="translate(20, 70)">
+      <rect x="0" y="0" width="200" height="90" rx="8" fill="#FFFFFF" stroke="#3B6D11" stroke-width="0.5"/>
+      <text x="100" y="22" text-anchor="middle" font-size="12" font-weight="600" fill="#27500A">Suporte &amp; SLA</text>
+      <text x="100" y="42" text-anchor="middle" font-size="10" fill="#5F5E5A">P1: 4h • P2: 24h</text>
+      <text x="100" y="56" text-anchor="middle" font-size="10" fill="#5F5E5A">P3: backlog</text>
+      <text x="100" y="78" text-anchor="middle" font-size="9" fill="#888780">Canal dedicado</text>
+    </g>
+    <g transform="translate(240, 70)">
+      <rect x="0" y="0" width="200" height="90" rx="8" fill="#FFFFFF" stroke="#3B6D11" stroke-width="0.5"/>
+      <text x="100" y="22" text-anchor="middle" font-size="12" font-weight="600" fill="#27500A">NPS &amp; pesquisa</text>
+      <text x="100" y="42" text-anchor="middle" font-size="10" fill="#5F5E5A">30 dias + a cada</text>
+      <text x="100" y="56" text-anchor="middle" font-size="10" fill="#5F5E5A">6 meses</text>
+      <text x="100" y="78" text-anchor="middle" font-size="9" fill="#888780">Ação com detratores</text>
+    </g>
+    <g transform="translate(460, 70)">
+      <rect x="0" y="0" width="200" height="90" rx="8" fill="#FFFFFF" stroke="#3B6D11" stroke-width="0.5"/>
+      <text x="100" y="22" text-anchor="middle" font-size="12" font-weight="600" fill="#27500A">Review trimestral</text>
+      <text x="100" y="42" text-anchor="middle" font-size="10" fill="#5F5E5A">QBR: resultados,</text>
+      <text x="100" y="56" text-anchor="middle" font-size="10" fill="#5F5E5A">ROI, roadmap</text>
+      <text x="100" y="78" text-anchor="middle" font-size="9" fill="#888780">Oportunidades</text>
+    </g>
+    <g transform="translate(680, 70)">
+      <rect x="0" y="0" width="200" height="90" rx="8" fill="#FFFFFF" stroke="#3B6D11" stroke-width="0.5"/>
+      <text x="100" y="22" text-anchor="middle" font-size="12" font-weight="600" fill="#27500A">Expansão</text>
+      <text x="100" y="42" text-anchor="middle" font-size="10" fill="#5F5E5A">Novas features,</text>
+      <text x="100" y="56" text-anchor="middle" font-size="10" fill="#5F5E5A">módulos, integrações</text>
+      <text x="100" y="78" text-anchor="middle" font-size="9" fill="#888780">Upsell e cross-sell</text>
+    </g>
+    <g transform="translate(900, 70)">
+      <rect x="0" y="0" width="200" height="90" rx="8" fill="#FFFFFF" stroke="#3B6D11" stroke-width="0.5"/>
+      <text x="100" y="22" text-anchor="middle" font-size="12" font-weight="600" fill="#27500A">Case &amp; indicação</text>
+      <text x="100" y="42" text-anchor="middle" font-size="10" fill="#5F5E5A">Promotores (NPS ≥ 9)</text>
+      <text x="100" y="56" text-anchor="middle" font-size="10" fill="#5F5E5A">geram novos leads</text>
+      <text x="100" y="78" text-anchor="middle" font-size="9" fill="#888780">Volta à fase 1</text>
+    </g>
+  </g>
+
+  <!-- Loop arrow back to start -->
+  <path d="M 1100 1520 Q 1170 1520 1170 200 Q 1170 130 1100 130" fill="none" stroke="#3B6D11" stroke-width="1.5" stroke-dasharray="6,4" marker-end="url(#arr)"/>
+  <text x="1145" y="850" font-size="11" font-weight="600" fill="#3B6D11" transform="rotate(-90 1145 850)">Clientes promotores alimentam novos leads</text>
+
+  <!-- Footer -->
+  <text x="600" y="1660" text-anchor="middle" font-size="10" fill="#888780">Projeto Raquel AGS — Manual de Processos da Software House (versão 1.0)</text>
+</svg>
