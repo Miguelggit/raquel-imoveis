@@ -2,6 +2,7 @@ spring:
   application:
     name: raquel-imoveis-api
 
+
   profiles:
     default: local
 
