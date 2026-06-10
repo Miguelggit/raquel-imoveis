@@ -63,7 +63,7 @@ public class FotoService {
     public List<FotoAgenciamentoResponseDTO> findAllPhotosByAgenciamento(Long id){
          return mapper.converterListModelParaListDTO(repository.findByAgenciamentoModelId(id));
     }
-    public FotoArquivoDTO showPhoto(String nomeArmazenado) throws IOException {
+    public FotoArquivoDTO showPhoto( String nomeArmazenado) throws IOException {
         FotoModel targetPhoto = repository.findByNomeArmazenado(nomeArmazenado); // Busca a Foto pelo nomeArmazenado dela
         if(targetPhoto == null){
             throw new ArquivoVazioException("O arquivo que você estava buscando não existe :(");
