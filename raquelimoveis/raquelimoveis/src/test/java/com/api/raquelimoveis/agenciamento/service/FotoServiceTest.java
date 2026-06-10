@@ -1,13 +1,14 @@
 package com.api.raquelimoveis.agenciamento.service;
 
-import com.api.raquelimoveis.agenciamento.controller.dto.FotoAgenciamentoResponseDTO;
+import com.api.raquelimoveis.foto.dto.FotoAgenciamentoResponseDTO;
 import com.api.raquelimoveis.agenciamento.database.model.AgenciamentoModel;
-import com.api.raquelimoveis.agenciamento.database.model.FotoModel;
-import com.api.raquelimoveis.agenciamento.database.repository.FotoRepository;
-import com.api.raquelimoveis.agenciamento.exceptions.ArquivoVazioException;
-import com.api.raquelimoveis.agenciamento.exceptions.FormatoInvalidoException;
-import com.api.raquelimoveis.agenciamento.exceptions.IdentificadorNaoEncontradoException;
-import com.api.raquelimoveis.agenciamento.mapper.FotoMapper;
+import com.api.raquelimoveis.foto.database.model.FotoModel;
+import com.api.raquelimoveis.foto.database.repository.FotoRepository;
+import com.api.raquelimoveis.foto.service.FotoService;
+import exceptions.ArquivoVazioException;
+import exceptions.FormatoInvalidoException;
+import exceptions.IdentificadorNaoEncontradoException;
+import com.api.raquelimoveis.foto.mapper.FotoMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
