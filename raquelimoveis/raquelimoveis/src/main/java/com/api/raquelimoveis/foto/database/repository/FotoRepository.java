@@ -1,6 +1,6 @@
-package com.api.raquelimoveis.agenciamento.database.repository;
+package com.api.raquelimoveis.foto.database.repository;
 
-import com.api.raquelimoveis.agenciamento.database.model.FotoModel;
+import com.api.raquelimoveis.foto.database.model.FotoModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

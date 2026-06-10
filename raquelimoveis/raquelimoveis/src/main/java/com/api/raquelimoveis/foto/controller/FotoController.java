@@ -1,8 +1,8 @@
-package com.api.raquelimoveis.agenciamento.controller;
+package com.api.raquelimoveis.foto.controller;
 
-import com.api.raquelimoveis.agenciamento.controller.dto.FotoAgenciamentoResponseDTO;
-import com.api.raquelimoveis.agenciamento.controller.dto.FotoArquivoDTO;
-import com.api.raquelimoveis.agenciamento.service.FotoService;
+import com.api.raquelimoveis.foto.dto.FotoAgenciamentoResponseDTO;
+import com.api.raquelimoveis.foto.dto.FotoArquivoDTO;
+import com.api.raquelimoveis.foto.service.FotoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
