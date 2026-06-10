@@ -1,6 +1,6 @@
 package com.api.raquelimoveis.usuario.database.model;
 
-import com.api.raquelimoveis.usuario.enums.UsuarioRole;
+import com.api.raquelimoveis.usuario.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -20,7 +21,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UsuarioModel implements UserDetails {
+public class UsuarioModel {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -30,32 +31,17 @@ public class UsuarioModel implements UserDetails {
     private String email;
     @Column(nullable = false)
     private String senha;
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private UsuarioRole role;
+    private Role role;
     @Column(nullable = false)
     private Boolean ativo = true;
+    @Column(name = "DT_HR_CRIADO")
     private LocalDateTime ciradoEM;
     @PrePersist
     protected void onCreate(){
         this.ciradoEM = LocalDateTime.now();
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        if(role.getRole().equals(UsuarioRole.ADMIN)){
-            return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"),
-                    new SimpleGrantedAuthority("ROLE_USER"));
-        }
-        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
-    }
 
-    @Override
-    public @Nullable String getPassword() {
-        return email;
-    }
-
-    @Override
-    public String getUsername() {
-        return senha;
-    }
 }
