@@ -2,6 +2,7 @@ package com.api.raquelimoveis.agenciamento.database.model;
 
 import com.api.raquelimoveis.agenciamento.enums.StatusAgenciamentos;
 import com.api.raquelimoveis.agenciamento.enums.TipoImovel;
+import com.api.raquelimoveis.foto.database.model.FotoModel;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
