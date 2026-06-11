@@ -19,7 +19,7 @@ public class AuthService {
     private final   UserDetailsServiceImpl userDetailsService;
 
     public final LoginResponseDTO authLogin(String email, String password){
-        UsuarioModel userByEmail = repository.findByEmail(email).get();
+        UsuarioModel userByEmail = userDetailsService.findEmail(email);
         if(!encoder.matches(password, userByEmail.getSenha())){
             throw new BadCredentialsException("Usuario e/ou senha estão invalidos!!");
         }
