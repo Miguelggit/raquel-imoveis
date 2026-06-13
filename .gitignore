@@ -40,3 +40,4 @@ frontend/.env.*
 # Docker
 *.pid
 .env
+.env
