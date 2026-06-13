@@ -1,6 +1,6 @@
 package exceptions;
-import com.api.raquelimoveis.agenciamento.controller.dto.ErrorResponseDTO;
-import com.api.raquelimoveis.agenciamento.controller.dto.FieldErrorDTO;
+import com.api.agenciamento.controller.dto.ErrorResponseDTO;
+import com.api.agenciamento.controller.dto.FieldErrorDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

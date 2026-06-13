@@ -1,8 +1,8 @@
-package com.api.raquelimoveis.agenciamento.mapper;
+package com.api.agenciamento.mapper;
 
-import com.api.raquelimoveis.agenciamento.controller.dto.AgenciamentoPageResponseDTO;
-import com.api.raquelimoveis.agenciamento.database.model.AgenciamentoModel;
-import com.api.raquelimoveis.agenciamento.enums.TipoImovel;
+import com.api.agenciamento.controller.dto.AgenciamentoPageResponseDTO;
+import com.api.agenciamento.database.model.AgenciamentoModel;
+import com.api.agenciamento.enums.TipoImovel;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -1,10 +1,8 @@
-package com.api.raquelimoveis.usuario.service;
+package com.api.usuario.service;
 
-import com.api.raquelimoveis.usuario.database.model.UsuarioModel;
-import com.api.raquelimoveis.usuario.database.repository.UsuarioRepository;
-import com.api.raquelimoveis.usuario.dto.LoginResponseDTO;
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
+import com.api.usuario.database.model.UsuarioModel;
+import com.api.usuario.database.repository.UsuarioRepository;
+import com.api.usuario.dto.LoginResponseDTO;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import exceptions.IdentificadorNaoEncontradoException;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,8 +16,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
-
-import java.time.Instant;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;

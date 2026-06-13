@@ -1,17 +1,17 @@
-package com.api.raquelimoveis.agenciamento.service;
+package com.api.agenciamento.service;
 
-import com.api.raquelimoveis.agenciamento.controller.dto.AgenciamentoPageResponseDTO;
-import com.api.raquelimoveis.agenciamento.controller.dto.AgenciamentoRequestDTO;
-import com.api.raquelimoveis.agenciamento.controller.dto.AgenciamentoResponseDTO;
-import com.api.raquelimoveis.agenciamento.controller.dto.AgenciamentoResponseSemDetalhesDTO;
-import com.api.raquelimoveis.agenciamento.database.model.AgenciamentoModel;
-import com.api.raquelimoveis.agenciamento.database.repository.AgenciamentoRepository;
-import com.api.raquelimoveis.agenciamento.enums.StatusAgenciamentos;
-import com.api.raquelimoveis.agenciamento.enums.TipoImovel;
+import com.api.agenciamento.controller.dto.AgenciamentoPageResponseDTO;
+import com.api.agenciamento.controller.dto.AgenciamentoRequestDTO;
+import com.api.agenciamento.controller.dto.AgenciamentoResponseDTO;
+import com.api.agenciamento.controller.dto.AgenciamentoResponseSemDetalhesDTO;
+import com.api.agenciamento.database.model.AgenciamentoModel;
+import com.api.agenciamento.database.repository.AgenciamentoRepository;
+import com.api.agenciamento.enums.StatusAgenciamentos;
+import com.api.agenciamento.enums.TipoImovel;
 import exceptions.CadastroDeStatusException;
 import exceptions.IdentificadorNaoEncontradoException;
 import exceptions.InativarAgenciamentoException;
-import com.api.raquelimoveis.agenciamento.mapper.AgenciamentoMapper;
+import com.api.agenciamento.mapper.AgenciamentoMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
