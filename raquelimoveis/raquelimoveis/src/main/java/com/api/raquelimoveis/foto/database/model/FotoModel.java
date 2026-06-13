@@ -1,5 +1,6 @@
-package com.api.raquelimoveis.agenciamento.database.model;
+package com.api.raquelimoveis.foto.database.model;
 
+import com.api.raquelimoveis.agenciamento.database.model.AgenciamentoModel;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;

@@ -1,4 +1,4 @@
-package com.api.raquelimoveis.agenciamento.controller.dto;
+package com.api.raquelimoveis.foto.dto;
 import java.time.LocalDateTime;
 
 public class FotoAgenciamentoResponseDTO {

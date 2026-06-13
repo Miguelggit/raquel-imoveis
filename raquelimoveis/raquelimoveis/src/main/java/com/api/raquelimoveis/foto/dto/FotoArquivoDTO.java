@@ -1,9 +1,7 @@
-package com.api.raquelimoveis.agenciamento.controller.dto;
+package com.api.raquelimoveis.foto.dto;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-
-import javax.print.attribute.standard.Media;
 
 public class FotoArquivoDTO {
     private byte[] conteudo;

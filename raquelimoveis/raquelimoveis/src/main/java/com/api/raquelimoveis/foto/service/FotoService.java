@@ -1,13 +1,14 @@
-package com.api.raquelimoveis.agenciamento.service;
-import com.api.raquelimoveis.agenciamento.controller.dto.FotoAgenciamentoResponseDTO;
-import com.api.raquelimoveis.agenciamento.controller.dto.FotoArquivoDTO;
+package com.api.raquelimoveis.foto.service;
+import com.api.raquelimoveis.agenciamento.service.AgenciamentoService;
+import com.api.raquelimoveis.foto.dto.FotoAgenciamentoResponseDTO;
+import com.api.raquelimoveis.foto.dto.FotoArquivoDTO;
 import com.api.raquelimoveis.agenciamento.database.model.AgenciamentoModel;
-import com.api.raquelimoveis.agenciamento.database.model.FotoModel;
-import com.api.raquelimoveis.agenciamento.database.repository.FotoRepository;
-import com.api.raquelimoveis.agenciamento.exceptions.ArquivoVazioException;
-import com.api.raquelimoveis.agenciamento.exceptions.FormatoInvalidoException;
-import com.api.raquelimoveis.agenciamento.exceptions.IdentificadorNaoEncontradoException;
-import com.api.raquelimoveis.agenciamento.mapper.FotoMapper;
+import com.api.raquelimoveis.foto.database.model.FotoModel;
+import com.api.raquelimoveis.foto.database.repository.FotoRepository;
+import exceptions.ArquivoVazioException;
+import exceptions.FormatoInvalidoException;
+import exceptions.IdentificadorNaoEncontradoException;
+import com.api.raquelimoveis.foto.mapper.FotoMapper;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -63,7 +64,7 @@ public class FotoService {
     public List<FotoAgenciamentoResponseDTO> findAllPhotosByAgenciamento(Long id){
          return mapper.converterListModelParaListDTO(repository.findByAgenciamentoModelId(id));
     }
-    public FotoArquivoDTO showPhoto(String nomeArmazenado) throws IOException {
+    public FotoArquivoDTO showPhoto( String nomeArmazenado) throws IOException {
         FotoModel targetPhoto = repository.findByNomeArmazenado(nomeArmazenado); // Busca a Foto pelo nomeArmazenado dela
         if(targetPhoto == null){
             throw new ArquivoVazioException("O arquivo que você estava buscando não existe :(");

@@ -1,4 +1,4 @@
-package com.api.raquelimoveis.agenciamento.exceptions;
+package exceptions;
 import com.api.raquelimoveis.agenciamento.controller.dto.ErrorResponseDTO;
 import com.api.raquelimoveis.agenciamento.controller.dto.FieldErrorDTO;
 import jakarta.servlet.http.HttpServletRequest;

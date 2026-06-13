@@ -1,7 +1,7 @@
-package com.api.raquelimoveis.agenciamento.mapper;
+package com.api.raquelimoveis.foto.mapper;
 
-import com.api.raquelimoveis.agenciamento.controller.dto.FotoAgenciamentoResponseDTO;
-import com.api.raquelimoveis.agenciamento.database.model.FotoModel;
+import com.api.raquelimoveis.foto.dto.FotoAgenciamentoResponseDTO;
+import com.api.raquelimoveis.foto.database.model.FotoModel;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

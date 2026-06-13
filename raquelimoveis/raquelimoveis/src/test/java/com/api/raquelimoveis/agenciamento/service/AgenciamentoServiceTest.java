@@ -8,13 +8,11 @@ import com.api.raquelimoveis.agenciamento.database.model.AgenciamentoModel;
 import com.api.raquelimoveis.agenciamento.database.repository.AgenciamentoRepository;
 import com.api.raquelimoveis.agenciamento.enums.StatusAgenciamentos;
 import com.api.raquelimoveis.agenciamento.enums.TipoImovel;
-import com.api.raquelimoveis.agenciamento.exceptions.CadastroDeStatusException;
-import com.api.raquelimoveis.agenciamento.exceptions.IdentificadorNaoEncontradoException;
-import com.api.raquelimoveis.agenciamento.exceptions.InativarAgenciamentoException;
+import exceptions.CadastroDeStatusException;
+import exceptions.IdentificadorNaoEncontradoException;
+import exceptions.InativarAgenciamentoException;
 import com.api.raquelimoveis.agenciamento.mapper.AgenciamentoMapper;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
@@ -33,7 +31,6 @@ import java.util.Optional;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
