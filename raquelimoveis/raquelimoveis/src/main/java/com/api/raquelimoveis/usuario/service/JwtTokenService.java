@@ -13,7 +13,7 @@ import java.util.Date;
 @Service
 public class JwtTokenService {
 
-    @Value("${app.jwt.secretKey}")
+    @Value("${app.jwt.secret}")
     private String secretKey;
     private final String ISSUER = "raquel-imoveis-api";
 
