@@ -18,7 +18,7 @@ spring:
       mode: never
 app:
   jwt:
-    secretKey: K7gNU3sdo+O!L0wN$hqo@VWhr3g6#@$!s=i!#@%MD!#I(¨%!@#MN;
+    secret: K7gNU3sdo+O!L0wN$hqo@VWhr3g6#@$!s=i!#@%MD!#I(¨%!@#MN;
 
 management:
   endpoints:
