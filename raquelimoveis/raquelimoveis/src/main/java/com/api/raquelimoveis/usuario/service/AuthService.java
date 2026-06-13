@@ -18,7 +18,7 @@ public class AuthService {
     private final   PasswordEncoder encoder;
     private final   UserDetailsServiceImpl userDetailsService;
 
-    public final LoginResponseDTO authLogin(String email, String password){
+    public LoginResponseDTO authLogin(String email, String password){
         UsuarioModel userByEmail = userDetailsService.findEmail(email);
         if(!encoder.matches(password, userByEmail.getSenha())){
             throw new BadCredentialsException("Usuario e/ou senha estão invalidos!!");
