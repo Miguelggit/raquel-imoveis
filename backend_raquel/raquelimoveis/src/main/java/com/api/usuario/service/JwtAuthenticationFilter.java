@@ -1,5 +1,6 @@
 package com.api.usuario.service;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,21 +30,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         String token = header.substring(7);
 
-        String email = tokenService.validationToken(token);
-
-        if(email != null && SecurityContextHolder.getContext().getAuthentication() == null){
-            UserDetails userDetails = userDetailsService.loadUserByUsername(email);
-
-            UsernamePasswordAuthenticationToken authenticationToken = UsernamePasswordAuthenticationToken
-                    .authenticated(
-                        userDetails.getUsername(),
-                        userDetails.getPassword(),
-                        userDetails.getAuthorities()
-                    );
-
-            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+        try {
+            String email = tokenService.validationToken(token);
+            if(email != null && SecurityContextHolder.getContext().getAuthentication() == null){
+                UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+                UsernamePasswordAuthenticationToken authenticationToken = UsernamePasswordAuthenticationToken
+                        .authenticated(
+                                userDetails.getUsername(),
+                                userDetails.getPassword(),
+                                userDetails.getAuthorities()
+                        );
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            }
+        } catch (JWTVerificationException e){
+            System.err.println(e.getMessage());
         }
-
         filterChain.doFilter(request, response);
     }
 
