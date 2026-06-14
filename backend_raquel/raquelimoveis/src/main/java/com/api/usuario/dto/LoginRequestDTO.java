@@ -5,7 +5,7 @@ import lombok.*;
 @Getter
 @Setter
 @AllArgsConstructor
-@RequiredArgsConstructor
+@NoArgsConstructor
 public class LoginRequestDTO {
     private String email;
     private String  senha;
