@@ -1,4 +1,4 @@
-package exceptions;
+package com.api.exceptions;
 import com.api.agenciamento.controller.dto.ErrorResponseDTO;
 import com.api.agenciamento.controller.dto.FieldErrorDTO;
 import jakarta.servlet.http.HttpServletRequest;
