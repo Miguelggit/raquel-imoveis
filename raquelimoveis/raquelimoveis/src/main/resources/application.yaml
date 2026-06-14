@@ -1,9 +1,0 @@
-spring:
-  application:
-    name: raquel-imoveis-api
-
-  profiles:
-    default: local
-
-server:
-  port: ${BACKEND_PORT:8080}
