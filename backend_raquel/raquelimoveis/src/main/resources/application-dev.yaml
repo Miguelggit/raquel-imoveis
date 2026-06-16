@@ -20,7 +20,7 @@ app:
   jwt:
     secret: K7gNU3sdoOL0wNhqo@VWhr3g8914298tmo9u23h78d1672dnBCXAGIOTWYUCVMN;
   upload:
-    dir: ./uploads/fotos
+    dir: ./uploads/fotos/
   cors:
     allowed-origin: http://localhost:5173
 
