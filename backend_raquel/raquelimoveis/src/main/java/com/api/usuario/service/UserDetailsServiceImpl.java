@@ -2,7 +2,7 @@ package com.api.usuario.service;
 
 import com.api.usuario.database.model.UsuarioModel;
 import com.api.usuario.database.repository.UsuarioRepository;
-import exceptions.IdentificadorNaoEncontradoException;
+import com.api.exceptions.IdentificadorNaoEncontradoException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

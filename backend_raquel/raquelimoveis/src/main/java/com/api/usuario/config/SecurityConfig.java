@@ -3,6 +3,7 @@ package com.api.usuario.config;
 import com.api.usuario.service.JwtAuthenticationFilter;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -25,7 +26,8 @@ import java.util.List;
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter authFilter;
-
+    @Value("${app.cors.allowed-origin}")
+    private String localhotsFrontEnd;
     @Bean
     public SecurityFilterChain configPrivilegiesEndpoints(HttpSecurity http) throws Exception {
         http
@@ -49,7 +51,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource(){
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:5173"));
+        config.setAllowedOrigins(List.of(localhotsFrontEnd, "http://localhost:5174"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         config.setAllowCredentials(true);

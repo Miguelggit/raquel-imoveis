@@ -4,7 +4,7 @@ import com.api.usuario.database.model.UsuarioModel;
 import com.api.usuario.database.repository.UsuarioRepository;
 import com.api.usuario.dto.LoginResponseDTO;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import exceptions.IdentificadorNaoEncontradoException;
+import com.api.exceptions.IdentificadorNaoEncontradoException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

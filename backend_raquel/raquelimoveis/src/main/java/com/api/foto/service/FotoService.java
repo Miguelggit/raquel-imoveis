@@ -5,10 +5,11 @@ import com.api.foto.dto.FotoArquivoDTO;
 import com.api.agenciamento.database.model.AgenciamentoModel;
 import com.api.foto.database.model.FotoModel;
 import com.api.foto.database.repository.FotoRepository;
-import exceptions.ArquivoVazioException;
-import exceptions.FormatoInvalidoException;
-import exceptions.IdentificadorNaoEncontradoException;
+import com.api.exceptions.ArquivoVazioException;
+import com.api.exceptions.FormatoInvalidoException;
+import com.api.exceptions.IdentificadorNaoEncontradoException;
 import com.api.foto.mapper.FotoMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -30,7 +31,8 @@ public class FotoService {
     private FotoRepository repository;
     private AgenciamentoService serviceAgenciamento;
     private FotoMapper mapper;
-    private final String uploadDir = "raquelimoveis/src/main/java/uploads/";
+    @Value("${app.upload.dir}")
+    private String uploadDir;
 
     public FotoService(FotoRepository repository, AgenciamentoService serviceAgenciamento, FotoMapper mapper) {
         this.repository = repository;
