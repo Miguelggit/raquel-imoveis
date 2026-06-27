@@ -6,7 +6,7 @@ export default function SellPropertyModal({ aberto, onFechar }: SellModalProps) 
   const enviar = () => {
     if (!nome.trim() || !tel.trim()) return;
     const t = [`Olá Raquel! Quero vender meu imóvel.`, ``, `Nome: ${nome}`, `Telefone: ${tel}`, tipo ? `Tipo: ${tipo}` : "", bairro ? `Bairro: ${bairro}` : "", msg ? `Obs: ${msg}` : ""].filter(Boolean).join("\n");
-    window.open(`https://wa.me/5554999999999?text=${encodeURIComponent(t)}`, "_blank");
+    window.open(`https://wa.me/5554996582058?text=${encodeURIComponent(t)}`, "_blank");
     setOk(true); setTimeout(() => { setOk(false); setNome(""); setTel(""); setTipo(""); setBairro(""); setMsg(""); onFechar(); }, 2000);
   };
   const inp = "w-full px-4 py-3 bg-white border border-gray-200 rounded-sm text-gray-900 text-sm placeholder-gray-300 outline-none focus:border-[#EA580C] transition-colors";

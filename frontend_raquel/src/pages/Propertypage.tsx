@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
 import type { Agenciamento, AgenciamentoResumo, Foto } from "../types";
 import { agenciamentoService, fotoService } from "../services/api";
@@ -10,15 +10,17 @@ export default function PropertyPage() {
   const [imovel, setImovel] = useState<Agenciamento | null>(null);
   const [fotos, setFotos] = useState<Foto[]>([]);
   const [outros, setOutros] = useState<AgenciamentoResumo[]>([]);
-  const [fa, setFa] = useState(0);
+  const [currentIdx, setCurrentIdx] = useState(0);
   const [loading, setLoading] = useState(true);
   const [erro, setErro] = useState(false);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxIdx, setLightboxIdx] = useState(0);
 
   useEffect(() => {
     if (!id) return;
     const n = parseInt(id);
     setLoading(true);
-    setFa(0);
+    setCurrentIdx(0);
 
     Promise.all([
       agenciamentoService.buscarPorId(n),
@@ -33,6 +35,40 @@ export default function PropertyPage() {
       .catch(() => setErro(true))
       .finally(() => setLoading(false));
   }, [id]);
+
+  const prevPhoto = useCallback(
+    () => setCurrentIdx((p) => (p - 1 + fotos.length) % fotos.length),
+    [fotos.length]
+  );
+  const nextPhoto = useCallback(
+    () => setCurrentIdx((p) => (p + 1) % fotos.length),
+    [fotos.length]
+  );
+
+  const openLightbox = useCallback((idx: number) => {
+    setLightboxIdx(idx);
+    setLightboxOpen(true);
+  }, []);
+  const closeLightbox = useCallback(() => setLightboxOpen(false), []);
+  const prevLightbox = useCallback(
+    () => setLightboxIdx((p) => (p - 1 + fotos.length) % fotos.length),
+    [fotos.length]
+  );
+  const nextLightbox = useCallback(
+    () => setLightboxIdx((p) => (p + 1) % fotos.length),
+    [fotos.length]
+  );
+
+  useEffect(() => {
+    if (!lightboxOpen) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "ArrowLeft") prevLightbox();
+      if (e.key === "ArrowRight") nextLightbox();
+      if (e.key === "Escape") closeLightbox();
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [lightboxOpen, prevLightbox, nextLightbox, closeLightbox]);
 
   const fmt = (v: number) =>
     v.toLocaleString("pt-BR", { style: "currency", currency: "BRL", minimumFractionDigits: 0 });
@@ -55,59 +91,168 @@ export default function PropertyPage() {
       </div>
     );
 
-  const mainUrl = fotos.length > 0 ? fotoService.getUrlImagem(fotos[fa].nomeArmazenado) : null;
-
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-[#FFFDF9]">
       {/* ══ GALERIA ══ */}
-      <section className="relative w-full h-[65vh] min-h-[450px] max-h-[650px] bg-gray-100">
-        {mainUrl ? (
+      <section className="group relative w-full h-[72vh] min-h-[500px] max-h-[720px] bg-gray-900 overflow-hidden">
+        {fotos.length === 0 ? (
+          <div className="w-full h-full flex flex-col items-center justify-center bg-gray-100 gap-3">
+            <span className="text-6xl">📷</span>
+            <p className="text-gray-400">Sem fotos disponíveis</p>
+          </div>
+        ) : (
           <>
-            <img src={mainUrl} alt={imovel.titulo} className="w-full h-full object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
+            {/* Stack de imagens com crossfade */}
+            {fotos.map((f, i) => (
+              <img
+                key={f.id}
+                src={fotoService.getUrlImagem(f.nomeArmazenado)}
+                alt={i === currentIdx ? imovel.titulo : ""}
+                className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-700 ease-in-out select-none ${
+                  i === currentIdx ? "opacity-100" : "opacity-0"
+                }`}
+                draggable={false}
+              />
+            ))}
+
+            {/* Gradiente apenas na base para legibilidade das thumbnails */}
+            <div className="absolute bottom-0 left-0 right-0 h-36 bg-gradient-to-t from-black/80 to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+            {/* Setas de navegação */}
             {fotos.length > 1 && (
               <>
                 <button
-                  onClick={() => setFa((p) => (p - 1 + fotos.length) % fotos.length)}
-                  className="absolute left-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/90 border-none rounded-full flex items-center justify-center cursor-pointer text-gray-800 text-xl shadow-md transition-all hover:bg-[#EA580C] hover:text-white"
+                  onClick={prevPhoto}
+                  className="absolute left-5 top-1/2 -translate-y-1/2 z-10 w-11 h-11 bg-black/35 hover:bg-black/65 backdrop-blur-sm border border-solid border-white/25 rounded-full text-white text-2xl flex items-center justify-center cursor-pointer transition-all duration-300 opacity-0 group-hover:opacity-100"
                 >
                   ‹
                 </button>
                 <button
-                  onClick={() => setFa((p) => (p + 1) % fotos.length)}
-                  className="absolute right-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/90 border-none rounded-full flex items-center justify-center cursor-pointer text-gray-800 text-xl shadow-md transition-all hover:bg-[#EA580C] hover:text-white"
+                  onClick={nextPhoto}
+                  className="absolute right-5 top-1/2 -translate-y-1/2 z-10 w-11 h-11 bg-black/35 hover:bg-black/65 backdrop-blur-sm border border-solid border-white/25 rounded-full text-white text-2xl flex items-center justify-center cursor-pointer transition-all duration-300 opacity-0 group-hover:opacity-100"
                 >
                   ›
                 </button>
               </>
             )}
-            <div className="absolute bottom-4 left-6">
-              <span className="px-3 py-1.5 bg-white/90 rounded-sm text-gray-800 text-xs font-medium shadow-sm">
-                {fa + 1} / {fotos.length}
-              </span>
+
+            {/* Contador */}
+            <div className="absolute top-5 right-5 z-10 px-3 py-1 bg-black/45 backdrop-blur-sm rounded-full text-white text-xs font-medium tracking-wide select-none opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              {currentIdx + 1} / {fotos.length}
+            </div>
+
+            {/* Barra inferior: thumbnails + botão "Ver todas" */}
+            <div className="absolute bottom-0 left-0 right-0 z-10 flex items-end gap-4 px-5 pb-5 pt-10">
+              {fotos.length > 1 && (
+                <div className="flex gap-2 overflow-x-auto flex-1 [&::-webkit-scrollbar]:hidden pb-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  {fotos.map((f, i) => (
+                    <button
+                      key={f.id}
+                      onClick={() => setCurrentIdx(i)}
+                      className={`flex-shrink-0 w-20 h-[54px] rounded-sm overflow-hidden border-2 border-solid transition-all duration-200 cursor-pointer ${
+                        i === currentIdx
+                          ? "border-white opacity-100 scale-[1.07] shadow-lg"
+                          : "border-white/30 opacity-45 hover:opacity-75 hover:border-white/60"
+                      }`}
+                    >
+                      <img
+                        src={fotoService.getUrlImagem(f.nomeArmazenado)}
+                        alt=""
+                        className="w-full h-full object-cover"
+                        draggable={false}
+                      />
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              <button
+                onClick={() => openLightbox(currentIdx)}
+                className="flex-shrink-0 px-4 py-2.5 bg-white/95 backdrop-blur-sm text-gray-800 text-xs font-semibold rounded-sm shadow-md flex items-center gap-2 cursor-pointer hover:bg-white hover:shadow-lg transition-all border-none"
+              >
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <rect x="3" y="3" width="7" height="7" rx="1" />
+                  <rect x="14" y="3" width="7" height="7" rx="1" />
+                  <rect x="3" y="14" width="7" height="7" rx="1" />
+                  <rect x="14" y="14" width="7" height="7" rx="1" />
+                </svg>
+                Ver todas as {fotos.length} fotos
+              </button>
             </div>
           </>
-        ) : (
-          <div className="w-full h-full flex items-center justify-center">
-            <span className="text-5xl">📷</span>
-          </div>
         )}
       </section>
 
-      {/* Thumbnails */}
-      {fotos.length > 1 && (
-        <div className="flex gap-2 px-6 py-3 overflow-x-auto bg-gray-50 border-b border-gray-100">
-          {fotos.map((f, i) => (
-            <button
-              key={f.id}
-              onClick={() => setFa(i)}
-              className={`flex-shrink-0 w-[90px] h-[60px] rounded-sm overflow-hidden border-2 transition-all cursor-pointer ${
-                i === fa ? "border-[#EA580C]" : "border-transparent opacity-50 hover:opacity-80"
-              }`}
-            >
-              <img src={fotoService.getUrlImagem(f.nomeArmazenado)} alt="" className="w-full h-full object-cover" />
-            </button>
-          ))}
+      {/* ══ LIGHTBOX ══ */}
+      {lightboxOpen && (
+        <div
+          className="fixed inset-0 z-[999] bg-black/95 flex items-center justify-center"
+          onClick={(e) => { if (e.target === e.currentTarget) closeLightbox(); }}
+        >
+          {/* Fechar */}
+          <button
+            onClick={closeLightbox}
+            className="absolute top-5 right-6 w-10 h-10 flex items-center justify-center text-white/70 hover:text-white text-lg border border-solid border-white/20 rounded-full bg-white/10 hover:bg-white/20 transition-all cursor-pointer z-10"
+          >
+            ✕
+          </button>
+
+          {/* Contador */}
+          <div className="absolute top-6 left-1/2 -translate-x-1/2 text-white/60 text-sm font-medium tracking-wide select-none">
+            {lightboxIdx + 1} / {fotos.length}
+          </div>
+
+          {/* Imagem */}
+          <div className="px-20 w-full flex items-center justify-center max-h-[80vh]">
+            <img
+              src={fotoService.getUrlImagem(fotos[lightboxIdx].nomeArmazenado)}
+              alt=""
+              className="max-w-full max-h-[80vh] object-contain rounded select-none"
+              draggable={false}
+            />
+          </div>
+
+          {/* Setas */}
+          {fotos.length > 1 && (
+            <>
+              <button
+                onClick={(e) => { e.stopPropagation(); prevLightbox(); }}
+                className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/10 hover:bg-white/25 border border-solid border-white/20 rounded-full text-white text-2xl flex items-center justify-center cursor-pointer transition-all"
+              >
+                ‹
+              </button>
+              <button
+                onClick={(e) => { e.stopPropagation(); nextLightbox(); }}
+                className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/10 hover:bg-white/25 border border-solid border-white/20 rounded-full text-white text-2xl flex items-center justify-center cursor-pointer transition-all"
+              >
+                ›
+              </button>
+            </>
+          )}
+
+          {/* Miniaturas */}
+          {fotos.length > 1 && (
+            <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-2 overflow-x-auto max-w-[80vw] pb-1 px-2 [&::-webkit-scrollbar]:hidden">
+              {fotos.map((f, i) => (
+                <button
+                  key={f.id}
+                  onClick={(e) => { e.stopPropagation(); setLightboxIdx(i); }}
+                  className={`flex-shrink-0 w-16 h-11 rounded overflow-hidden border-2 border-solid transition-all duration-200 cursor-pointer ${
+                    i === lightboxIdx
+                      ? "border-white opacity-100 scale-110"
+                      : "border-transparent opacity-40 hover:opacity-70"
+                  }`}
+                >
+                  <img
+                    src={fotoService.getUrlImagem(f.nomeArmazenado)}
+                    alt=""
+                    className="w-full h-full object-cover"
+                    draggable={false}
+                  />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
@@ -161,14 +306,14 @@ export default function PropertyPage() {
 
             {/* Descrição */}
             {imovel.descricao && (
-              <div className="bg-gray-50 border border-gray-100 rounded-sm p-8">
+              <div className="bg-[#FFF7ED]/70 border border-[#EA580C]/10 rounded-sm p-8">
                 <h3 className="text-[.7rem] font-semibold uppercase tracking-[.14em] text-[#EA580C] mb-5">Sobre este imóvel</h3>
                 <p className="text-gray-600 leading-[1.9] text-[.95rem]">{imovel.descricao}</p>
               </div>
             )}
 
             {/* Localização */}
-            <div className="bg-gray-50 border border-gray-100 rounded-sm p-8">
+            <div className="bg-[#FFF7ED]/70 border border-[#EA580C]/10 rounded-sm p-8">
               <h3 className="text-[.7rem] font-semibold uppercase tracking-[.14em] text-[#EA580C] mb-5">Localização</h3>
               <div className="grid grid-cols-2 gap-5 text-sm">
                 {[
@@ -190,11 +335,14 @@ export default function PropertyPage() {
 
           {/* Coluna lateral */}
           <div className="lg:sticky lg:top-[92px] lg:self-start flex flex-col gap-5">
-            <div className="bg-white border border-gray-100 rounded-lg p-8 shadow-sm">
-              <p className="text-[.7rem] text-gray-400 uppercase tracking-wider mb-2">Valor de venda</p>
-              <p className="text-[2.2rem] font-bold text-[#EA580C] mb-6 leading-tight">{fmt(imovel.valorVenda)}</p>
-              <WhatsAppButton mensagem={`Olá! Tenho interesse no imóvel ${imovel.codigoAgs} — ${imovel.titulo}`} />
-              <p className="text-[.7rem] text-gray-400 mt-4 text-center">Resposta em até 2 horas</p>
+            <div className="bg-white border border-gray-100 rounded-lg overflow-hidden shadow-md">
+              <div className="h-1.5 bg-gradient-to-r from-[#EA580C] to-[#F97316]" />
+              <div className="p-8">
+                <p className="text-[.7rem] text-gray-400 uppercase tracking-wider mb-2">Valor de venda</p>
+                <p className="text-[2.2rem] font-bold text-[#EA580C] mb-6 leading-tight">{fmt(imovel.valorVenda)}</p>
+                <WhatsAppButton mensagem={`Olá! Tenho interesse no imóvel ${imovel.codigoAgs} — ${imovel.titulo}`} />
+                <p className="text-[.7rem] text-gray-400 mt-4 text-center">Resposta em até 2 horas</p>
+              </div>
             </div>
             <div className="bg-[#FFF7ED] border border-[#EA580C]/10 rounded-lg p-8">
               <div className="flex items-center gap-4 mb-4">
@@ -212,7 +360,7 @@ export default function PropertyPage() {
 
       {/* ══ OUTROS IMÓVEIS ══ */}
       {outros.length > 0 && (
-        <section className="bg-gray-50 border-t border-gray-100 py-20 px-[6vw]">
+        <section className="bg-[#FAF4EE] border-t border-[#EA580C]/10 py-20 px-[6vw]">
           <div className="max-w-6xl mx-auto">
             <div className="flex items-center justify-between mb-10">
               <div>

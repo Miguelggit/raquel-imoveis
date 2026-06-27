@@ -9,7 +9,7 @@ export default function PropertyCarousel() {
   if (!imoveis.length) return null;
 
   return (
-    <section className="bg-gray-50 py-20 overflow-hidden">
+    <section className="bg-white py-20 overflow-hidden border-y border-orange-50">
       <div className="px-[6vw] mb-10 flex items-baseline gap-4">
         <span className="text-[.72rem] tracking-[.12em] uppercase text-[#EA580C] font-semibold">Destaques</span>
         <h2 className="text-[clamp(1.4rem,2.2vw,1.8rem)] font-medium text-gray-900 tracking-tight">Agenciamentos recentes</h2>
