@@ -26,7 +26,7 @@ public class AgenciamentoModel {
     @Size(min = 5, max = 150)
     private String titulo;
 
-    @Column(nullable = true)
+    @Column(nullable = true, length = 3000)
     private String descricao;
 
     @Enumerated(EnumType.STRING)
