@@ -60,11 +60,13 @@ export default function AboutPage() {
   const dep = DEPOIMENTOS[depAtivo];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-[#FFFDF9]">
 
       {/* ══ HERO ══ */}
-      <section className="relative bg-gray-900 pt-32 pb-28 px-[6vw] overflow-hidden">
-        <div className="absolute top-0 right-0 w-[40%] h-full bg-[#EA580C]/5 -skew-x-12 translate-x-20" />
+      <section className="relative bg-[#1A0C06] pt-32 pb-28 px-[6vw] overflow-hidden">
+        <div className="absolute top-0 right-0 w-[50%] h-full bg-[#EA580C]/12 -skew-x-12 translate-x-10" />
+        <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] rounded-full bg-[#EA580C] opacity-[0.14] blur-[120px] pointer-events-none" />
+        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-[#EA580C]/[0.05] to-transparent pointer-events-none" />
         <div className="relative max-w-5xl mx-auto">
           <div className="flex items-center gap-3 mb-6">
             <span className="block w-10 h-[2px] bg-[#EA580C]" />
@@ -84,7 +86,7 @@ export default function AboutPage() {
       </section>
 
       {/* ══ SOBRE A RAQUEL ══ */}
-      <section className="py-24 px-[6vw]">
+      <section className="py-24 px-[6vw] bg-gradient-to-br from-[#FFFDF9] via-white to-[#FFF7ED]">
         <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-[300px_1fr] gap-16 items-start">
 
           {/* Foto + números */}
@@ -103,11 +105,11 @@ export default function AboutPage() {
 
             {/* Números abaixo da foto */}
             <div className="w-full grid grid-cols-2 gap-3">
-              <div className="bg-[#FFF7ED] border border-[#EA580C]/10 rounded-lg p-5 text-center">
+              <div className="bg-gradient-to-b from-[#FFF7ED] to-[#FFE8C8] border border-[#EA580C]/20 rounded-lg p-5 text-center shadow-sm shadow-[#EA580C]/8">
                 <p className="text-2xl font-bold text-[#EA580C]">2+</p>
                 <p className="text-[.65rem] text-gray-400 uppercase tracking-wider mt-1">Anos no mercado</p>
               </div>
-              <div className="bg-[#FFF7ED] border border-[#EA580C]/10 rounded-lg p-5 text-center">
+              <div className="bg-gradient-to-b from-[#FFF7ED] to-[#FFE8C8] border border-[#EA580C]/20 rounded-lg p-5 text-center shadow-sm shadow-[#EA580C]/8">
                 <p className="text-2xl font-bold text-[#EA580C]">R$ 2M+</p>
                 <p className="text-[.65rem] text-gray-400 uppercase tracking-wider mt-1">VGV</p>
               </div>
@@ -139,7 +141,7 @@ export default function AboutPage() {
             </div>
             <div className="mt-10">
               <a
-                href="https://wa.me/5554999999999?text=Olá Raquel! Vi seu site e gostaria de conversar"
+                href="https://wa.me/5554996582058?text=Olá Raquel! Vi seu site e gostaria de conversar"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-3 px-8 py-4 bg-[#EA580C] text-white no-underline text-sm font-semibold uppercase tracking-wide rounded-sm transition-all hover:bg-[#C2410C] hover:-translate-y-0.5 shadow-md shadow-[#EA580C]/20"
@@ -155,11 +157,12 @@ export default function AboutPage() {
       </section>
 
       {/* ══ DEPOIMENTOS ══ */}
-      <section className="py-24 px-[6vw] bg-[#FFF7ED] relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-full opacity-30">
-          <div className="absolute top-10 left-[10%] text-[12rem] text-[#EA580C]/10 font-serif leading-none">"</div>
-          <div className="absolute bottom-10 right-[10%] text-[12rem] text-[#EA580C]/10 font-serif leading-none rotate-180">"</div>
+      <section className="py-24 px-[6vw] bg-gradient-to-b from-[#FFF7ED] to-[#FFEFD4] relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-full">
+          <div className="absolute top-10 left-[10%] text-[12rem] text-[#EA580C]/20 font-serif leading-none">"</div>
+          <div className="absolute bottom-10 right-[10%] text-[12rem] text-[#EA580C]/20 font-serif leading-none rotate-180">"</div>
         </div>
+        <div className="absolute top-[-10%] right-[-5%] w-[350px] h-[350px] rounded-full bg-[#EA580C] opacity-[0.07] blur-[100px] pointer-events-none" />
 
         <div className="max-w-3xl mx-auto relative">
           <div className="text-center mb-16">
@@ -174,7 +177,7 @@ export default function AboutPage() {
           {/* Depoimento com fade */}
           <div className={`text-center transition-all duration-500 ${fadeIn ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
             {/* Avatar */}
-            <div className="w-20 h-20 mx-auto mb-6 bg-white rounded-full flex items-center justify-center shadow-sm border-2 border-[#EA580C]/15">
+            <div className="w-20 h-20 mx-auto mb-6 bg-[#FFFDF9] rounded-full flex items-center justify-center shadow-sm border-2 border-[#EA580C]/30">
               <span className="text-2xl font-bold text-[#EA580C]">
                 {dep.nome.charAt(0)}
               </span>
@@ -231,7 +234,7 @@ export default function AboutPage() {
               { icon: "👤", title: "Atendimento pessoal", desc: "Entendo suas necessidades, seu momento de vida e seu orçamento para encontrar a melhor opção." },
               { icon: "✨", title: "Curadoria de imóveis", desc: "Cada imóvel foi visitado e avaliado pessoalmente. Qualidade acima de quantidade, sempre." },
             ].map((v, i) => (
-              <div key={i} className="bg-white rounded-lg p-10 border border-gray-100 shadow-sm transition-all hover:-translate-y-1 hover:shadow-md hover:border-[#EA580C]/15">
+              <div key={i} className="bg-gradient-to-b from-[#FFF7ED] to-[#FFFDF9] rounded-xl p-10 border border-[#EA580C]/15 shadow-md shadow-[#EA580C]/5 transition-all hover:-translate-y-2 hover:shadow-xl hover:shadow-[#EA580C]/10 hover:border-[#EA580C]/30">
                 <span className="text-4xl block mb-6">{v.icon}</span>
                 <h3 className="text-xl font-semibold mb-4">{v.title}</h3>
                 <p className="text-sm text-gray-500 leading-[1.8]">{v.desc}</p>
@@ -242,7 +245,7 @@ export default function AboutPage() {
       </section>
 
       {/* ══ COMO FUNCIONA ══ */}
-      <section className="py-24 px-[6vw] bg-gray-50">
+      <section className="py-24 px-[6vw] bg-gradient-to-b from-[#FFFDF9] to-[#FFF7ED]">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
             <div className="flex items-center gap-3 mb-4 justify-center">
@@ -260,8 +263,8 @@ export default function AboutPage() {
               { step: "04", title: "Negociação", desc: "Cuido de toda a documentação e negociação" },
             ].map((item, i) => (
               <div key={i} className="text-center">
-                <div className="w-16 h-16 mx-auto mb-5 bg-[#FFF7ED] border-2 border-[#EA580C]/15 rounded-full flex items-center justify-center">
-                  <span className="text-xl font-bold text-[#EA580C]">{item.step}</span>
+                <div className="w-16 h-16 mx-auto mb-5 bg-[#EA580C] border-2 border-[#EA580C] rounded-full flex items-center justify-center shadow-lg shadow-[#EA580C]/30">
+                  <span className="text-xl font-bold text-white">{item.step}</span>
                 </div>
                 <h3 className="font-semibold text-lg mb-2">{item.title}</h3>
                 <p className="text-sm text-gray-400 leading-relaxed">{item.desc}</p>
@@ -272,15 +275,16 @@ export default function AboutPage() {
       </section>
 
       {/* ══ CTA FINAL ══ */}
-      <section className="py-24 px-[6vw] bg-gray-900 relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-[30%] h-full bg-[#EA580C]/5 skew-x-12 -translate-x-20" />
+      <section className="py-24 px-[6vw] bg-[#1A0C06] relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-[30%] h-full bg-[#EA580C]/10 skew-x-12 -translate-x-10" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[450px] h-[450px] rounded-full bg-[#EA580C] opacity-[0.12] blur-[110px] pointer-events-none" />
         <div className="relative max-w-3xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-white mb-4">
             Pronta para encontrar <span className="text-[#EA580C]">seu imóvel</span>?
           </h2>
           <p className="text-white/50 text-lg mb-10">Entre em contato e vamos conversar.</p>
           <div className="flex gap-4 justify-center flex-wrap">
-            <a href="https://wa.me/5554999999999" target="_blank" rel="noopener noreferrer"
+            <a href="https://wa.me/5554996582058" target="_blank" rel="noopener noreferrer"
               className="px-8 py-4 bg-[#EA580C] text-white no-underline text-sm font-semibold uppercase tracking-wide rounded-sm transition-all hover:bg-[#C2410C] shadow-lg shadow-[#EA580C]/20">
               Fale no WhatsApp
             </a>
