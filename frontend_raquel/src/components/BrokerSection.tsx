@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 
 export default function BrokerSection() {
   return (
@@ -8,10 +7,11 @@ export default function BrokerSection() {
       <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-12 md:gap-16 relative z-10">
         <div className="flex-shrink-0">
           <div className="w-[220px] h-[280px] rounded-sm overflow-hidden bg-white border-2 border-[#EA580C]/25 shadow-lg shadow-[#EA580C]/10">
-            <div className="w-full h-full flex flex-col items-center justify-center text-center p-4">
-              <div className="w-20 h-20 bg-[#EA580C] rounded-full flex items-center justify-center text-white text-3xl font-bold mb-4">R</div>
-              <p className="text-xs text-gray-400 uppercase tracking-wider">Foto da Raquel</p>
-            </div>
+            <img
+              src="/images/Foto_5.jpg"
+              alt="Raquel - Corretora de Imóveis"
+              className="w-full h-full object-cover object-center"
+            />
           </div>
         </div>
         <div className="flex-1 text-center md:text-left">
@@ -26,7 +26,7 @@ export default function BrokerSection() {
             <div className="w-10 h-[1px] bg-[#EA580C]" />
             <div>
               <p className="font-semibold text-gray-900">Raquel</p>
-              <p className="text-sm text-gray-400">Corretora de Imóveis — CRECI XXXXX</p>
+              <p className="text-sm text-gray-400">Corretora de Imóveis — CRECI 82238-F</p>
             </div>
           </div>
           <div className="mt-8">

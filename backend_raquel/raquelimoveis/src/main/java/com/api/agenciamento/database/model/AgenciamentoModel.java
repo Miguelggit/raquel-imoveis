@@ -7,6 +7,10 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -14,6 +18,8 @@ import java.util.Set;
 
 @Entity
 @Table(name = "TB_AGENCIAMENTOS")
+@Data
+@NoArgsConstructor
 public class AgenciamentoModel {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -90,161 +96,10 @@ public class AgenciamentoModel {
     protected void onUpdate() {
         this.atualizadoEM = LocalDateTime.now();
     }
-    public AgenciamentoModel() {
-
-    }
     @OneToMany(mappedBy = "agenciamentoModel", fetch = FetchType.LAZY)
     private Set<FotoModel> fotoModel;
 
-    public Long getId() {
-        return id;
-    }
+    private String posicaoSolar;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getCodigoAgs() {
-        return codigoAgs;
-    }
-
-    public void setCodigoAgs(String codigoAgs) {
-        this.codigoAgs = codigoAgs;
-    }
-
-    public String getTitulo() {
-        return titulo;
-    }
-
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
-    }
-
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-
-    public TipoImovel getTipoImovel() {
-        return tipoImovel;
-    }
-
-    public void setTipoImovel(TipoImovel tipoImovel) {
-        this.tipoImovel = tipoImovel;
-    }
-
-    public StatusAgenciamentos getStatus() {
-        return status;
-    }
-
-    public void setStatus(StatusAgenciamentos status) {
-        this.status = status;
-    }
-
-    public BigDecimal getValorVenda() {
-        return valorVenda;
-    }
-
-    public void setValorVenda(BigDecimal valorVenda) {
-        this.valorVenda = valorVenda;
-    }
-
-    public String getCidade() {
-        return cidade;
-    }
-
-    public void setCidade(String cidade) {
-        this.cidade = cidade;
-    }
-
-    public String getBairro() {
-        return bairro;
-    }
-
-    public void setBairro(String bairro) {
-        this.bairro = bairro;
-    }
-
-    public String getRua() {
-        return rua;
-    }
-
-    public void setRua(String rua) {
-        this.rua = rua;
-    }
-
-    public String getNumero() {
-        return numero;
-    }
-
-    public void setNumero(String numero) {
-        this.numero = numero;
-    }
-
-    public String getComplemento() {
-        return complemento;
-    }
-
-    public void setComplemento(String complemento) {
-        this.complemento = complemento;
-    }
-
-    public BigDecimal getAreaM2() {
-        return areaM2;
-    }
-
-    public void setAreaM2(BigDecimal areaM2) {
-        this.areaM2 = areaM2;
-    }
-
-    public Integer getQuartos() {
-        return quartos;
-    }
-
-    public void setQuartos(Integer quartos) {
-        this.quartos = quartos;
-    }
-
-    public Integer getBanheiros() {
-        return banheiros;
-    }
-
-    public void setBanheiros(Integer banheiros) {
-        this.banheiros = banheiros;
-    }
-
-    public Integer getVagasGaragem() {
-        return vagasGaragem;
-    }
-
-    public void setVagasGaragem(Integer vagasGaragem) {
-        this.vagasGaragem = vagasGaragem;
-    }
-
-    public LocalDateTime getCriadoEM() {
-        return criadoEM;
-    }
-
-    public void setCriadoEM(LocalDateTime criadoEM) {
-        this.criadoEM = criadoEM;
-    }
-
-    public LocalDateTime getAtualizadoEM() {
-        return atualizadoEM;
-    }
-
-    public void setAtualizadoEM(LocalDateTime atualizadoEM) {
-        this.atualizadoEM = atualizadoEM;
-    }
-
-    public Set<FotoModel> getFotoAgenciamentoModel() {
-        return fotoModel;
-    }
-
-    public void setFotoAgenciamentoModel(Set<FotoModel> fotoModel) {
-        this.fotoModel = fotoModel;
-    }
+    private Integer suite;
 }

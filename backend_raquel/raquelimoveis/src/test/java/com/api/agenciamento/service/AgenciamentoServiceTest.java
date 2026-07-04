@@ -300,7 +300,7 @@ class AgenciamentoServiceTest {
         Page<AgenciamentoModel> responsePage = new PageImpl<>(lista);
         when(repository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(responsePage);
         when(mapper.converterPageParaDTO(any())).thenReturn(new AgenciamentoPageResponseDTO());
-        AgenciamentoPageResponseDTO filtros = service.filtros(null, null, null, null, null, null, PageRequest.of(0, 12));
+        AgenciamentoPageResponseDTO filtros = service.filtros(null, null, null, null, null, null, null, null, false, PageRequest.of(0, 12));
         assertNotNull(filtros);
         verify(repository).findAll(any(Specification.class), any(Pageable.class));
     }
@@ -311,7 +311,7 @@ class AgenciamentoServiceTest {
         Page<AgenciamentoModel> page = new PageImpl<>(listaAGS);
         when(repository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(page);
         when(mapper.converterPageParaDTO(any())).thenReturn(new AgenciamentoPageResponseDTO());
-        AgenciamentoPageResponseDTO response = service.filtros(TipoImovel.CASA, null, null, null, null, null, PageRequest.of(0, 12));
+        AgenciamentoPageResponseDTO response = service.filtros(TipoImovel.CASA, null, null, null, null, null, null, null, false, PageRequest.of(0, 12));
         assertNotNull(response); // Verifica se o valor passado não é nulo
         verify(repository).findAll(any(Specification.class), any(Pageable.class));
         verify(mapper).converterPageParaDTO(any());
@@ -323,7 +323,7 @@ class AgenciamentoServiceTest {
         Page<AgenciamentoModel> page = new PageImpl<>(listaAgs);
         when(repository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(page);
         when(mapper.converterPageParaDTO(page)).thenReturn(new AgenciamentoPageResponseDTO());
-        AgenciamentoPageResponseDTO response = service.filtros(null, null, null, "Lourdes", null, null, PageRequest.of(0, 12));
+        AgenciamentoPageResponseDTO response = service.filtros(null, null, null, "Lourdes", null, null, null, null, false, PageRequest.of(0, 12));
         assertNotNull(response);
         verify(repository).findAll(any(Specification.class), any(Pageable.class)); // Faz o teste dos metodos que mockamos
         verify(mapper).converterPageParaDTO(any());
@@ -334,7 +334,7 @@ class AgenciamentoServiceTest {
         Page<AgenciamentoModel> page = new PageImpl<>(List.of(new AgenciamentoModel(), new AgenciamentoModel()));
         when(mapper.converterPageParaDTO(page)).thenReturn(new AgenciamentoPageResponseDTO());
         when(repository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(page);
-        AgenciamentoPageResponseDTO response = service.filtros(null, null,null, null, new BigDecimal(400_000), new BigDecimal(600_000), PageRequest.of(0, 12));
+        AgenciamentoPageResponseDTO response = service.filtros(null, null,null, null, new BigDecimal(400_000), new BigDecimal(600_000), null, null, false, PageRequest.of(0, 12));
         assertNotNull(response);
         verify(repository).findAll(any(Specification.class), any(Pageable.class));
         verify(mapper).converterPageParaDTO(any());
@@ -344,7 +344,7 @@ class AgenciamentoServiceTest {
     void deveRetornarVazio_quandoNenhumResultado(){
         when(mapper.converterPageParaDTO(Page.empty())).thenReturn(new AgenciamentoPageResponseDTO());
         when(repository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(Page.empty());
-        AgenciamentoPageResponseDTO response = service.filtros(null, null, null, null, null, null, PageRequest.of(0, 12));
+        AgenciamentoPageResponseDTO response = service.filtros(null, null, null, null, null, null, null, null, false, PageRequest.of(0, 12));
         assertEquals(List.of(), response.getContent());
         verify(repository).findAll(any(Specification.class), any(Pageable.class));
         verify(mapper).converterPageParaDTO(any());

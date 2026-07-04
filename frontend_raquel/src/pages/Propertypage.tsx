@@ -15,6 +15,7 @@ export default function PropertyPage() {
   const [erro, setErro] = useState(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIdx, setLightboxIdx] = useState(0);
+  const [copiado, setCopiado] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -25,12 +26,12 @@ export default function PropertyPage() {
     Promise.all([
       agenciamentoService.buscarPorId(n),
       fotoService.listarPorAgenciamento(n),
-      agenciamentoService.listar({ size: 12, sort: "criadoEM,desc" }),
+      agenciamentoService.listar({ size: 200, sort: "criadoEM,desc" }),
     ])
       .then(([ag, ft, page]) => {
         setImovel(ag);
         setFotos(ft);
-        setOutros(page.content.filter((im) => im.id !== n).slice(0, 4));
+        setOutros(page.content.filter((im) => im.id !== n));
       })
       .catch(() => setErro(true))
       .finally(() => setLoading(false));
@@ -72,6 +73,29 @@ export default function PropertyPage() {
 
   const fmt = (v: number) =>
     v.toLocaleString("pt-BR", { style: "currency", currency: "BRL", minimumFractionDigits: 0 });
+
+  const handleCompartilhar = useCallback(async () => {
+    if (!imovel) return;
+    const url = window.location.href;
+    const texto = `${imovel.titulo} — ${imovel.codigoAgs}\n${fmt(imovel.valorVenda)} • ${imovel.bairro}, ${imovel.cidade}`;
+    // Web Share API (celular): abre o menu nativo de compartilhamento
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: imovel.titulo, text: texto, url });
+        return;
+      } catch {
+        // usuário cancelou ou não suportado — cai no fallback de copiar
+      }
+    }
+    // Fallback (desktop): copia o link
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopiado(true);
+      setTimeout(() => setCopiado(false), 2000);
+    } catch {
+      /* clipboard indisponível */
+    }
+  }, [imovel]);
 
   if (loading)
     return (
@@ -277,6 +301,27 @@ export default function PropertyPage() {
                 {imovel.status === "RESERVADO" && (
                   <span className="px-3 py-1 bg-amber-100 text-amber-700 text-[.68rem] font-semibold uppercase tracking-wider rounded-sm">Reservado</span>
                 )}
+                <button
+                  onClick={handleCompartilhar}
+                  className="ml-auto inline-flex items-center gap-2 px-3.5 py-1.5 bg-white border border-[#EA580C]/25 text-[#EA580C] text-xs font-semibold rounded-sm cursor-pointer hover:bg-[#EA580C] hover:text-white hover:border-[#EA580C] transition-all"
+                >
+                  {copiado ? (
+                    <>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                        <path d="M20 6 9 17l-5-5" />
+                      </svg>
+                      Link copiado!
+                    </>
+                  ) : (
+                    <>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" />
+                        <path d="m8.59 13.51 6.83 3.98M15.41 6.51 8.59 10.49" />
+                      </svg>
+                      Compartilhar
+                    </>
+                  )}
+                </button>
               </div>
               <h1 className="text-3xl md:text-[2.5rem] font-bold tracking-tight leading-tight mb-3">{imovel.titulo}</h1>
               <p className="text-gray-400 flex items-center gap-2">
@@ -346,10 +391,11 @@ export default function PropertyPage() {
             </div>
             <div className="bg-[#FFF7ED] border border-[#EA580C]/10 rounded-lg p-8">
               <div className="flex items-center gap-4 mb-4">
-                <div className="w-14 h-14 bg-[#EA580C] rounded-full flex items-center justify-center text-white font-bold text-xl">R</div>
+                <div className="w-20 h-20 bg-[#EA580C] rounded-full flex items-center justify-center text-white font-bold text-xl"><img src="/images/Foto_5.jpg" alt="Raquel" className="w-full h-full object-cover object-center rounded-full" /></div>
                 <div>
-                  <p className="font-semibold text-lg">Raquel</p>
+                  <p className="font-semibold text-lg">Raquel Marinho</p>
                   <p className="text-gray-400 text-sm">Corretora de imóveis</p>
+                  <p className="text-gray-400 text-sm">CRECI 82238-F</p>
                 </div>
               </div>
               <p className="text-gray-500 text-sm leading-relaxed">Atendimento personalizado para encontrar o imóvel ideal.</p>

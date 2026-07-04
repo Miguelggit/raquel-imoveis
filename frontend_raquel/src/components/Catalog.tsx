@@ -104,7 +104,7 @@ export default function Catalog() {
       {/* Cabeçalho: empilhado no mobile, lado a lado no desktop */}
       <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-5 md:gap-6 mb-8 md:mb-14">
         <div>
-          <h2 className="text-[clamp(1.6rem,2.8vw,2.5rem)] font-bold tracking-tight">Nossos agenciamentos</h2>
+          <h2 className="text-[clamp(1.6rem,2.8vw,2.5rem)] font-bold tracking-tight">Imóveis</h2>
           <p className="text-sm text-gray-400 mt-1 transition-all duration-300">
             {busca
               ? `${totalElements} ${totalElements === 1 ? "resultado" : "resultados"} para "${busca}"`
@@ -139,7 +139,7 @@ export default function Catalog() {
           {/* Barra de progresso sutil ao buscar */}
           <div className="w-full md:w-80 h-[2px] rounded-full overflow-hidden bg-transparent">
             <div className={`h-full bg-[#EA580C] rounded-full transition-all duration-500 ${loading ? "w-full opacity-40" : "w-0 opacity-0"}`} />
-          </div>
+          </div> 
 
           <FilterBar tipoAtivo={tipoFiltro} onTipoChange={(t) => { setTipoFiltro(t); setPage(0); }} />
         </div>
