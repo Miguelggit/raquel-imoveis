@@ -15,6 +15,8 @@ export interface Agenciamento {
   quartos: number;
   banheiros: number;
   vagasGaragem: number;
+  posicaoSolar: string;
+  suite: number;
   criadoEM: string;
   atualizadoEM: string;
 }
@@ -32,6 +34,8 @@ export interface AgenciamentoResumo {
   quartos: number;
   banheiros: number;
   vagasGaragem: number;
+  posicaoSolar: string;
+  suite: number;
 }
 
 export interface AgenciamentoPage {
@@ -60,6 +64,7 @@ export interface FiltrosAgenciamento {
   bairro?: string;
   precoMin?: number;
   precoMax?: number;
+  incluirInativos?: boolean;
   page?: number;
   size?: number;
   sort?: string;

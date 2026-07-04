@@ -18,7 +18,7 @@ spring:
       mode: never
 app:
   jwt:
-    secret: K7gNU3sdoOL0wNhqo@VWhr3g8914298tmo9u23h78d1672dnBCXAGIOTWYUCVMN;
+    secret: SDPl5462dX9ImxLUkvZodv3NWcRqsqsgAbgliALfoPeFcY895bBesCec6r6leYVpRTYnQLqcOXSaR9DXbRrhlJDZaEoh8Qrq;
   upload:
     dir: ./uploads/fotos/
   cors:

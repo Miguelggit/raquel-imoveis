@@ -1,111 +1,112 @@
+import { useState, useEffect } from "react";
+import { agenciamentoService, fotoService } from "../services/api";
+
+// ══════════════════════════════════════════════════════════════════
+//  IMÓVEIS EM DESTAQUE NO HERO
+//  Coloque aqui os códigos AGS dos imóveis que devem aparecer no
+//  slideshow da capa, na ordem desejada. Ex: ["AGS-0012", "AGS-0007"].
+//  Deixe a lista vazia ([]) para exibir automaticamente os mais recentes.
+// ══════════════════════════════════════════════════════════════════
+const DESTAQUES_AGS: string[] = ["AGS-001", "AGS-002", "AGS-003"]; // Exemplo de códigos AGS
+
+const FALLBACK = [
+  "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&q=80",
+  "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&q=80",
+];
+
 export default function Hero() {
+  const [current, setCurrent] = useState(0);
+  const [slides, setSlides] = useState<string[]>([]);
+  const [carregando, setCarregando] = useState(true);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        // Busca o catálogo e seleciona os imóveis do Hero
+        const page = await agenciamentoService.listar({ size: 200, sort: "criadoEM,desc" });
+
+        let selecionados;
+        if (DESTAQUES_AGS.length > 0) {
+          // Escolha da cliente: imóveis pelos códigos AGS, na ordem da lista
+          const porAgs = new Map(page.content.map((im) => [im.codigoAgs, im]));
+          selecionados = DESTAQUES_AGS
+            .map((ags) => porAgs.get(ags))
+            .filter((im): im is NonNullable<typeof im> => Boolean(im));
+        } else {
+          // Sem escolha: os 5 mais recentes
+          selecionados = page.content.slice(0, 5);
+        }
+
+        const urls: string[] = [];
+        for (const im of selecionados) {
+          try { const f = await fotoService.listarPorAgenciamento(im.id); if (f.length) urls.push(fotoService.getUrlImagem(f[0].nomeArmazenado)); } catch {}
+        }
+        setSlides(urls.length > 0 ? urls : FALLBACK);
+      } catch { setSlides(FALLBACK); }
+      setCarregando(false);
+    })();
+  }, []);
+
+  useEffect(() => {
+    if (slides.length <= 1) return;
+    const t = setInterval(() => setCurrent((p) => (p + 1) % slides.length), 5000);
+    return () => clearInterval(t);
+  }, [slides]);
+
   return (
-    <section className="relative min-h-screen flex flex-col justify-center overflow-hidden bg-gradient-to-br from-[#FFEFD4] via-[#FFF7ED] to-[#FFFDF9]">
+    <section className="relative w-full h-screen overflow-hidden">
+      {carregando && (
+        <div className="absolute inset-0 bg-gray-900 flex items-center justify-center z-20">
+          <div className="w-8 h-8 border-2 border-[#EA580C] border-t-transparent rounded-full animate-spin" />
+        </div>
+      )}
+      {slides.map((img, i) => (
+        <div key={i} className={`absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ${i === current ? "opacity-100" : "opacity-0"}`} style={{ backgroundImage: `url(${img})` }}>
+          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60" />
+        </div>
+      ))}
 
-      {/* Blob principal — canto superior direito */}
-      <div className="absolute top-[-8%] right-[-8%] w-[700px] h-[700px] rounded-full bg-[#EA580C] opacity-[0.22] blur-[130px] pointer-events-none" />
-      {/* Blob secundário — canto inferior esquerdo */}
-      <div className="absolute bottom-[-5%] left-[-5%] w-[500px] h-[500px] rounded-full bg-[#EA580C] opacity-[0.16] blur-[110px] pointer-events-none" />
-      {/* Blob terciário — centro-esquerdo, profundidade */}
-      <div className="absolute top-[30%] left-[10%] w-[320px] h-[320px] rounded-full bg-[#F97316] opacity-[0.09] blur-[90px] pointer-events-none" />
-
-      {/* Forma geométrica — canto inferior direito */}
-      <div className="absolute bottom-0 right-0 w-[42%] h-[50%] bg-[#FFEDD5] rounded-tl-[140px] opacity-30 pointer-events-none" />
-
-      {/* Grade de pontos */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          backgroundImage: "radial-gradient(circle, #C2410C 1px, transparent 1px)",
-          backgroundSize: "36px 36px",
-          opacity: 0.07,
-        }}
-      />
-
-      {/* Detalhe lateral — desktop */}
-      <div className="absolute left-0 top-1/2 -translate-y-1/2 hidden xl:flex flex-col items-center gap-3 pl-8">
-        <div className="w-[1.5px] h-20 bg-gradient-to-b from-transparent to-[#EA580C]/40" />
-        <span
-          className="text-[.6rem] font-semibold uppercase tracking-[.2em] text-[#EA580C]/50"
-          style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
-        >
-          Caxias do Sul · RS
-        </span>
-        <div className="w-[1.5px] h-20 bg-gradient-to-t from-transparent to-[#EA580C]/40" />
+      {/* Retrato da Raquel — ancorado à direita, dissolvido no cenário */}
+      <div className="hidden lg:block absolute right-0 bottom-0 top-0 z-[5] pointer-events-none">
+        <img
+          src="/images/foto_1.jpg"
+          alt="Raquel Marinho, corretora de imóveis"
+          className="h-full w-auto object-cover object-bottom select-none"
+          draggable={false}
+          style={{
+            WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 42%)",
+            maskImage: "linear-gradient(to right, transparent 0%, black 42%)",
+          }}
+        />
       </div>
 
-      {/* Conteúdo */}
-      <div className="relative z-10 w-full px-5 sm:px-[6vw] pt-32 pb-16 flex flex-col items-center text-center">
+      {/* Escurecimento à esquerda para legibilidade do texto */}
+      <div className="absolute inset-0 z-[6] bg-gradient-to-r from-black/80 via-black/45 to-transparent pointer-events-none" />
 
-        {/* Badge */}
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#EA580C]/10 border border-[#EA580C]/30 mb-8 md:mb-10 backdrop-blur-sm">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#EA580C] animate-pulse flex-shrink-0" />
-          <span className="text-[.72rem] font-semibold uppercase tracking-[.14em] text-[#EA580C]">
-            Caxias do Sul e região
-          </span>
+      <div className="absolute inset-0 z-10 flex flex-col justify-end px-[6vw] pb-[9vh] max-w-[800px]">
+        <div className="flex items-center gap-3 mb-4">
+          <span className="block w-8 h-[1.5px] bg-[#EA580C]" />
+          <span className="text-[.72rem] font-medium uppercase tracking-[.14em] text-[#EA580C]">Caxias do Sul e região</span>
         </div>
-
-        {/* Título */}
-        <h1 className="text-[clamp(2.6rem,7.5vw,5.8rem)] font-bold leading-[1.06] tracking-[-0.02em] text-gray-900 max-w-[14ch] mb-6 md:mb-8">
-          Seu próximo imóvel{" "}
-          <span className="relative inline-block">
-            <span className="relative z-10 text-[#EA580C]">começa aqui.</span>
-            <span
-              className="absolute inset-x-0 bottom-[6%] h-[30%] bg-[#EA580C]/15 -z-0 -skew-x-1 rounded-sm"
-              aria-hidden
-            />
-          </span>
+        <h1 className="text-[clamp(2.5rem,5.5vw,4.5rem)] font-bold leading-[1.1] tracking-tight text-white max-w-[650px]">
+          Encontre o imóvel dos seus <em className="not-italic text-[#EA580C]">sonhos</em>
         </h1>
-
-        {/* Subtítulo */}
-        <p className="text-base md:text-lg text-gray-500 max-w-[44ch] leading-relaxed mb-10 md:mb-12">
-          Atendimento personalizado, imóveis selecionados a dedo
-          e negociação do início ao fim na Serra Gaúcha.
+        <p className="mt-5 text-base text-white/70 max-w-[420px] leading-relaxed">
+          Agenciamentos selecionados com a curadoria de quem entende o mercado imobiliário da Serra Gaúcha.
         </p>
-
-        {/* CTAs */}
-        <div className="flex flex-col sm:flex-row gap-3 w-full max-w-xs sm:max-w-none sm:w-auto">
-          <a
-            href="#catalogo"
-            className="px-8 py-4 bg-[#EA580C] text-white no-underline text-sm font-semibold uppercase tracking-wide rounded-xl transition-all duration-200 hover:bg-[#C2410C] hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#EA580C]/25 active:translate-y-0 text-center"
-          >
-            Ver imóveis
-          </a>
-          <a
-            href="https://wa.me/5554996582058?text=Olá Raquel! Vi seu site e gostaria de conversar."
-            target="_blank"
-            rel="noopener noreferrer"
-            className="px-8 py-4 bg-white text-gray-700 no-underline text-sm font-medium uppercase tracking-wide rounded-xl border border-[#EA580C]/20 transition-all duration-200 hover:border-[#EA580C]/60 hover:text-[#EA580C] hover:shadow-md active:bg-orange-50 text-center"
-          >
-            Falar com a Raquel
-          </a>
-        </div>
-
-        {/* Stats */}
-        <div className="mt-16 md:mt-20 w-full max-w-sm sm:max-w-md">
-          <div className="flex justify-center bg-white/60 backdrop-blur-sm rounded-2xl px-4 py-5 border border-[#EA580C]/20 shadow-md shadow-[#EA580C]/8">
-            <div className="flex-1 flex flex-col items-center gap-1 px-4">
-              <p className="text-2xl md:text-3xl font-bold text-gray-900 leading-none">2+</p>
-              <p className="text-[.68rem] text-gray-400 uppercase tracking-wider mt-1 text-center leading-tight">Anos no mercado</p>
-            </div>
-            <div className="w-[1px] bg-[#EA580C]/20 self-stretch my-1" />
-            <div className="flex-1 flex flex-col items-center gap-1 px-4">
-              <p className="text-2xl md:text-3xl font-bold text-[#EA580C] leading-none">100%</p>
-              <p className="text-[.68rem] text-gray-400 uppercase tracking-wider mt-1 text-center leading-tight">Personalizado</p>
-            </div>
-            <div className="w-[1px] bg-[#EA580C]/20 self-stretch my-1" />
-            <div className="flex-1 flex flex-col items-center gap-1 px-4">
-              <p className="text-2xl md:text-3xl font-bold text-gray-900 leading-none">Serra</p>
-              <p className="text-[.68rem] text-gray-400 uppercase tracking-wider mt-1 text-center leading-tight">Gaúcha</p>
-            </div>
-          </div>
+        <div className="flex gap-4 mt-10 flex-wrap">
+          <a href="#catalogo" className="px-8 py-3.5 bg-[#EA580C] text-white no-underline text-sm font-semibold uppercase tracking-wide rounded-sm transition-all hover:bg-[#C2410C] hover:-translate-y-0.5">Ver imóveis</a>
+          <a href="https://wa.me/5554996582058?text=Olá Raquel! Vi seu site e gostaria de conversar." target="_blank" rel="noopener noreferrer" className="px-8 py-3.5 bg-transparent text-white no-underline text-sm font-medium uppercase tracking-wide rounded-sm border-[1.5px] border-white/50 transition-all hover:bg-white/10">Fale conosco</a>
         </div>
       </div>
 
-      {/* Scroll */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-[#EA580C]/40">
-        <span className="text-[.6rem] uppercase tracking-[.18em]">Scroll</span>
-        <div className="w-[1px] h-8 bg-gradient-to-b from-[#EA580C]/40 to-transparent" />
+      {slides.length > 1 && (
+        <div className="absolute bottom-[3vh] left-1/2 -translate-x-1/2 z-10 flex gap-2">
+          {slides.map((_, i) => (<button key={i} onClick={() => setCurrent(i)} className={`h-[2px] rounded-none border-none cursor-pointer transition-all ${i === current ? "w-12 bg-[#EA580C]" : "w-7 bg-white/35 hover:bg-white/50"}`} />))}
+        </div>
+      )}
+      <div className="absolute bottom-[3.5vh] right-[6vw] z-10 text-xs tracking-wider text-white/50">
+        <b className="text-[#EA580C] font-semibold">{String(current + 1).padStart(2, "0")}</b> / {String(slides.length).padStart(2, "0")}
       </div>
     </section>
   );

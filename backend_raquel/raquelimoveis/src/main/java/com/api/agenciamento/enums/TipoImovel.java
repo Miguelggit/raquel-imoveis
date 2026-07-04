@@ -6,6 +6,7 @@ public enum TipoImovel {
     SOBRADO("Sobrado"),
     LOFT("Loft"),
     TERRENO("Terreno"),
+    COBERTURA("Cobertura"),
     CASA_GERMINADA("Casa Germinada");
 
     private final String tipo;
