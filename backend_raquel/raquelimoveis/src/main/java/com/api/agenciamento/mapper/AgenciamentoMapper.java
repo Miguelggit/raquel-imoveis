@@ -27,7 +27,9 @@ public class AgenciamentoMapper {
                 model.getBanheiros(),
                 model.getVagasGaragem(),
                 model.getPosicaoSolar(),
-                model.getSuite()
+                model.getSuite(),
+                model.getSlideshow(),
+                model.getDestaque()
         );
     }
     public AgenciamentoResponseDTO converterParaDTO(AgenciamentoModel model){
@@ -50,6 +52,8 @@ public class AgenciamentoMapper {
                 model.getVagasGaragem(),
                 model.getPosicaoSolar(),
                 model.getSuite(),
+                model.getSlideshow(),
+                model.getDestaque(),
                 model.getCriadoEM(),
                 model.getAtualizadoEM()
         );
@@ -73,6 +77,8 @@ public class AgenciamentoMapper {
         ags.setVagasGaragem(requestDTO.getVagasGaragem());
         ags.setPosicaoSolar(requestDTO.getPosicaoSolar());
         ags.setSuite(requestDTO.getSuite());
+        ags.setSlideshow(requestDTO.getSlideshow());
+        ags.setDestaque(requestDTO.getDestaque());
         return ags;
     }
     public void atualizarModel(AgenciamentoModel model, AgenciamentoRequestDTO requestDTO){
@@ -95,6 +101,8 @@ public class AgenciamentoMapper {
         model.setVagasGaragem(requestDTO.getVagasGaragem());
         model.setPosicaoSolar(requestDTO.getPosicaoSolar());
         model.setSuite(requestDTO.getSuite());
+        model.setSlideshow(requestDTO.getSlideshow());
+        model.setDestaque(requestDTO.getDestaque());
     }
     public AgenciamentoPageResponseDTO converterPageParaDTO(Page<AgenciamentoModel> page ){
         List<AgenciamentoResponseSemDetalhesDTO> content = page.getContent().stream()
