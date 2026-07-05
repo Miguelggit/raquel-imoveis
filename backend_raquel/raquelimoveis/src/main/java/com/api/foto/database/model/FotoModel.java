@@ -2,11 +2,15 @@ package com.api.foto.database.model;
 
 import com.api.agenciamento.database.model.AgenciamentoModel;
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "TB_FOTOS")
+@Data
+@NoArgsConstructor
 public class FotoModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,87 +28,12 @@ public class FotoModel {
     @ManyToOne
     @JoinColumn(name = "agenciamento_id", nullable = false) // Da o nome para a coluna com o relacionamento
     private AgenciamentoModel agenciamentoModel;
+    @Column(nullable = false)
+    private Boolean principal = false;
     @Column(name = "DT_HR_CRIADO")
     private LocalDateTime criadoEM;
     @PrePersist
     protected void onCreate(){this.criadoEM = LocalDateTime.now();
 
-    }
-
-    public FotoModel() {
-
-    }
-
-    public FotoModel(String nomeArquivo, String nomeArmazenado, String contentType, Long tamanho, String url, AgenciamentoModel agenciamentoModel, LocalDateTime criadoEM) {
-        this.nomeArquivo = nomeArquivo;
-        this.nomeArmazenado = nomeArmazenado;
-        this.contentType = contentType;
-        this.tamanho = tamanho;
-        this.url = url;
-        this.agenciamentoModel = agenciamentoModel;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNomeArquivo() {
-        return nomeArquivo;
-    }
-
-    public void setNomeArquivo(String nomeArquivo) {
-        this.nomeArquivo = nomeArquivo;
-    }
-
-    public String getNomeArmazenado() {
-        return nomeArmazenado;
-    }
-
-    public void setNomeArmazenado(String nomeArmazenado) {
-        this.nomeArmazenado = nomeArmazenado;
-    }
-
-    public String getContentType() {
-        return contentType;
-    }
-
-    public void setContentType(String contentType) {
-        this.contentType = contentType;
-    }
-
-    public Long getTamanho() {
-        return tamanho;
-    }
-
-    public void setTamanho(Long tamanho) {
-        this.tamanho = tamanho;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public AgenciamentoModel getAgenciamentoModel() {
-        return agenciamentoModel;
-    }
-
-    public void setAgenciamentoModel(AgenciamentoModel agenciamentoModel) {
-        this.agenciamentoModel = agenciamentoModel;
-    }
-
-    public LocalDateTime getCriadoEM() {
-        return criadoEM;
-    }
-
-    public void setCriadoEM(LocalDateTime criadoEM) {
-        this.criadoEM = criadoEM;
     }
 }
