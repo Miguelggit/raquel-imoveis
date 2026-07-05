@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
 import type { Agenciamento, AgenciamentoResumo, Foto } from "../types";
 import { agenciamentoService, fotoService } from "../services/api";
@@ -45,6 +45,18 @@ export default function PropertyPage() {
     () => setCurrentIdx((p) => (p + 1) % fotos.length),
     [fotos.length]
   );
+
+  // Swipe no celular: guarda o X inicial e navega conforme a direção do arrasto
+  const touchStartX = useRef<number | null>(null);
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null || fotos.length <= 1) return;
+    const dx = e.changedTouches[0].clientX - touchStartX.current;
+    if (Math.abs(dx) > 40) (dx < 0 ? nextPhoto : prevPhoto)();
+    touchStartX.current = null;
+  };
 
   const openLightbox = useCallback((idx: number) => {
     setLightboxIdx(idx);
@@ -118,7 +130,17 @@ export default function PropertyPage() {
   return (
     <div className="min-h-screen bg-[#FFFDF9]">
       {/* ══ GALERIA ══ */}
-      <section className="group relative w-full h-[72vh] min-h-[500px] max-h-[720px] bg-gray-900 overflow-hidden">
+      <section
+        className="group relative w-full h-[72vh] min-h-[500px] max-h-[720px] bg-gray-900 overflow-hidden"
+        onTouchStart={onTouchStart}
+        onTouchEnd={onTouchEnd}
+      >
+        {/* Faixa "Vendido" sobre a galeria */}
+        {imovel.status === "VENDIDO" && (
+          <div className="absolute top-5 left-5 z-20 px-4 py-2 bg-gray-900/90 text-white text-sm font-bold uppercase tracking-[0.15em] rounded-sm select-none">
+            Vendido
+          </div>
+        )}
         {fotos.length === 0 ? (
           <div className="w-full h-full flex flex-col items-center justify-center bg-gray-100 gap-3">
             <span className="text-6xl">📷</span>
@@ -147,13 +169,13 @@ export default function PropertyPage() {
               <>
                 <button
                   onClick={prevPhoto}
-                  className="absolute left-5 top-1/2 -translate-y-1/2 z-10 w-11 h-11 bg-black/35 hover:bg-black/65 backdrop-blur-sm border border-solid border-white/25 rounded-full text-white text-2xl flex items-center justify-center cursor-pointer transition-all duration-300 opacity-0 group-hover:opacity-100"
+                  className="absolute left-3 sm:left-5 top-1/2 -translate-y-1/2 z-10 w-11 h-11 bg-black/35 hover:bg-black/65 backdrop-blur-sm border border-solid border-white/25 rounded-full text-white text-2xl flex items-center justify-center cursor-pointer transition-all duration-300 opacity-100 md:opacity-0 md:group-hover:opacity-100"
                 >
                   ‹
                 </button>
                 <button
                   onClick={nextPhoto}
-                  className="absolute right-5 top-1/2 -translate-y-1/2 z-10 w-11 h-11 bg-black/35 hover:bg-black/65 backdrop-blur-sm border border-solid border-white/25 rounded-full text-white text-2xl flex items-center justify-center cursor-pointer transition-all duration-300 opacity-0 group-hover:opacity-100"
+                  className="absolute right-3 sm:right-5 top-1/2 -translate-y-1/2 z-10 w-11 h-11 bg-black/35 hover:bg-black/65 backdrop-blur-sm border border-solid border-white/25 rounded-full text-white text-2xl flex items-center justify-center cursor-pointer transition-all duration-300 opacity-100 md:opacity-0 md:group-hover:opacity-100"
                 >
                   ›
                 </button>
@@ -161,7 +183,7 @@ export default function PropertyPage() {
             )}
 
             {/* Contador */}
-            <div className="absolute top-5 right-5 z-10 px-3 py-1 bg-black/45 backdrop-blur-sm rounded-full text-white text-xs font-medium tracking-wide select-none opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <div className="absolute top-5 right-5 z-10 px-3 py-1 bg-black/45 backdrop-blur-sm rounded-full text-white text-xs font-medium tracking-wide select-none opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300">
               {currentIdx + 1} / {fotos.length}
             </div>
 
@@ -227,11 +249,20 @@ export default function PropertyPage() {
           </div>
 
           {/* Imagem */}
-          <div className="px-20 w-full flex items-center justify-center max-h-[80vh]">
+          <div
+            className="px-3 sm:px-16 lg:px-20 w-full flex items-center justify-center max-h-[88vh]"
+            onTouchStart={onTouchStart}
+            onTouchEnd={(e) => {
+              if (touchStartX.current === null || fotos.length <= 1) return;
+              const dx = e.changedTouches[0].clientX - touchStartX.current;
+              if (Math.abs(dx) > 40) (dx < 0 ? nextLightbox : prevLightbox)();
+              touchStartX.current = null;
+            }}
+          >
             <img
               src={fotoService.getUrlImagem(fotos[lightboxIdx].nomeArmazenado)}
               alt=""
-              className="max-w-full max-h-[80vh] object-contain rounded select-none"
+              className="max-w-full max-h-[82vh] sm:max-h-[80vh] object-contain rounded select-none"
               draggable={false}
             />
           </div>
@@ -300,6 +331,9 @@ export default function PropertyPage() {
                 <span className="px-3 py-1 bg-[#EA580C]/10 text-[#EA580C] text-[.68rem] font-semibold uppercase tracking-wider rounded-sm">{imovel.codigoAgs}</span>
                 {imovel.status === "RESERVADO" && (
                   <span className="px-3 py-1 bg-amber-100 text-amber-700 text-[.68rem] font-semibold uppercase tracking-wider rounded-sm">Reservado</span>
+                )}
+                {imovel.status === "VENDIDO" && (
+                  <span className="px-3 py-1 bg-gray-900 text-white text-[.68rem] font-semibold uppercase tracking-wider rounded-sm">Vendido</span>
                 )}
                 <button
                   onClick={handleCompartilhar}

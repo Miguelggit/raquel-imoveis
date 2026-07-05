@@ -60,8 +60,8 @@ export default function AdminDashboard() {
     }
   };
 
-  const handleLogout = () => {
-    authService.logout();
+  const handleLogout = async () => {
+    await authService.logout();
     navigate("/admin/login");
   };
 
@@ -71,8 +71,8 @@ export default function AdminDashboard() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header admin */}
-      <header className="bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between sticky top-0 z-30">
-        <div className="flex items-center gap-4">
+      <header className="bg-white border-b border-gray-100 px-4 sm:px-6 py-4 flex items-center justify-between sticky top-0 z-30">
+        <div className="flex items-center gap-2 sm:gap-4">
           <Link to="/" className="text-xl font-bold tracking-tight no-underline text-gray-900">
             Raquel<span className="text-[#EA580C]">.</span>
           </Link>
@@ -86,16 +86,16 @@ export default function AdminDashboard() {
         </div>
       </header>
 
-      <div className="max-w-6xl mx-auto px-6 py-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
         {/* Topo */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
           <div>
             <h1 className="text-2xl font-bold tracking-tight">Imóveis disponivels</h1>
             <p className="text-sm text-gray-400 mt-1">{totalElements} imóveis cadastrados</p>
           </div>
           <Link
             to="/admin/novo"
-            className="px-6 py-3 bg-[#EA580C] text-white no-underline text-sm font-semibold rounded-sm hover:bg-[#C2410C] transition-all"
+            className="px-6 py-3 bg-[#EA580C] text-white no-underline text-sm font-semibold rounded-sm hover:bg-[#C2410C] transition-all text-center"
           >
             + Novo imóvel
           </Link>
@@ -114,39 +114,50 @@ export default function AdminDashboard() {
             {imoveis.map((im, i) => (
               <div
                 key={im.id}
-                className={`flex items-center gap-5 px-6 py-4 ${i > 0 ? "border-t border-gray-50" : ""} hover:bg-gray-50/50 transition-colors ${im.status === "INATIVO" ? "opacity-50 grayscale" : ""}`}
+                className={`flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-5 px-4 sm:px-6 py-4 ${i > 0 ? "border-t border-gray-50" : ""} hover:bg-gray-50/50 transition-colors ${im.status === "INATIVO" ? "opacity-50 grayscale" : ""}`}
               >
-                {/* Foto */}
-                <div className="w-20 h-14 rounded-sm overflow-hidden bg-gray-100 flex-shrink-0">
-                  {fotos[im.id] ? (
-                    <img src={fotos[im.id]} alt="" className="w-full h-full object-cover" />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-gray-300 text-xs">Sem foto</div>
-                  )}
-                </div>
-
-                {/* Info */}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-[.65rem] font-semibold text-[#EA580C] uppercase tracking-wider">{im.codigoAgs}</span>
-                    <span className={`text-[.65rem] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-sm ${
-                      im.status === "DISPONIVEL" ? "bg-green-50 text-green-600" :
-                      im.status === "RESERVADO" ? "bg-amber-50 text-amber-600" :
-                      "bg-gray-100 text-gray-400"
-                    }`}>{im.status}</span>
+                {/* Foto + Info */}
+                <div className="flex items-center gap-4 flex-1 min-w-0">
+                  {/* Foto */}
+                  <div className="w-20 h-14 rounded-sm overflow-hidden bg-gray-100 flex-shrink-0">
+                    {fotos[im.id] ? (
+                      <img src={fotos[im.id]} alt="" className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-gray-300 text-xs">Sem foto</div>
+                    )}
                   </div>
-                  <p className="text-sm font-medium text-gray-900 truncate">{im.titulo}</p>
-                  <p className="text-xs text-gray-400">{im.bairro}, {im.cidade}</p>
+
+                  {/* Info */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-[.65rem] font-semibold text-[#EA580C] uppercase tracking-wider">{im.codigoAgs}</span>
+                      <span className={`text-[.65rem] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-sm ${
+                        im.status === "DISPONIVEL" ? "bg-green-50 text-green-600" :
+                        im.status === "RESERVADO" ? "bg-amber-50 text-amber-600" :
+                        "bg-gray-100 text-gray-400"
+                      }`}>{im.status}</span>
+                      {im.slideshow && (
+                        <span className="text-[.6rem] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-sm bg-[#EA580C]/10 text-[#EA580C]">★ Slideshow</span>
+                      )}
+                      {im.destaque && (
+                        <span className="text-[.6rem] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-sm bg-[#EA580C]/10 text-[#EA580C]">★ Destaque</span>
+                      )}
+                    </div>
+                    <p className="text-sm font-medium text-gray-900 truncate">{im.titulo}</p>
+                    <p className="text-xs text-gray-400 truncate">{im.bairro}, {im.cidade}</p>
+                    {/* Preço (visível só no mobile, dentro da info) */}
+                    <p className="sm:hidden text-sm font-semibold text-gray-900 mt-1">{fmt(im.valorVenda)}</p>
+                  </div>
                 </div>
 
                 {/* Tipo */}
                 <div className="hidden md:block text-xs text-gray-400 w-28">{im.tipoImovel}</div>
 
-                {/* Preço */}
+                {/* Preço (desktop) */}
                 <div className="hidden sm:block text-sm font-semibold text-gray-900 w-32 text-right">{fmt(im.valorVenda)}</div>
 
                 {/* Ações */}
-                <div className="flex items-center gap-2 flex-shrink-0">
+                <div className="flex items-center flex-wrap gap-2 flex-shrink-0">
                   <Link
                     to={`/admin/editar/${im.id}`}
                     className="px-3 py-1.5 text-xs font-medium text-[#EA580C] border border-[#EA580C]/20 rounded-sm no-underline hover:bg-[#EA580C]/5 transition-colors"
@@ -162,14 +173,14 @@ export default function AdminDashboard() {
                   {im.status === "INATIVO" ? (
                     <button
                       onClick={() => handleAtivar(im.id, im.titulo)}
-                      className="px-3 py-1.5 text-xs font-medium text-green-600 border border-green-200 rounded-sm bg-transparent cursor-pointer hover:bg-green-50 transition-colors"
+                      className="px-3 py-1.5 text-xs font-medium text-green-600 border border-green-450 rounded-sm bg-transparent cursor-pointer hover:bg-green-50 transition-colors"
                     >
                       Ativar
                     </button>
                   ) : (
                     <button
                       onClick={() => handleDesativar(im.id, im.titulo)}
-                      className="px-3 py-1.5 text-xs font-medium text-red-400 border border-red-100 rounded-sm bg-transparent cursor-pointer hover:bg-red-50 transition-colors"
+                      className="px-3 py-1.5 text-xs font-medium text-red-400 border border-red-250 rounded-sm bg-transparent cursor-pointer hover:bg-red-50 transition-colors"
                     >
                       Desativar
                     </button>

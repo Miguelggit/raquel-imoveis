@@ -39,11 +39,22 @@ export default function PropertyCard({ imovel }: PropertyCardProps) {
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
           </div>
         )}
-        <span className="absolute top-3 left-3 px-2.5 py-1 bg-[#EA580C] text-white text-[.68rem] font-semibold uppercase tracking-wider rounded-md">
+        {/* Imóvel vendido: escurece a foto e mostra o selo "Vendido" */}
+        {imovel.status === "VENDIDO" && (
+          <div className="absolute inset-0 bg-black/45 flex items-center justify-center z-[1]">
+            <span className="px-5 py-1.5 border-2 border-white text-white text-sm font-bold uppercase tracking-[0.2em] -rotate-6 select-none">
+              Vendido
+            </span>
+          </div>
+        )}
+        <span className="absolute top-3 left-3 z-[2] px-2.5 py-1 bg-[#EA580C] text-white text-[.68rem] font-semibold uppercase tracking-wider rounded-md">
           {imovel.tipoImovel.replace("_", " ")}
         </span>
         {imovel.status === "RESERVADO" && (
-          <span className="absolute top-3 right-3 px-2.5 py-1 bg-amber-500 text-white text-[.68rem] font-semibold uppercase tracking-wider rounded-md">Reservado</span>
+          <span className="absolute top-3 right-3 z-[2] px-2.5 py-1 bg-amber-500 text-white text-[.68rem] font-semibold uppercase tracking-wider rounded-md">Reservado</span>
+        )}
+        {imovel.status === "VENDIDO" && (
+          <span className="absolute top-3 right-3 z-[2] px-2.5 py-1 bg-gray-900 text-white text-[.68rem] font-semibold uppercase tracking-wider rounded-md">Vendido</span>
         )}
       </div>
 

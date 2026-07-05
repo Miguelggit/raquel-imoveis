@@ -3,6 +3,7 @@ package com.api.usuario.service;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -23,15 +24,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String header = request.getHeader("Authorization");
-        if(header == null || !header.startsWith("Bearer")){
-            filterChain.doFilter(request, response);
-            return;
+        String jwt = null;
+        if(request.getCookies() != null ){
+            for(Cookie c : request.getCookies()){
+                if("token".equals(c.getName())){
+                    jwt = c.getValue();
+                    break;
+                }
+            }
         }
-        String token = header.substring(7);
-
         try {
-            String email = tokenService.validationToken(token);
+            String email = tokenService.validationToken(jwt);
             if(email != null && SecurityContextHolder.getContext().getAuthentication() == null){
                 UserDetails userDetails = userDetailsService.loadUserByUsername(email);
                 UsernamePasswordAuthenticationToken authenticationToken = UsernamePasswordAuthenticationToken

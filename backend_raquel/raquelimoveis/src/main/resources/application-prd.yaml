@@ -22,7 +22,10 @@ app:
   upload:
     dir: ./uploads/fotos/
   cors:
-    allowed-origin: http://localhost:5173
+    allowed-origin: http://192.168.0.79:5173
+  cookie:
+    secure: true
+  time: 28800
 
 management:
   endpoints:

@@ -17,6 +17,8 @@ export interface Agenciamento {
   vagasGaragem: number;
   posicaoSolar: string;
   suite: number;
+  slideshow?: boolean;
+  destaque?: boolean;
   criadoEM: string;
   atualizadoEM: string;
 }
@@ -36,6 +38,8 @@ export interface AgenciamentoResumo {
   vagasGaragem: number;
   posicaoSolar: string;
   suite: number;
+  slideshow?: boolean;
+  destaque?: boolean;
 }
 
 export interface AgenciamentoPage {
