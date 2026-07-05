@@ -119,6 +119,11 @@ export const fotoService = {
     await api.delete(`/agenciamentos/fotos/${fotoId}`);
   },
 
+  // Define esta foto como capa do imóvel (o backend desmarca as demais)
+  definirCapa: async (fotoId: number): Promise<void> => {
+    await api.patch(`/agenciamentos/fotos/${fotoId}/principal`);
+  },
+
   getUrlImagem: (nomeArmazenado: string): string => {
     return `${API_BASE}/agenciamentos/fotos/${nomeArmazenado}`;
   },

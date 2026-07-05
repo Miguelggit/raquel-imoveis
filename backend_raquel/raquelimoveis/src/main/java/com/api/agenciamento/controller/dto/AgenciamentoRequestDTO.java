@@ -48,4 +48,6 @@ public class AgenciamentoRequestDTO {
     private String posicaoSolar;
     @Min(0)
     private Integer suite;
+    private Boolean slideshow;
+    private Boolean destaque;
 }

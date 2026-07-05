@@ -86,28 +86,59 @@ export default function PropertyPage() {
   const fmt = (v: number) =>
     v.toLocaleString("pt-BR", { style: "currency", currency: "BRL", minimumFractionDigits: 0 });
 
+  // Cópia legada: funciona mesmo sem HTTPS (contexto inseguro), onde
+  // navigator.clipboard não existe. Usa um <textarea> temporário.
+  const copiarLegado = (texto: string) => {
+    try {
+      const ta = document.createElement("textarea");
+      ta.value = texto;
+      ta.style.position = "fixed";
+      ta.style.top = "0";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      const ok = document.execCommand("copy");
+      document.body.removeChild(ta);
+      return ok;
+    } catch {
+      return false;
+    }
+  };
+
+  const marcarCopiado = useCallback(() => {
+    setCopiado(true);
+    setTimeout(() => setCopiado(false), 2000);
+  }, []);
+
   const handleCompartilhar = useCallback(async () => {
     if (!imovel) return;
     const url = window.location.href;
     const texto = `${imovel.titulo} — ${imovel.codigoAgs}\n${fmt(imovel.valorVenda)} • ${imovel.bairro}, ${imovel.cidade}`;
-    // Web Share API (celular): abre o menu nativo de compartilhamento
+    // 1) Web Share API (celular em HTTPS): abre o menu nativo de compartilhamento
     if (navigator.share) {
       try {
         await navigator.share({ title: imovel.titulo, text: texto, url });
         return;
-      } catch {
-        // usuário cancelou ou não suportado — cai no fallback de copiar
+      } catch (err) {
+        // Usuário cancelou o menu nativo: não faz nada
+        if ((err as Error)?.name === "AbortError") return;
+        // Qualquer outra falha: cai nos fallbacks abaixo
       }
     }
-    // Fallback (desktop): copia o link
-    try {
-      await navigator.clipboard.writeText(url);
-      setCopiado(true);
-      setTimeout(() => setCopiado(false), 2000);
-    } catch {
-      /* clipboard indisponível */
+    // 2) Clipboard API (contexto seguro / HTTPS)
+    if (navigator.clipboard?.writeText) {
+      try {
+        await navigator.clipboard.writeText(url);
+        marcarCopiado();
+        return;
+      } catch {
+        // cai no fallback legado
+      }
     }
-  }, [imovel]);
+    // 3) Fallback legado (funciona em HTTP, como no demo pela rede local)
+    if (copiarLegado(url)) marcarCopiado();
+  }, [imovel, marcarCopiado]);
 
   if (loading)
     return (

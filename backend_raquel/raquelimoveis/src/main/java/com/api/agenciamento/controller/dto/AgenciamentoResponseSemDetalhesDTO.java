@@ -24,4 +24,6 @@ public class AgenciamentoResponseSemDetalhesDTO {
     private  Integer vagasGaragem;
     private String posicaoSolar;
     private Integer suite;
+    private Boolean slideshow;
+    private Boolean destaque;
 }

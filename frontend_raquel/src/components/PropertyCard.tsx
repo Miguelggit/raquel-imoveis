@@ -11,7 +11,11 @@ export default function PropertyCard({ imovel }: PropertyCardProps) {
 
   useEffect(() => {
     fotoService.listarPorAgenciamento(imovel.id)
-      .then((f) => { if (f.length) setFoto(fotoService.getUrlImagem(f[0].nomeArmazenado)); })
+      .then((f) => {
+        // Usa a foto de capa escolhida pela cliente; se não houver, a primeira
+        const capa = f.find((x) => x.principal) ?? f[0];
+        if (capa) setFoto(fotoService.getUrlImagem(capa.nomeArmazenado));
+      })
       .catch(() => {});
   }, [imovel.id]);
 

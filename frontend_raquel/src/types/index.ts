@@ -58,6 +58,7 @@ export interface Foto {
   tamanho: number;
   url: string;
   agenciamentoId: number;
+  principal?: boolean;
   criadoEM: string;
 }
 

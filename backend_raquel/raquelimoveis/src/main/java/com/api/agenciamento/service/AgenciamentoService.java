@@ -36,6 +36,12 @@ public class  AgenciamentoService {
             if(dto.getStatus() == null) {
                 dto.setStatus(StatusAgenciamentos.DISPONIVEL);
             }
+            if(dto.getSlideshow() == null){
+                dto.setSlideshow(false);
+            }
+            if(dto.getSlideshow() == null){
+                dto.setDestaque(false);
+            }
             if(dto.getStatus().equals(StatusAgenciamentos.INATIVO) || dto.getStatus().equals(StatusAgenciamentos.VENDIDO)) {
                 throw new CadastroDeStatusException("Este status não pode ser cadastrado");
             }

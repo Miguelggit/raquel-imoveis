@@ -32,6 +32,8 @@ public class AgenciamentoResponseDTO {
     private  Integer vagasGaragem;
     private String posicaoSolar;
     private Integer suite;
+    private Boolean slideshow;
+    private Boolean destaque;
     private  LocalDateTime criadoEM;
     private  LocalDateTime atualizadoEM;
 

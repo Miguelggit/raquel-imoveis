@@ -102,4 +102,8 @@ public class AgenciamentoModel {
     private String posicaoSolar;
 
     private Integer suite;
+    @Column(nullable = false)
+    private Boolean slideshow = false;
+    @Column(nullable = false)
+    private Boolean destaque = false;
 }
