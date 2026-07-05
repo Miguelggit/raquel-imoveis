@@ -18,6 +18,7 @@ public class FotoMapper {
                 model.getTamanho(),
                 model.getUrl(),
                 model.getAgenciamentoModel().getId(),
+                model.getPrincipal(),
                 model.getCriadoEM()
         );
     }
