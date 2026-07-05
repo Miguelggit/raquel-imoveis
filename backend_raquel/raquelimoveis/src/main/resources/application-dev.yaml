@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3307/raquel_imoveis_dev?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=America/Sao_Paulo
+    url: jdbc:mysql://localhost:3307/raquel_imoveis?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=America/Sao_Paulo
     username: ${DB_USER:${MYSQL_USER:raquel}}
     password: ${DB_PASSWORD:${MYSQL_PASSWORD:db_msql_raquel}}
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -22,7 +22,10 @@ app:
   upload:
     dir: ./uploads/fotos/
   cors:
-    allowed-origin: http://localhost:5173
+    allowed-origin: http://192.168.0.79:5173
+  cookie:
+    secure: false
+  time: 28800
 
 management:
   endpoints:
