@@ -1,5 +1,6 @@
 package com.api.foto.service;
 import com.api.agenciamento.service.AgenciamentoService;
+import com.api.exceptions.PrincipalNaoEncontradoException;
 import com.api.foto.dto.FotoAgenciamentoResponseDTO;
 import com.api.foto.dto.FotoArquivoDTO;
 import com.api.agenciamento.database.model.AgenciamentoModel;
@@ -92,5 +93,12 @@ public class FotoService {
         Path filePathDele = Paths.get(uploadDir+File.separator+fotoTarget.getNomeArmazenado());
         Files.deleteIfExists(filePathDele);
         repository.delete(fotoTarget);
+    }
+    public void definirCapa(Long id, Long idFoto){
+        List<FotoModel> fotos = repository.findByAgenciamentoModelId(id);
+        for(FotoModel foto: fotos){
+            foto.setPrincipal(foto.getId().equals(idFoto));
+        }
+        repository.saveAll(fotos);
     }
 }
