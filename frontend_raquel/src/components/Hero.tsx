@@ -17,14 +17,17 @@ export default function Hero() {
         // Busca o catálogo e seleciona os imóveis marcados como "slideshow" pela cliente
         const page = await agenciamentoService.listar({ size: 200, sort: "criadoEM,desc" });
 
-        // Curadoria da cliente: imóveis marcados para o slideshow no painel.
-        // Fallback: se nenhum estiver marcado, mostra os 5 mais recentes.
-        const marcados = page.content.filter((im) => im.slideshow);
-        const selecionados = marcados.length > 0 ? marcados : page.content.slice(0, 5);
+        // Curadoria da cliente: somente os imóveis marcados para o slideshow no painel.
+        const selecionados = page.content.filter((im) => im.slideshow);
 
         const urls: string[] = [];
         for (const im of selecionados) {
-          try { const f = await fotoService.listarPorAgenciamento(im.id); if (f.length) urls.push(fotoService.getUrlImagem(f[0].nomeArmazenado)); } catch {}
+          try {
+            const f = await fotoService.listarPorAgenciamento(im.id);
+            // Usa a foto de capa escolhida pela cliente; se não houver, a primeira
+            const capa = f.find((x) => x.principal) ?? f[0];
+            if (capa) urls.push(fotoService.getUrlImagem(capa.nomeArmazenado));
+          } catch {}
         }
         setSlides(urls.length > 0 ? urls : FALLBACK);
       } catch { setSlides(FALLBACK); }
