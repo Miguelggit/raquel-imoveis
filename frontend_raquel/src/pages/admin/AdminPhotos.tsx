@@ -65,6 +65,15 @@ export default function AdminPhotos() {
     }
   };
 
+  const handleDefinirCapa = async (fotoId: number) => {
+    try {
+      await fotoService.definirCapa(fotoId);
+      carregarDados();
+    } catch {
+      setErro("Erro ao definir a foto de capa");
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -132,9 +141,10 @@ export default function AdminPhotos() {
 
         {/* Fotos existentes */}
         <div className="bg-white rounded-lg border border-gray-100 shadow-sm p-5 sm:p-8">
-          <h2 className="text-sm font-semibold uppercase tracking-wider text-[#EA580C] mb-4">
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-[#EA580C] mb-1">
             Fotos cadastradas ({fotos.length})
           </h2>
+          <p className="text-xs text-gray-400 mb-4">A foto de <b>capa</b> (★) é a que aparece no card do catálogo e no slideshow da capa.</p>
 
           {fotos.length === 0 ? (
             <div className="text-center py-12">
@@ -145,26 +155,36 @@ export default function AdminPhotos() {
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {fotos.map((foto, i) => (
-                <div key={foto.id} className="relative group rounded-sm overflow-hidden border border-gray-100">
+                <div key={foto.id} className={`relative group rounded-sm overflow-hidden border ${foto.principal ? "border-[#EA580C] ring-2 ring-[#EA580C]" : "border-gray-100"}`}>
                   <img
                     src={fotoService.getUrlImagem(foto.nomeArmazenado)}
                     alt={foto.nomeArquivo}
                     className="w-full h-40 object-cover"
                   />
-                  {/* Overlay (no desktop aparece no hover; no mobile o botão fica sempre visível) */}
-                  <div className="absolute inset-0 sm:bg-black/0 sm:group-hover:bg-black/40 transition-all flex items-end sm:items-center justify-center p-2 sm:p-0">
+                  {/* Overlay (no desktop aparece no hover; no mobile os botões ficam sempre visíveis) */}
+                  <div className="absolute inset-0 sm:bg-black/0 sm:group-hover:bg-black/40 transition-all flex flex-col items-center justify-center gap-1.5 p-2">
+                    {!foto.principal && (
+                      <button
+                        onClick={() => handleDefinirCapa(foto.id)}
+                        className="opacity-100 sm:opacity-0 sm:group-hover:opacity-100 px-3 py-1.5 bg-white/95 text-gray-800 text-[.7rem] font-semibold rounded-sm border-none cursor-pointer transition-all hover:bg-white shadow-sm"
+                      >
+                        Tornar capa
+                      </button>
+                    )}
                     <button
                       onClick={() => handleDeletar(foto.id, foto.nomeArquivo)}
-                      className="opacity-100 sm:opacity-0 sm:group-hover:opacity-100 px-4 py-2 bg-red-500 text-white text-xs font-semibold rounded-sm border-none cursor-pointer transition-all hover:bg-red-600 shadow-sm"
+                      className="opacity-100 sm:opacity-0 sm:group-hover:opacity-100 px-3 py-1.5 bg-red-500 text-white text-[.7rem] font-semibold rounded-sm border-none cursor-pointer transition-all hover:bg-red-600 shadow-sm"
                     >
                       Remover
                     </button>
                   </div>
-                  {/* Badge posição */}
+                  {/* Badge: capa ou posição */}
                   <div className="absolute top-2 left-2">
-                    <span className="px-2 py-1 bg-black/50 text-white text-[.65rem] rounded-sm">
-                      {i + 1}
-                    </span>
+                    {foto.principal ? (
+                      <span className="px-2 py-1 bg-[#EA580C] text-white text-[.65rem] font-semibold rounded-sm">★ Capa</span>
+                    ) : (
+                      <span className="px-2 py-1 bg-black/50 text-white text-[.65rem] rounded-sm">{i + 1}</span>
+                    )}
                   </div>
                 </div>
               ))}
