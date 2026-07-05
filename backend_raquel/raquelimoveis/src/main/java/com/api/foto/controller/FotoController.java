@@ -43,4 +43,10 @@ public class FotoController {
         service.deletePhoto(id);
         return ResponseEntity.noContent().build();
     }
+    @PatchMapping("/{agenciamentoId}/fotos/{id}/principal")
+    public ResponseEntity<Void> fotoPrincipal(@PathVariable Long agenciamentoId,
+                                              @PathVariable Long id){
+        service.definirCapa(agenciamentoId, id);
+        return ResponseEntity.noContent().build();
+    }
 }

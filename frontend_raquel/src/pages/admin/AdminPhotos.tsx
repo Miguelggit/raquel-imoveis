@@ -66,8 +66,9 @@ export default function AdminPhotos() {
   };
 
   const handleDefinirCapa = async (fotoId: number) => {
+    if (!id) return;
     try {
-      await fotoService.definirCapa(fotoId);
+      await fotoService.definirCapa(parseInt(id), fotoId);
       carregarDados();
     } catch {
       setErro("Erro ao definir a foto de capa");

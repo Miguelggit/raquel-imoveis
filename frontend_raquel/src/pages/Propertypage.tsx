@@ -450,7 +450,7 @@ export default function PropertyPage() {
               <div className="p-8">
                 <p className="text-[.7rem] text-gray-400 uppercase tracking-wider mb-2">Valor de venda</p>
                 <p className="text-[2.2rem] font-bold text-[#EA580C] mb-6 leading-tight">{fmt(imovel.valorVenda)}</p>
-                <WhatsAppButton mensagem={`Olá! Tenho interesse no imóvel ${imovel.codigoAgs} — ${imovel.titulo}`} />
+                <WhatsAppButton mensagem={`Olá! Tenho interesse no imóvel ${imovel.codigoAgs} — ${imovel.titulo}. Aguardo seu contato. Obrigado!`} />
                 <p className="text-[.7rem] text-gray-400 mt-4 text-center">Resposta em até 2 horas</p>
               </div>
             </div>
