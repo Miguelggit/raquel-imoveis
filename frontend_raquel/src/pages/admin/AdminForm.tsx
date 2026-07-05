@@ -32,6 +32,8 @@ export default function AdminForm() {
     vagasGaragem: "",
     posicaoSolar: "",
     suite: "",
+    slideshow: false,
+    destaque: false,
   });
 
   useEffect(() => {
@@ -57,6 +59,8 @@ export default function AdminForm() {
             vagasGaragem: ag.vagasGaragem?.toString() || "",
             posicaoSolar: ag.posicaoSolar || "",
             suite: ag.suite?.toString() || "",
+            slideshow: ag.slideshow ?? false,
+            destaque: ag.destaque ?? false,
           });
         })
         .catch(() => setErro("Erro ao carregar imóvel"))
@@ -65,7 +69,10 @@ export default function AdminForm() {
   }, [id]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const target = e.target;
+    const value =
+      target instanceof HTMLInputElement && target.type === "checkbox" ? target.checked : target.value;
+    setForm({ ...form, [target.name]: value });
   };
 
   const handleSalvar = async () => {
@@ -87,6 +94,8 @@ export default function AdminForm() {
         vagasGaragem: form.vagasGaragem ? parseInt(form.vagasGaragem) : null,
         posicaoSolar: form.posicaoSolar || null,
         suite: form.suite ? parseInt(form.suite) : null,
+        slideshow: form.slideshow,
+        destaque: form.destaque,
       };
 
       // Status só é enviado na edição (no cadastro o backend define DISPONIVEL)
@@ -123,8 +132,8 @@ export default function AdminForm() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between sticky top-0 z-30">
-        <div className="flex items-center gap-4">
+      <header className="bg-white border-b border-gray-100 px-4 sm:px-6 py-4 flex items-center justify-between sticky top-0 z-30">
+        <div className="flex items-center gap-2 sm:gap-4">
           <Link to="/admin" className="text-xl font-bold tracking-tight no-underline text-gray-900">
             Raquel<span className="text-[#EA580C]">.</span>
           </Link>
@@ -133,7 +142,7 @@ export default function AdminForm() {
         <Link to="/admin" className="text-sm text-gray-400 no-underline hover:text-[#EA580C]">← Voltar</Link>
       </header>
 
-      <div className="max-w-3xl mx-auto px-6 py-8">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
         <h1 className="text-2xl font-bold tracking-tight mb-8">
           {isEdicao ? "Editar imóvel" : "Novo imóvel"}
         </h1>
@@ -141,7 +150,7 @@ export default function AdminForm() {
         {erro && <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-sm text-red-600 text-sm">{erro}</div>}
         {sucesso && <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-sm text-green-600 text-sm">{sucesso}</div>}
 
-        <div className="bg-white rounded-lg border border-gray-100 shadow-sm p-8">
+        <div className="bg-white rounded-lg border border-gray-100 shadow-sm p-5 sm:p-8">
           <div className="flex flex-col gap-6">
 
             {/* Título */}
@@ -207,8 +216,41 @@ export default function AdminForm() {
               </div>
             </div>
 
+            {/* Exibição na home */}
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wider text-[#EA580C] mb-4">Exibição na página inicial</p>
+              <div className="flex flex-col gap-3">
+                <label className="flex items-start gap-3 p-4 bg-gray-50 border border-gray-200 rounded-sm cursor-pointer hover:border-[#EA580C]/40 transition-colors">
+                  <input
+                    type="checkbox"
+                    name="slideshow"
+                    checked={form.slideshow}
+                    onChange={handleChange}
+                    className="mt-0.5 w-4 h-4 accent-[#EA580C] cursor-pointer"
+                  />
+                  <span>
+                    <span className="block text-sm font-medium text-gray-900">Aparecer no slideshow da capa</span>
+                    <span className="block text-xs text-gray-400 mt-0.5">O imóvel entra no carrossel de fotos grandes no topo da página inicial.</span>
+                  </span>
+                </label>
+                <label className="flex items-start gap-3 p-4 bg-gray-50 border border-gray-200 rounded-sm cursor-pointer hover:border-[#EA580C]/40 transition-colors">
+                  <input
+                    type="checkbox"
+                    name="destaque"
+                    checked={form.destaque}
+                    onChange={handleChange}
+                    className="mt-0.5 w-4 h-4 accent-[#EA580C] cursor-pointer"
+                  />
+                  <span>
+                    <span className="block text-sm font-medium text-gray-900">Aparecer nos destaques</span>
+                    <span className="block text-xs text-gray-400 mt-0.5">O imóvel entra na seção "Destaques" (carrossel de cards) da página inicial.</span>
+                  </span>
+                </label>
+              </div>
+            </div>
+
             {/* Botões */}
-            <div className="flex gap-4 mt-4 pt-6 border-t border-gray-100">
+            <div className="flex flex-col-reverse sm:flex-row gap-3 sm:gap-4 mt-4 pt-6 border-t border-gray-100">
               <button
                 onClick={handleSalvar}
                 disabled={salvando || !form.titulo || !form.valorVenda || !form.cidade || !form.bairro}
@@ -216,7 +258,7 @@ export default function AdminForm() {
               >
                 {salvando ? "Salvando..." : isEdicao ? "Atualizar" : "Cadastrar"}
               </button>
-              <Link to="/admin" className="px-8 py-3 border border-gray-200 text-gray-500 no-underline text-sm font-medium rounded-sm hover:bg-gray-50 transition-all flex items-center">
+              <Link to="/admin" className="px-8 py-3 border border-gray-200 text-gray-500 no-underline text-sm font-medium rounded-sm hover:bg-gray-50 transition-all flex items-center justify-center">
                 Cancelar
               </Link>
             </div>

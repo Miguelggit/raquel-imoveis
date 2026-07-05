@@ -76,8 +76,8 @@ export default function AdminPhotos() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between sticky top-0 z-30">
-        <div className="flex items-center gap-4">
+      <header className="bg-white border-b border-gray-100 px-4 sm:px-6 py-4 flex items-center justify-between sticky top-0 z-30">
+        <div className="flex items-center gap-2 sm:gap-4">
           <Link to="/admin" className="text-xl font-bold tracking-tight no-underline text-gray-900">
             Raquel<span className="text-[#EA580C]">.</span>
           </Link>
@@ -86,7 +86,7 @@ export default function AdminPhotos() {
         <Link to="/admin" className="text-sm text-gray-400 no-underline hover:text-[#EA580C]">← Voltar</Link>
       </header>
 
-      <div className="max-w-4xl mx-auto px-6 py-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
         {/* Título */}
         <div className="mb-8">
           <h1 className="text-2xl font-bold tracking-tight">Fotos do imóvel</h1>
@@ -100,7 +100,7 @@ export default function AdminPhotos() {
         {erro && <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-sm text-red-600 text-sm">{erro}</div>}
 
         {/* Upload */}
-        <div className="bg-white rounded-lg border border-gray-100 shadow-sm p-8 mb-8">
+        <div className="bg-white rounded-lg border border-gray-100 shadow-sm p-5 sm:p-8 mb-8">
           <h2 className="text-sm font-semibold uppercase tracking-wider text-[#EA580C] mb-4">Enviar novas fotos</h2>
           <p className="text-sm text-gray-400 mb-4">Formatos aceitos: JPEG, PNG, WebP. Selecione uma ou várias fotos de uma vez.</p>
 
@@ -131,7 +131,7 @@ export default function AdminPhotos() {
         </div>
 
         {/* Fotos existentes */}
-        <div className="bg-white rounded-lg border border-gray-100 shadow-sm p-8">
+        <div className="bg-white rounded-lg border border-gray-100 shadow-sm p-5 sm:p-8">
           <h2 className="text-sm font-semibold uppercase tracking-wider text-[#EA580C] mb-4">
             Fotos cadastradas ({fotos.length})
           </h2>
@@ -151,11 +151,11 @@ export default function AdminPhotos() {
                     alt={foto.nomeArquivo}
                     className="w-full h-40 object-cover"
                   />
-                  {/* Overlay */}
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all flex items-center justify-center">
+                  {/* Overlay (no desktop aparece no hover; no mobile o botão fica sempre visível) */}
+                  <div className="absolute inset-0 sm:bg-black/0 sm:group-hover:bg-black/40 transition-all flex items-end sm:items-center justify-center p-2 sm:p-0">
                     <button
                       onClick={() => handleDeletar(foto.id, foto.nomeArquivo)}
-                      className="opacity-0 group-hover:opacity-100 px-4 py-2 bg-red-500 text-white text-xs font-semibold rounded-sm border-none cursor-pointer transition-all hover:bg-red-600"
+                      className="opacity-100 sm:opacity-0 sm:group-hover:opacity-100 px-4 py-2 bg-red-500 text-white text-xs font-semibold rounded-sm border-none cursor-pointer transition-all hover:bg-red-600 shadow-sm"
                     >
                       Remover
                     </button>
