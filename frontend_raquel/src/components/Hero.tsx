@@ -82,17 +82,19 @@ export default function Hero() {
       <div className="absolute inset-0 z-[6] bg-gradient-to-r from-black/80 via-black/45 to-transparent pointer-events-none" />
 
       <div className="absolute inset-0 z-10 flex flex-col justify-end px-[6vw] pb-[9vh] max-w-[800px]">
-        <div className="flex items-center gap-3 mb-4">
+        {/* Eyebrow: escondido no mobile */}
+        <div className="hidden lg:flex items-center gap-3 mb-4">
           <span className="block w-8 h-[1.5px] bg-[#EA580C]" />
           <span className="text-[.72rem] font-medium uppercase tracking-[.14em] text-[#EA580C]">Caxias do Sul e região</span>
         </div>
-        <h1 className="text-[clamp(1.9rem,5.5vw,4.5rem)] font-bold leading-[1.15] tracking-tight text-white max-w-[650px]">
+        <h1 className="text-xl lg:text-[clamp(2.5rem,5.5vw,4.5rem)] font-bold leading-snug lg:leading-[1.15] tracking-tight text-white max-w-[650px]">
           Encontre o imóvel dos seus <em className="not-italic text-[#EA580C]">sonhos</em>
         </h1>
-        <p className="mt-4 md:mt-5 text-sm md:text-base text-white/70 max-w-[420px] leading-relaxed">
+        <p className="mt-2.5 lg:mt-5 text-xs lg:text-base text-white/55 lg:text-white/70 max-w-[420px] leading-relaxed">
           Agenciamentos selecionados com a curadoria de quem entende o mercado imobiliário da Serra Gaúcha.
         </p>
-        <div className="flex gap-3 md:gap-4 mt-7 md:mt-10 flex-wrap">
+        {/* Botões: escondidos no mobile */}
+        <div className="hidden lg:flex gap-4 mt-10 flex-wrap">
           <a href="#catalogo" className="px-8 py-3.5 bg-[#EA580C] text-white no-underline text-sm font-semibold uppercase tracking-wide rounded-sm transition-all hover:bg-[#C2410C] hover:-translate-y-0.5">Ver imóveis</a>
           <a href="https://wa.me/5554996582058?text=Olá Raquel! Vi seu site e gostaria de conversar." target="_blank" rel="noopener noreferrer" className="px-8 py-3.5 bg-transparent text-white no-underline text-sm font-medium uppercase tracking-wide rounded-sm border-[1.5px] border-white/50 transition-all hover:bg-white/10">Fale conosco</a>
         </div>
