@@ -37,7 +37,10 @@ export default function Footer() {
             </ul>
           </div>
         </div>
-        <div className="border-t border-white/10 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+        <p className="mt-12 text-[.7rem] text-white/30 leading-relaxed max-w-3xl">
+          As informações e os valores dos imóveis são meramente informativos, podem sofrer alterações sem aviso prévio e não constituem oferta ou proposta comercial. Consulte a corretora para condições e valores atualizados.
+        </p>
+        <div className="border-t border-white/10 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-xs text-white/30">© {new Date().getFullYear()} Raquel Imóveis. Todos os direitos reservados.</p>
           <a href="https://www.stenix.com.br" target="_blank" rel="noopener noreferrer" className="no-underline flex items-center gap-2 opacity-80 hover:opacity-100 transition-opacity">
             <span className="text-xs text-white/70">Desenvolvido por</span>

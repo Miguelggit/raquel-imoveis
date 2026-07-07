@@ -449,7 +449,8 @@ export default function PropertyPage() {
               <div className="h-1.5 bg-gradient-to-r from-[#EA580C] to-[#F97316]" />
               <div className="p-8">
                 <p className="text-[.7rem] text-gray-400 uppercase tracking-wider mb-2">Valor de venda</p>
-                <p className="text-[2.2rem] font-bold text-[#EA580C] mb-6 leading-tight">{fmt(imovel.valorVenda)}</p>
+                <p className="text-[2.2rem] font-bold text-[#EA580C] mb-2 leading-tight">{fmt(imovel.valorVenda)}</p>
+                <p className="text-[.68rem] text-gray-400 italic mb-6 leading-snug">* Valor sujeito a alteração sem aviso prévio. Consulte a corretora para o valor atualizado.</p>
                 <WhatsAppButton mensagem={`Olá! Tenho interesse no imóvel ${imovel.codigoAgs} — ${imovel.titulo}. Aguardo seu contato. Obrigado!`} />
                 <p className="text-[.7rem] text-gray-400 mt-4 text-center">Resposta em até 2 horas</p>
               </div>

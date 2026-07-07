@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import SellPropertyModal from "./SellPropertyModal";
+import { authService } from "../services/api";
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -9,6 +10,9 @@ export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+
+  // Só aparece para quem está logada (a Raquel). Reavalia a cada troca de página.
+  const logada = authService.isLoggedIn();
 
   // Transparente apenas no topo da home (sobre o Hero) e com menu fechado
   const transparent = location.pathname === "/" && !scrolled && !menuOpen;
@@ -93,6 +97,14 @@ export default function Header() {
                 ? "border-white/70 text-white hover:bg-white hover:text-gray-900"
                 : "border-[#EA580C] text-[#EA580C] hover:bg-[#EA580C] hover:text-white"
             }`}>Contato</a>
+          {logada && (
+            <Link to="/admin"
+              className={`text-xs font-semibold uppercase tracking-wide px-4 py-2 rounded-lg transition-all no-underline ${
+                transparent
+                  ? "bg-white/15 text-white border border-white/40 hover:bg-white/25"
+                  : "bg-[#EA580C]/10 text-[#EA580C] hover:bg-[#EA580C] hover:text-white"
+              }`}>Painel</Link>
+          )}
         </div>
 
         <button onClick={() => setMenuOpen(!menuOpen)} className={`md:hidden flex flex-col gap-1.5 bg-transparent border-none cursor-pointer p-2 ${transparent ? "[&>span]:bg-white" : "[&>span]:bg-gray-900"}`}>
@@ -105,6 +117,9 @@ export default function Header() {
             <Link to="/sobre" onClick={() => setMenuOpen(false)} className="text-sm font-medium text-gray-700 no-underline hover:text-[#EA580C]">Sobre</Link>
             <button onClick={() => { setSellOpen(true); setMenuOpen(false); }} className="text-left text-sm font-medium text-[#EA580C] bg-transparent border-none cursor-pointer p-0">Venda seu imóvel</button>
             <a href="https://wa.me/5554996582058" target="_blank" rel="noopener noreferrer" className="text-center text-sm font-semibold uppercase tracking-wide px-5 py-2.5 bg-[#25D366] text-white rounded-sm no-underline">WhatsApp</a>
+            {logada && (
+              <Link to="/admin" onClick={() => setMenuOpen(false)} className="text-center text-sm font-semibold uppercase tracking-wide px-5 py-2.5 bg-[#EA580C] text-white rounded-sm no-underline">Painel administrativo</Link>
+            )}
           </div>
         )}
       </nav>
