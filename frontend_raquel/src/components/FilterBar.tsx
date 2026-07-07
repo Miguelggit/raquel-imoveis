@@ -6,8 +6,9 @@ const TIPOS = [
   { label: "Apartamento", value: "APARTAMENTO" },
   { label: "Terreno", value: "TERRENO" },
   { label: "Sobrado", value: "SOBRADO" },
-  { label: "Sala Comercial", value: "SALA_COMERCIAL" },
-  { label: "Chácara", value: "CHACARA" },
+  { label: "Casa Germinada", value: "CASA_GERMINADA" },
+  { label: "Loft", value: "LOFT" },
+  { label: "Cobertura", value: "COBERTURA"}
 ];
 
 export default function FilterBar({ tipoAtivo, onTipoChange }: FilterBarProps) {

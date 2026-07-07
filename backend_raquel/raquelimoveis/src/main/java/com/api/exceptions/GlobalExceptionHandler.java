@@ -103,4 +103,16 @@ public class GlobalExceptionHandler {
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponseDTO);
     }
+
+    @ExceptionHandler(PrincipalNaoEncontradoException.class)
+    public ResponseEntity<ErrorResponseDTO> handlePrincipalException(PrincipalNaoEncontradoException exc, HttpServletRequest rq){
+        ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(
+                LocalDateTime.now(),
+                HttpStatus.NOT_FOUND.value(),
+                exc.getMessage(),
+                rq.getRequestURI(),
+                null
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponseDTO);
+    }
 }

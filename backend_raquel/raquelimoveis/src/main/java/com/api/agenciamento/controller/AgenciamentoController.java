@@ -34,8 +34,11 @@ public class AgenciamentoController {
                                                                                 @RequestParam(required = false) String cidade,
                                                                                 @RequestParam(required = false) BigDecimal precoMin,
                                                                                 @RequestParam(required = false) BigDecimal precoMax,
+                                                                                @RequestParam(required = false) String posicaoSolar,
+                                                                                @RequestParam(required = false) Integer suite,
+                                                                                @RequestParam(required = false, defaultValue = "false") boolean incluirInativos,
                                                                                 Pageable pageable){
-        return ResponseEntity.ok(service.filtros(tipoImovel, status, cidade, bairro, precoMin, precoMax, pageable));
+        return ResponseEntity.ok(service.filtros(tipoImovel, status, cidade, bairro, precoMin, precoMax, posicaoSolar, suite, incluirInativos, pageable));
     }
 
     @GetMapping("/{id}")

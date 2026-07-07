@@ -36,6 +36,12 @@ public class  AgenciamentoService {
             if(dto.getStatus() == null) {
                 dto.setStatus(StatusAgenciamentos.DISPONIVEL);
             }
+            if(dto.getSlideshow() == null){
+                dto.setSlideshow(false);
+            }
+            if(dto.getSlideshow() == null){
+                dto.setDestaque(false);
+            }
             if(dto.getStatus().equals(StatusAgenciamentos.INATIVO) || dto.getStatus().equals(StatusAgenciamentos.VENDIDO)) {
                 throw new CadastroDeStatusException("Este status não pode ser cadastrado");
             }
@@ -89,8 +95,13 @@ public class  AgenciamentoService {
                                                String bairro,
                                                BigDecimal precoMin,
                                                BigDecimal precoMax,
+                                               String posicaoSolar,
+                                               Integer suite,
+                                               boolean incluirInativos,
                                                Pageable pageable){
-        Specification<AgenciamentoModel> spec = AgenciamentoSpecification.statusDiferentesDe(StatusAgenciamentos.INATIVO);
+        Specification<AgenciamentoModel> spec = incluirInativos
+                ? AgenciamentoSpecification.semFiltro()
+                : AgenciamentoSpecification.statusDiferentesDe(StatusAgenciamentos.INATIVO);
         if(tipoImovel != null){
             spec = spec.and(AgenciamentoSpecification.porTipoDeImovel(tipoImovel));
         }
@@ -108,6 +119,12 @@ public class  AgenciamentoService {
         }
         if(precoMax != null){
             spec = spec.and(AgenciamentoSpecification.porPrecoMaximo(precoMax));
+        }
+        if(posicaoSolar != null){
+            spec = spec.and(AgenciamentoSpecification.porPosicaoSolar(posicaoSolar));
+        }
+        if(suite != null){
+            spec = spec.and(AgenciamentoSpecification.porSuite(suite));
         }
         return mapper.converterPageParaDTO(repository.findAll(spec, pageable));
     }

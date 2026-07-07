@@ -15,6 +15,8 @@ public class JwtTokenService {
 
     @Value("${app.jwt.secret}")
     private String secretKey;
+    @Value("${app.time}")
+    private Long additionalTime;
     private final String ISSUER = "raquel-imoveis-api";
 
     public String generateToken(UsuarioModel user){
@@ -23,7 +25,7 @@ public class JwtTokenService {
             return JWT.create()
                     .withIssuer(ISSUER)
                     .withIssuedAt(Date.from(Instant.now()))
-                    .withExpiresAt(Date.from(Instant.now().plusSeconds(86400L)))
+                    .withExpiresAt(Date.from(Instant.now().plusSeconds(additionalTime)))
                     .withSubject(user.getEmail())
                     .sign(alg);
         } catch (JWTVerificationException e) {

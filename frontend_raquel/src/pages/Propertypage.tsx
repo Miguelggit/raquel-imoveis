@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
 import type { Agenciamento, AgenciamentoResumo, Foto } from "../types";
 import { agenciamentoService, fotoService } from "../services/api";
@@ -15,6 +15,7 @@ export default function PropertyPage() {
   const [erro, setErro] = useState(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIdx, setLightboxIdx] = useState(0);
+  const [copiado, setCopiado] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -25,12 +26,12 @@ export default function PropertyPage() {
     Promise.all([
       agenciamentoService.buscarPorId(n),
       fotoService.listarPorAgenciamento(n),
-      agenciamentoService.listar({ size: 12, sort: "criadoEM,desc" }),
+      agenciamentoService.listar({ size: 200, sort: "criadoEM,desc" }),
     ])
       .then(([ag, ft, page]) => {
         setImovel(ag);
         setFotos(ft);
-        setOutros(page.content.filter((im) => im.id !== n).slice(0, 4));
+        setOutros(page.content.filter((im) => im.id !== n));
       })
       .catch(() => setErro(true))
       .finally(() => setLoading(false));
@@ -44,6 +45,18 @@ export default function PropertyPage() {
     () => setCurrentIdx((p) => (p + 1) % fotos.length),
     [fotos.length]
   );
+
+  // Swipe no celular: guarda o X inicial e navega conforme a direção do arrasto
+  const touchStartX = useRef<number | null>(null);
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null || fotos.length <= 1) return;
+    const dx = e.changedTouches[0].clientX - touchStartX.current;
+    if (Math.abs(dx) > 40) (dx < 0 ? nextPhoto : prevPhoto)();
+    touchStartX.current = null;
+  };
 
   const openLightbox = useCallback((idx: number) => {
     setLightboxIdx(idx);
@@ -73,6 +86,60 @@ export default function PropertyPage() {
   const fmt = (v: number) =>
     v.toLocaleString("pt-BR", { style: "currency", currency: "BRL", minimumFractionDigits: 0 });
 
+  // Cópia legada: funciona mesmo sem HTTPS (contexto inseguro), onde
+  // navigator.clipboard não existe. Usa um <textarea> temporário.
+  const copiarLegado = (texto: string) => {
+    try {
+      const ta = document.createElement("textarea");
+      ta.value = texto;
+      ta.style.position = "fixed";
+      ta.style.top = "0";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      const ok = document.execCommand("copy");
+      document.body.removeChild(ta);
+      return ok;
+    } catch {
+      return false;
+    }
+  };
+
+  const marcarCopiado = useCallback(() => {
+    setCopiado(true);
+    setTimeout(() => setCopiado(false), 2000);
+  }, []);
+
+  const handleCompartilhar = useCallback(async () => {
+    if (!imovel) return;
+    const url = window.location.href;
+    const texto = `${imovel.titulo} — ${imovel.codigoAgs}\n${fmt(imovel.valorVenda)} • ${imovel.bairro}, ${imovel.cidade}`;
+    // 1) Web Share API (celular em HTTPS): abre o menu nativo de compartilhamento
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: imovel.titulo, text: texto, url });
+        return;
+      } catch (err) {
+        // Usuário cancelou o menu nativo: não faz nada
+        if ((err as Error)?.name === "AbortError") return;
+        // Qualquer outra falha: cai nos fallbacks abaixo
+      }
+    }
+    // 2) Clipboard API (contexto seguro / HTTPS)
+    if (navigator.clipboard?.writeText) {
+      try {
+        await navigator.clipboard.writeText(url);
+        marcarCopiado();
+        return;
+      } catch {
+        // cai no fallback legado
+      }
+    }
+    // 3) Fallback legado (funciona em HTTP, como no demo pela rede local)
+    if (copiarLegado(url)) marcarCopiado();
+  }, [imovel, marcarCopiado]);
+
   if (loading)
     return (
       <div className="min-h-screen flex items-center justify-center pt-[68px]">
@@ -94,7 +161,17 @@ export default function PropertyPage() {
   return (
     <div className="min-h-screen bg-[#FFFDF9]">
       {/* ══ GALERIA ══ */}
-      <section className="group relative w-full h-[72vh] min-h-[500px] max-h-[720px] bg-gray-900 overflow-hidden">
+      <section
+        className="group relative w-full h-[72vh] min-h-[500px] max-h-[720px] bg-gray-900 overflow-hidden"
+        onTouchStart={onTouchStart}
+        onTouchEnd={onTouchEnd}
+      >
+        {/* Faixa "Vendido" sobre a galeria */}
+        {imovel.status === "VENDIDO" && (
+          <div className="absolute top-5 left-5 z-20 px-4 py-2 bg-gray-900/90 text-white text-sm font-bold uppercase tracking-[0.15em] rounded-sm select-none">
+            Vendido
+          </div>
+        )}
         {fotos.length === 0 ? (
           <div className="w-full h-full flex flex-col items-center justify-center bg-gray-100 gap-3">
             <span className="text-6xl">📷</span>
@@ -123,13 +200,13 @@ export default function PropertyPage() {
               <>
                 <button
                   onClick={prevPhoto}
-                  className="absolute left-5 top-1/2 -translate-y-1/2 z-10 w-11 h-11 bg-black/35 hover:bg-black/65 backdrop-blur-sm border border-solid border-white/25 rounded-full text-white text-2xl flex items-center justify-center cursor-pointer transition-all duration-300 opacity-0 group-hover:opacity-100"
+                  className="absolute left-3 sm:left-5 top-1/2 -translate-y-1/2 z-10 w-11 h-11 bg-black/35 hover:bg-black/65 backdrop-blur-sm border border-solid border-white/25 rounded-full text-white text-2xl flex items-center justify-center cursor-pointer transition-all duration-300 opacity-100 md:opacity-0 md:group-hover:opacity-100"
                 >
                   ‹
                 </button>
                 <button
                   onClick={nextPhoto}
-                  className="absolute right-5 top-1/2 -translate-y-1/2 z-10 w-11 h-11 bg-black/35 hover:bg-black/65 backdrop-blur-sm border border-solid border-white/25 rounded-full text-white text-2xl flex items-center justify-center cursor-pointer transition-all duration-300 opacity-0 group-hover:opacity-100"
+                  className="absolute right-3 sm:right-5 top-1/2 -translate-y-1/2 z-10 w-11 h-11 bg-black/35 hover:bg-black/65 backdrop-blur-sm border border-solid border-white/25 rounded-full text-white text-2xl flex items-center justify-center cursor-pointer transition-all duration-300 opacity-100 md:opacity-0 md:group-hover:opacity-100"
                 >
                   ›
                 </button>
@@ -137,7 +214,7 @@ export default function PropertyPage() {
             )}
 
             {/* Contador */}
-            <div className="absolute top-5 right-5 z-10 px-3 py-1 bg-black/45 backdrop-blur-sm rounded-full text-white text-xs font-medium tracking-wide select-none opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <div className="absolute top-5 right-5 z-10 px-3 py-1 bg-black/45 backdrop-blur-sm rounded-full text-white text-xs font-medium tracking-wide select-none opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300">
               {currentIdx + 1} / {fotos.length}
             </div>
 
@@ -203,11 +280,20 @@ export default function PropertyPage() {
           </div>
 
           {/* Imagem */}
-          <div className="px-20 w-full flex items-center justify-center max-h-[80vh]">
+          <div
+            className="px-3 sm:px-16 lg:px-20 w-full flex items-center justify-center max-h-[88vh]"
+            onTouchStart={onTouchStart}
+            onTouchEnd={(e) => {
+              if (touchStartX.current === null || fotos.length <= 1) return;
+              const dx = e.changedTouches[0].clientX - touchStartX.current;
+              if (Math.abs(dx) > 40) (dx < 0 ? nextLightbox : prevLightbox)();
+              touchStartX.current = null;
+            }}
+          >
             <img
               src={fotoService.getUrlImagem(fotos[lightboxIdx].nomeArmazenado)}
               alt=""
-              className="max-w-full max-h-[80vh] object-contain rounded select-none"
+              className="max-w-full max-h-[82vh] sm:max-h-[80vh] object-contain rounded select-none"
               draggable={false}
             />
           </div>
@@ -277,6 +363,30 @@ export default function PropertyPage() {
                 {imovel.status === "RESERVADO" && (
                   <span className="px-3 py-1 bg-amber-100 text-amber-700 text-[.68rem] font-semibold uppercase tracking-wider rounded-sm">Reservado</span>
                 )}
+                {imovel.status === "VENDIDO" && (
+                  <span className="px-3 py-1 bg-gray-900 text-white text-[.68rem] font-semibold uppercase tracking-wider rounded-sm">Vendido</span>
+                )}
+                <button
+                  onClick={handleCompartilhar}
+                  className="ml-auto inline-flex items-center gap-2 px-3.5 py-1.5 bg-white border border-[#EA580C]/25 text-[#EA580C] text-xs font-semibold rounded-sm cursor-pointer hover:bg-[#EA580C] hover:text-white hover:border-[#EA580C] transition-all"
+                >
+                  {copiado ? (
+                    <>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                        <path d="M20 6 9 17l-5-5" />
+                      </svg>
+                      Link copiado!
+                    </>
+                  ) : (
+                    <>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" />
+                        <path d="m8.59 13.51 6.83 3.98M15.41 6.51 8.59 10.49" />
+                      </svg>
+                      Compartilhar
+                    </>
+                  )}
+                </button>
               </div>
               <h1 className="text-3xl md:text-[2.5rem] font-bold tracking-tight leading-tight mb-3">{imovel.titulo}</h1>
               <p className="text-gray-400 flex items-center gap-2">
@@ -339,17 +449,19 @@ export default function PropertyPage() {
               <div className="h-1.5 bg-gradient-to-r from-[#EA580C] to-[#F97316]" />
               <div className="p-8">
                 <p className="text-[.7rem] text-gray-400 uppercase tracking-wider mb-2">Valor de venda</p>
-                <p className="text-[2.2rem] font-bold text-[#EA580C] mb-6 leading-tight">{fmt(imovel.valorVenda)}</p>
-                <WhatsAppButton mensagem={`Olá! Tenho interesse no imóvel ${imovel.codigoAgs} — ${imovel.titulo}`} />
+                <p className="text-[2.2rem] font-bold text-[#EA580C] mb-2 leading-tight">{fmt(imovel.valorVenda)}</p>
+                <p className="text-[.68rem] text-gray-400 italic mb-6 leading-snug">* Valor sujeito a alteração sem aviso prévio. Consulte a corretora para o valor atualizado.</p>
+                <WhatsAppButton mensagem={`Olá! Tenho interesse no imóvel ${imovel.codigoAgs} — ${imovel.titulo}. Aguardo seu contato. Obrigado!`} />
                 <p className="text-[.7rem] text-gray-400 mt-4 text-center">Resposta em até 2 horas</p>
               </div>
             </div>
             <div className="bg-[#FFF7ED] border border-[#EA580C]/10 rounded-lg p-8">
               <div className="flex items-center gap-4 mb-4">
-                <div className="w-14 h-14 bg-[#EA580C] rounded-full flex items-center justify-center text-white font-bold text-xl">R</div>
+                <div className="w-20 h-20 bg-[#EA580C] rounded-full flex items-center justify-center text-white font-bold text-xl"><img src="/images/Foto_5.jpg" alt="Raquel" className="w-full h-full object-cover object-center rounded-full" /></div>
                 <div>
-                  <p className="font-semibold text-lg">Raquel</p>
+                  <p className="font-semibold text-lg">Raquel Marinho</p>
                   <p className="text-gray-400 text-sm">Corretora de imóveis</p>
+                  <p className="text-gray-400 text-sm">CRECI 82238-F</p>
                 </div>
               </div>
               <p className="text-gray-500 text-sm leading-relaxed">Atendimento personalizado para encontrar o imóvel ideal.</p>

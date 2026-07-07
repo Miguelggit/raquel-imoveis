@@ -25,7 +25,11 @@ public class AgenciamentoMapper {
                 model.getAreaM2(),
                 model.getQuartos(),
                 model.getBanheiros(),
-                model.getVagasGaragem()
+                model.getVagasGaragem(),
+                model.getPosicaoSolar(),
+                model.getSuite(),
+                model.getSlideshow(),
+                model.getDestaque()
         );
     }
     public AgenciamentoResponseDTO converterParaDTO(AgenciamentoModel model){
@@ -46,6 +50,10 @@ public class AgenciamentoMapper {
                 model.getQuartos(),
                 model.getBanheiros(),
                 model.getVagasGaragem(),
+                model.getPosicaoSolar(),
+                model.getSuite(),
+                model.getSlideshow(),
+                model.getDestaque(),
                 model.getCriadoEM(),
                 model.getAtualizadoEM()
         );
@@ -67,6 +75,10 @@ public class AgenciamentoMapper {
         ags.setTipoImovel(requestDTO.getTipoImovel());
         ags.setStatus(requestDTO.getStatus());
         ags.setVagasGaragem(requestDTO.getVagasGaragem());
+        ags.setPosicaoSolar(requestDTO.getPosicaoSolar());
+        ags.setSuite(requestDTO.getSuite());
+        ags.setSlideshow(requestDTO.getSlideshow());
+        ags.setDestaque(requestDTO.getDestaque());
         return ags;
     }
     public void atualizarModel(AgenciamentoModel model, AgenciamentoRequestDTO requestDTO){
@@ -83,8 +95,14 @@ public class AgenciamentoMapper {
         model.setAreaM2(requestDTO.getAreaM2());
         model.setTitulo(requestDTO.getTitulo());
         model.setTipoImovel(requestDTO.getTipoImovel());
-        model.setStatus(requestDTO.getStatus());
+        if (requestDTO.getStatus() != null) {
+            model.setStatus(requestDTO.getStatus());
+        }
         model.setVagasGaragem(requestDTO.getVagasGaragem());
+        model.setPosicaoSolar(requestDTO.getPosicaoSolar());
+        model.setSuite(requestDTO.getSuite());
+        model.setSlideshow(requestDTO.getSlideshow());
+        model.setDestaque(requestDTO.getDestaque());
     }
     public AgenciamentoPageResponseDTO converterPageParaDTO(Page<AgenciamentoModel> page ){
         List<AgenciamentoResponseSemDetalhesDTO> content = page.getContent().stream()

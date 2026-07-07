@@ -1,4 +1,7 @@
-import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";import { FaInstagram } from 'react-icons/fa';
+
+const InstagramIcon = () => <FaInstagram size={30} />;   
+
 export default function Footer() {
   return (
     <footer className="bg-[#1C1008] text-white relative overflow-hidden">
@@ -22,15 +25,24 @@ export default function Footer() {
             <h4 className="text-xs font-semibold uppercase tracking-[.12em] text-[#EA580C] mb-5">Contato</h4>
             <ul className="list-none flex flex-col gap-3">
               <li className="text-sm text-white/50">Caxias do Sul, RS</li>
-              <li><a href="tel:+5554996582058" className="text-sm text-white/50 no-underline hover:text-white transition-colors">(54) 9 9658-2058</a></li>
-              <li><a href="mailto:raquelmarinhoimoveis25@gmail.com" className="text-sm text-white/50 no-underline hover:text-white transition-colors">raquelmarinhoimoveis25@gmail.com</a></li>
-              <li><a href="https://instagram.com/raquelmarinhoimoveis" target="_blank" rel="noopener noreferrer" className="text-sm text-white/50 no-underline hover:text-white transition-colors">@raquelmarinhoimoveis</a></li>
+              <li>
+                <a href="tel:+5554996582058" className="text-sm text-white/50 no-underline hover:text-white transition-colors">(54) 9 9658-2058</a>
+              </li>
+              <li>
+                <a href="mailto:raquelmarinhoimoveis25@gmail.com" className="text-sm text-white/50 no-underline hover:text-white transition-colors">raquelmarinhoimoveis25@gmail.com</a>
+              </li>
+              <li>
+                <a href="https://instagram.com/raquelmarinhoimoveis" target="_blank" rel="noopener noreferrer" className="text-sm text-white/50 no-underline hover:text-white transition-colors"> <div className="flex align-center gap-2">{InstagramIcon()} raquelmarinhoimoveis</div></a>
+              </li>
             </ul>
           </div>
         </div>
-        <div className="border-t border-white/10 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+        <p className="mt-12 text-[.7rem] text-white/30 leading-relaxed max-w-3xl">
+          As informações e os valores dos imóveis são meramente informativos, podem sofrer alterações sem aviso prévio e não constituem oferta ou proposta comercial. Consulte a corretora para condições e valores atualizados.
+        </p>
+        <div className="border-t border-white/10 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-xs text-white/30">© {new Date().getFullYear()} Raquel Imóveis. Todos os direitos reservados.</p>
-          <a href="https://stenix.com.br" target="_blank" rel="noopener noreferrer" className="no-underline flex items-center gap-2 opacity-80 hover:opacity-100 transition-opacity">
+          <a href="https://www.stenix.com.br" target="_blank" rel="noopener noreferrer" className="no-underline flex items-center gap-2 opacity-80 hover:opacity-100 transition-opacity">
             <span className="text-xs text-white/70">Desenvolvido por</span>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 66" height="22" aria-label="Stenix">
               <polygon points="30,3 54,17 54,45 30,59 6,45 6,17" fill="#0D9488" stroke="#054D46" strokeWidth="2.5" strokeLinejoin="round"/>
