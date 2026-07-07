@@ -25,7 +25,7 @@ export default function BrokerSection() {
             <div className="w-10 h-[1px] bg-[#EA580C]" />
             <div>
               <p className="font-semibold text-gray-900">Raquel</p>
-              <p className="text-sm text-gray-400">Corretora de Imóveis — CRECI XXXXX</p>
+              <p className="text-sm text-gray-400">Corretora de Imóveis — CRECI 82238 F</p>
             </div>
           </div>
           <div className="mt-8">
