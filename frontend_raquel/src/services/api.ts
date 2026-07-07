@@ -3,15 +3,13 @@ import type { Agenciamento, AgenciamentoPage, Foto, FiltrosAgenciamento } from "
 
 // Usa o mesmo host pelo qual o navegador acessou o site.
 // No PC vira "localhost"; no celular vira o IP da rede (ex: 192.168.0.79) — automático.
-const API_BASE = `http://${window.location.hostname}:8080/api`;
+export const API_BASE = `http://${window.location.hostname}:8080/api`;
 
 const api = axios.create({
-  baseURL: API_BASE,
+  baseURL: "/api",
   headers: { "Content-Type": "application/json" },
   withCredentials: true,
 });
-
-export { API_BASE };
 
 // Sinalizador NÃO-sensível de UI (não é o token; o token vive no cookie httpOnly).
 const AUTH_FLAG = "raquel_auth";
