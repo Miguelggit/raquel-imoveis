@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell($env:JAVA_HOME = \"C:\\\\Users\\\\ark1c\\\\.jdks\\\\azul-21.0.11\"; Set-Location \"c:\\\\Users\\\\ark1c\\\\Desktop\\\\Stenix\\\\Projetos da Stenix\\\\raquel-imoveis\\\\backend_raquel\\\\raquelimoveis\"; & .\\\\mvnw.cmd -q compile 2>&1 | Select-Object -Last 30; \"EXIT=$LASTEXITCODE\")"
+    ],
+    "additionalDirectories": [
+      "c:\\Users\\ark1c\\Desktop\\Stenix\\Projetos da Stenix\\raquel-imoveis\\backend_raquel\\raquelimoveis\\src\\main\\java\\com\\api\\agenciamento\\specification",
+      "c:\\Users\\ark1c\\Desktop\\Stenix\\Projetos da Stenix\\raquel-imoveis\\backend_raquel\\raquelimoveis\\src\\main\\java\\com\\api\\usuario\\controller"
+    ]
+  }
+}

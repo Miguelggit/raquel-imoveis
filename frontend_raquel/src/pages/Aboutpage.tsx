@@ -92,14 +92,13 @@ export default function AboutPage() {
           {/* Foto + números */}
           <div className="flex flex-col items-center gap-6">
             <div className="w-full aspect-[3/4] rounded-lg overflow-hidden bg-gray-100 border border-gray-100 shadow-md relative">
-              {/* Substituir pelo src da foto real */}
-              <div className="w-full h-full flex flex-col items-center justify-center text-center p-6 bg-gradient-to-b from-[#FFF7ED] to-white">
-                <div className="w-24 h-24 bg-[#EA580C] rounded-full flex items-center justify-center text-white text-4xl font-bold mb-6">R</div>
-                <p className="text-sm text-gray-400">Foto da Raquel</p>
-              </div>
+              <img
+                src="/images/foto_3.jpg"
+                alt="Raquel - Corretora de Imóveis"
+                className="w-full h-full object-cover object-top"
+              />
               {/* Badge CRECI */}
               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-                <p className="text-white text-xs font-semibold uppercase tracking-wider text-center">CRECI XXXXX</p>
               </div>
             </div>
 

@@ -5,7 +5,14 @@ import PropertyCard from "./PropertyCard";
 
 export default function PropertyCarousel() {
   const [imoveis, setImoveis] = useState<AgenciamentoResumo[]>([]);
-  useEffect(() => { agenciamentoService.listar({ size: 12, sort: "criadoEM,desc" }).then((p) => setImoveis(p.content)).catch(() => {}); }, []);
+  useEffect(() => {
+    agenciamentoService.listar({ size: 200, sort: "criadoEM,desc" })
+      .then((p) => {
+        // Curadoria da cliente: somente os imóveis marcados como "destaque" no painel.
+        setImoveis(p.content.filter((im) => im.destaque));
+      })
+      .catch(() => {});
+  }, []);
   if (!imoveis.length) return null;
 
   return (
