@@ -18,7 +18,7 @@ spring:
       mode: never
 app:
   jwt:
-    secret: SDPl5462dX9ImxLUkvZodv3NWcRqsqsgAbgliALfoPeFcY895bBesCec6r6leYVpRTYnQLqcOXSaR9DXbRrhlJDZaEoh8Qrq;
+    secret: b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZWQyNTUxOQAAACAK5noa78NS1F9wRXbBdjnfAh1juB9auxhaQJJmONdl1wAAAJCn+lJUp/pSVAAAAAtzc2gtZWQyNTUxOQAAACAK5noa78NS1F9wRXbBdjnfAh1juB9auxhaQJJmONdl1wAAAEDWOAn8QXRMANbJ5aHFNiL+TS9zB1cvrQalsVe2sXn3xgrmehrvw1LUX3BFdsF2Od8CHWO4H1q7GFpAkmY412XXAAAADGFyazFjQE1pZ3VlbAE=
   upload:
     dir: ./uploads/fotos/
   cors:
