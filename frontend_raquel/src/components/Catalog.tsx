@@ -79,9 +79,10 @@ export default function Catalog() {
         setTotalPages(1);
         setTotalElements(filtrados.length);
       } else {
-        setImoveis(r.content);
-        setTotalPages(r.totalPages);
-        setTotalElements(r.totalElements);
+        // Protege contra respostas sem "content" (ex.: API indisponível): nunca deixa o estado virar undefined.
+        setImoveis(r.content ?? []);
+        setTotalPages(r.totalPages ?? 0);
+        setTotalElements(r.totalElements ?? 0);
       }
     } catch {
       setImoveis([]); setTotalPages(0); setTotalElements(0);

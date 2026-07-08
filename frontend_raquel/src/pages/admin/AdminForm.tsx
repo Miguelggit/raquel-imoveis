@@ -4,6 +4,8 @@ import { agenciamentoService, authService } from "../../services/api";
 
 const TIPOS = ["CASA", "APARTAMENTO", "TERRENO", "SOBRADO", "SALA_COMERCIAL", "CHACARA"];
 const STATUS = ["DISPONIVEL", "RESERVADO", "VENDIDO", "INATIVO"];
+// No cadastro o backend rejeita estes; só ficam disponíveis na edição.
+const STATUS_BLOQUEADOS_NO_CADASTRO = ["VENDIDO", "INATIVO"];
 
 export default function AdminForm() {
   const { id } = useParams<{ id: string }>();
@@ -98,10 +100,8 @@ export default function AdminForm() {
         destaque: form.destaque,
       };
 
-      // Status só é enviado na edição (no cadastro o backend define DISPONIVEL)
-      if (isEdicao) {
-        payload.status = form.status;
-      }
+      // Status enviado tanto no cadastro quanto na edição.
+      payload.status = form.status;
 
       if (isEdicao) {
         await agenciamentoService.atualizar(parseInt(id!), payload);
@@ -112,7 +112,17 @@ export default function AdminForm() {
         setTimeout(() => navigate(`/admin/fotos/${novo.id}`), 1500);
       }
     } catch (err: any) {
-      setErro(err.response?.data?.message || "Erro ao salvar. Verifique os campos obrigatórios.");
+      const data = err.response?.data;
+      // Se o backend retornou erros de validação por campo, mostra quais campos falharam.
+      if (data?.fields?.length) {
+        setErro(
+          data.fields
+            .map((f: { name: string; message: string }) => `${f.name}: ${f.message}`)
+            .join(" · ")
+        );
+      } else {
+        setErro(data?.message || "Erro ao salvar. Verifique os campos obrigatórios.");
+      }
     } finally {
       setSalvando(false);
     }
@@ -173,15 +183,13 @@ export default function AdminForm() {
               </div>
             </div>
 
-            {/* Status (somente na edição) */}
-            {isEdicao && (
-              <div>
-                <label className={lbl}>Status</label>
-                <select name="status" value={form.status} onChange={handleChange} className={`${inp} appearance-none cursor-pointer`}>
-                  {STATUS.map((s) => <option key={s} value={s}>{s}</option>)}
-                </select>
-              </div>
-            )}
+            {/* Status */}
+            <div>
+              <label className={lbl}>Status *</label>
+              <select name="status" value={form.status} onChange={handleChange} className={`${inp} appearance-none cursor-pointer`}>
+                {(isEdicao ? STATUS : STATUS.filter((s) => !STATUS_BLOQUEADOS_NO_CADASTRO.includes(s))).map((s) => <option key={s} value={s}>{s}</option>)}
+              </select>
+            </div>
 
             {/* Descrição */}
             <div>
@@ -207,7 +215,7 @@ export default function AdminForm() {
             <div>
               <p className="text-xs font-semibold uppercase tracking-wider text-[#EA580C] mb-4">Características</p>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div><label className={lbl}>Área (m²)</label><input type="number" name="areaM2" value={form.areaM2} onChange={handleChange} placeholder="180" className={inp} /></div>
+                <div><label className={lbl}>Área (m²) *</label><input type="number" name="areaM2" value={form.areaM2} onChange={handleChange} placeholder="180" className={inp} /></div>
                 <div><label className={lbl}>Quartos</label><input type="number" name="quartos" value={form.quartos} onChange={handleChange} placeholder="3" className={inp} /></div>
                 <div><label className={lbl}>Banheiros</label><input type="number" name="banheiros" value={form.banheiros} onChange={handleChange} placeholder="2" className={inp} /></div>
                 <div><label className={lbl}>Vagas</label><input type="number" name="vagasGaragem" value={form.vagasGaragem} onChange={handleChange} placeholder="2" className={inp} /></div>
@@ -253,7 +261,7 @@ export default function AdminForm() {
             <div className="flex flex-col-reverse sm:flex-row gap-3 sm:gap-4 mt-4 pt-6 border-t border-gray-100">
               <button
                 onClick={handleSalvar}
-                disabled={salvando || !form.titulo || !form.valorVenda || !form.cidade || !form.bairro}
+                disabled={salvando || !form.titulo || !form.valorVenda || !form.cidade || !form.bairro || !form.areaM2}
                 className="px-8 py-3 bg-[#EA580C] text-white text-sm font-semibold rounded-sm cursor-pointer hover:bg-[#C2410C] disabled:opacity-40 disabled:cursor-not-allowed transition-all"
               >
                 {salvando ? "Salvando..." : isEdicao ? "Atualizar" : "Cadastrar"}
