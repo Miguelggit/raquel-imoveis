@@ -16,13 +16,14 @@ export default function AdminDashboard() {
     setLoading(true);
     try {
       const r = await agenciamentoService.listar({ page: pg, size: 10, sort: "criadoEM,desc", incluirInativos: true });
-      setImoveis(r.content);
-      setTotalPages(r.totalPages);
-      setTotalElements(r.totalElements);
+      const lista = r.content ?? [];
+      setImoveis(lista);
+      setTotalPages(r.totalPages ?? 0);
+      setTotalElements(r.totalElements ?? 0);
 
       // Busca primeira foto de cada imóvel
       const fotosMap: Record<number, string> = {};
-      for (const im of r.content) {
+      for (const im of lista) {
         try {
           const f = await fotoService.listarPorAgenciamento(im.id);
           if (f.length > 0) fotosMap[im.id] = fotoService.getUrlImagem(f[0].nomeArmazenado);
