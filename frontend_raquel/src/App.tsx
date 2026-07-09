@@ -10,7 +10,6 @@ import AdminLogin from "./pages/admin/AdminLogin";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminForm from "./pages/admin/AdminForm";
 import AdminPhotos from "./pages/admin/AdminPhotos";
-import NotFound from "./pages/NotFound";
 import { useLocation } from "react-router-dom";
 
 function AppContent() {
@@ -33,8 +32,6 @@ function AppContent() {
           <Route path="/admin/novo" element={<AdminForm />} />
           <Route path="/admin/editar/:id" element={<AdminForm />} />
           <Route path="/admin/fotos/:id" element={<AdminPhotos />} />
-          {/* Catch-all: qualquer rota inexistente cai na tela padrão 404 */}
-          <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
       {!isAdmin && <Footer />}
