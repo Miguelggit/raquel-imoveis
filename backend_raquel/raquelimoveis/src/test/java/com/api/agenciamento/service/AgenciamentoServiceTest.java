@@ -117,19 +117,16 @@ class AgenciamentoServiceTest {
         assertEquals("AGS-002", captor.getValue().getCodigoAgs());
     }
     @Test
-    @DisplayName("Permite cadastrar como INATIVO (rascunho oculto enquanto as fotos são adicionadas)")
-    void devePermitirCadastro_quandoStatusForInativo(){
+    @DisplayName("Lança uma exceção caso o status for INATIVO")
+    void deveLancarExcecao_quandoStatusForInativo(){
         AgenciamentoRequestDTO requestDTO = new AgenciamentoRequestDTO();
         requestDTO.setStatus(StatusAgenciamentos.INATIVO);
-        Mockito.when(repository.findMaxCodigoAgs()).thenReturn("AGS-001");
-        Mockito.when(mapper.converterParaModel(any())).thenReturn(new AgenciamentoModel());
-        Mockito.when(repository.save(any())).thenReturn(new AgenciamentoModel());
-        Mockito.when(mapper.converterParaDTO(any())).thenReturn(new AgenciamentoResponseDTO());
-
-        service.cadastrarAgenciamento(requestDTO);
-
-        assertEquals(StatusAgenciamentos.INATIVO, requestDTO.getStatus());
-        verify(repository).save(any());
+        CadastroDeStatusException ex = assertThrows(CadastroDeStatusException.class, () ->
+                service.cadastrarAgenciamento(requestDTO
+        ));
+        assertEquals("Este status não pode ser cadastrado", ex.getMessage());
+        ArgumentCaptor<AgenciamentoModel> captor = ArgumentCaptor.forClass(AgenciamentoModel.class);
+        verify(repository, Mockito.never()).save(any());
     }
     @Test
     @DisplayName("Lança uma exceção caso o status for VENDIDO")
