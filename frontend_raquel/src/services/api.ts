@@ -1,10 +1,6 @@
 import axios from "axios";
 import type { Agenciamento, AgenciamentoPage, Foto, FiltrosAgenciamento } from "../types";
 
-// Usa o mesmo host pelo qual o navegador acessou o site.
-// No PC vira "localhost"; no celular vira o IP da rede (ex: 192.168.0.79) — automático.
-export const API_BASE = `http://${window.location.hostname}:8080/api`;
-
 const api = axios.create({
   baseURL: "/api",
   headers: { "Content-Type": "application/json" },
@@ -124,7 +120,10 @@ export const fotoService = {
   },
 
   getUrlImagem: (nomeArmazenado: string): string => {
-    return `${API_BASE}/agenciamentos/fotos/${nomeArmazenado}`;
+    // Caminho relativo (mesma origem): em produção vira https://SEU_DOMINIO/api/... (via nginx),
+    // evitando o mixed content do http://host:8080 que o navegador bloqueia em página HTTPS.
+    // Em dev, passa pelo proxy do Vite (/api -> localhost:8080).
+    return `/api/agenciamentos/fotos/${nomeArmazenado}`;
   },
 };
 
