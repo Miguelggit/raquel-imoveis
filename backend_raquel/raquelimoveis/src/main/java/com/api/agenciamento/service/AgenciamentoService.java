@@ -42,7 +42,9 @@ public class  AgenciamentoService {
             if(dto.getSlideshow() == null){
                 dto.setDestaque(false);
             }
-            if(dto.getStatus().equals(StatusAgenciamentos.INATIVO) || dto.getStatus().equals(StatusAgenciamentos.VENDIDO)) {
+            // VENDIDO não faz sentido num cadastro novo. INATIVO é permitido: serve de
+            // "rascunho oculto" enquanto as fotos são adicionadas (o catálogo público filtra INATIVO).
+            if(dto.getStatus().equals(StatusAgenciamentos.VENDIDO)) {
                 throw new CadastroDeStatusException("Este status não pode ser cadastrado");
             }
             AgenciamentoModel ags = mapper.converterParaModel(dto);
