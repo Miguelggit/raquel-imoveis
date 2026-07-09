@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { agenciamentoService, authService } from "../../services/api";
-import GaleriaFotos from "../../components/admin/GaleriaFotos";
 
 const TIPOS = ["CASA", "APARTAMENTO", "TERRENO", "SOBRADO", "SALA_COMERCIAL", "CHACARA"];
 const STATUS = ["DISPONIVEL", "RESERVADO", "VENDIDO", "INATIVO"];
@@ -17,13 +16,6 @@ export default function AdminForm() {
   const [salvando, setSalvando] = useState(false);
   const [erro, setErro] = useState("");
   const [sucesso, setSucesso] = useState("");
-  // Id do imóvel recém-criado como rascunho (nesta mesma tela), para liberar a seção de fotos.
-  const [salvoId, setSalvoId] = useState<number | null>(null);
-  // Quantidade de fotos já enviadas (informada pela GaleriaFotos) — trava a publicação se for 0.
-  const [qtdFotos, setQtdFotos] = useState(0);
-
-  // Id efetivo do imóvel: na edição vem da URL; no cadastro, aparece após criar o rascunho.
-  const effectiveId = isEdicao ? parseInt(id!) : salvoId;
 
   const [form, setForm] = useState({
     titulo: "",
@@ -85,99 +77,56 @@ export default function AdminForm() {
     setForm({ ...form, [target.name]: value });
   };
 
-  // Monta o corpo enviado ao backend com o status informado.
-  const montarPayload = (status: string): Record<string, unknown> => ({
-    titulo: form.titulo,
-    descricao: form.descricao || null,
-    tipoImovel: form.tipoImovel,
-    valorVenda: parseFloat(form.valorVenda),
-    cidade: form.cidade,
-    bairro: form.bairro,
-    rua: form.rua || null,
-    numero: form.numero || null,
-    complemento: form.complemento || null,
-    areaM2: form.areaM2 ? parseFloat(form.areaM2) : null,
-    quartos: form.quartos ? parseInt(form.quartos) : null,
-    banheiros: form.banheiros ? parseInt(form.banheiros) : null,
-    vagasGaragem: form.vagasGaragem ? parseInt(form.vagasGaragem) : null,
-    posicaoSolar: form.posicaoSolar || null,
-    suite: form.suite ? parseInt(form.suite) : null,
-    slideshow: form.slideshow,
-    destaque: form.destaque,
-    status,
-  });
-
-  const tratarErro = (err: any) => {
-    const data = err.response?.data;
-    // Se o backend retornou erros de validação por campo, mostra quais campos falharam.
-    if (data?.fields?.length) {
-      setErro(
-        data.fields
-          .map((f: { name: string; message: string }) => `${f.name}: ${f.message}`)
-          .join(" · ")
-      );
-    } else {
-      setErro(data?.message || "Erro ao salvar. Verifique os campos obrigatórios.");
-    }
-  };
-
-  // Edição de um imóvel já existente: salva os dados com o status escolhido.
-  const handleAtualizar = async () => {
+  const handleSalvar = async () => {
     setErro(""); setSucesso(""); setSalvando(true);
     try {
-      await agenciamentoService.atualizar(parseInt(id!), montarPayload(form.status));
-      setSucesso("Dados do imóvel salvos!");
+      const payload: Record<string, unknown> = {
+        titulo: form.titulo,
+        descricao: form.descricao || null,
+        tipoImovel: form.tipoImovel,
+        valorVenda: parseFloat(form.valorVenda),
+        cidade: form.cidade,
+        bairro: form.bairro,
+        rua: form.rua || null,
+        numero: form.numero || null,
+        complemento: form.complemento || null,
+        areaM2: form.areaM2 ? parseFloat(form.areaM2) : null,
+        quartos: form.quartos ? parseInt(form.quartos) : null,
+        banheiros: form.banheiros ? parseInt(form.banheiros) : null,
+        vagasGaragem: form.vagasGaragem ? parseInt(form.vagasGaragem) : null,
+        posicaoSolar: form.posicaoSolar || null,
+        suite: form.suite ? parseInt(form.suite) : null,
+        slideshow: form.slideshow,
+        destaque: form.destaque,
+      };
+
+      // Status enviado tanto no cadastro quanto na edição.
+      payload.status = form.status;
+
+      if (isEdicao) {
+        await agenciamentoService.atualizar(parseInt(id!), payload);
+        setSucesso("Imóvel atualizado com sucesso!");
+      } else {
+        const novo = await agenciamentoService.criar(payload);
+        setSucesso("Imóvel cadastrado! Redirecionando para fotos...");
+        setTimeout(() => navigate(`/admin/fotos/${novo.id}`), 1500);
+      }
     } catch (err: any) {
-      tratarErro(err);
+      const data = err.response?.data;
+      // Se o backend retornou erros de validação por campo, mostra quais campos falharam.
+      if (data?.fields?.length) {
+        setErro(
+          data.fields
+            .map((f: { name: string; message: string }) => `${f.name}: ${f.message}`)
+            .join(" · ")
+        );
+      } else {
+        setErro(data?.message || "Erro ao salvar. Verifique os campos obrigatórios.");
+      }
     } finally {
       setSalvando(false);
     }
   };
-
-  // Cadastro: cria como RASCUNHO OCULTO (INATIVO) — não aparece no site sem fotos.
-  const handleCriarRascunho = async () => {
-    setErro(""); setSucesso(""); setSalvando(true);
-    try {
-      const novo = await agenciamentoService.criar(montarPayload("INATIVO"));
-      setSalvoId(novo.id);
-      setSucesso("Rascunho criado (oculto do site). Adicione as fotos e clique em Publicar.");
-    } catch (err: any) {
-      tratarErro(err);
-    } finally {
-      setSalvando(false);
-    }
-  };
-
-  // Salva alterações do rascunho mantendo-o oculto (INATIVO).
-  const handleSalvarRascunho = async () => {
-    if (!salvoId) return;
-    setErro(""); setSucesso(""); setSalvando(true);
-    try {
-      await agenciamentoService.atualizar(salvoId, montarPayload("INATIVO"));
-      setSucesso("Rascunho salvo (ainda oculto).");
-    } catch (err: any) {
-      tratarErro(err);
-    } finally {
-      setSalvando(false);
-    }
-  };
-
-  // Publica: aplica o status escolhido e o imóvel passa a aparecer no site. Exige ao menos 1 foto.
-  const handlePublicar = async () => {
-    if (!salvoId) return;
-    if (qtdFotos === 0) { setErro("Adicione ao menos uma foto antes de publicar."); return; }
-    setErro(""); setSucesso(""); setSalvando(true);
-    try {
-      await agenciamentoService.atualizar(salvoId, montarPayload(form.status));
-      navigate("/admin");
-    } catch (err: any) {
-      tratarErro(err);
-    } finally {
-      setSalvando(false);
-    }
-  };
-
-  const camposInvalidos = !form.titulo || !form.valorVenda || !form.cidade || !form.bairro || !form.areaM2;
 
   const inp = "w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-sm text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:bg-white focus:border-[#EA580C] focus:ring-2 focus:ring-[#EA580C]/10 transition-colors";
   const lbl = "block text-xs text-gray-500 uppercase tracking-wider mb-2";
@@ -236,7 +185,7 @@ export default function AdminForm() {
 
             {/* Status */}
             <div>
-              <label className={lbl}>{isEdicao ? "Status *" : "Status ao publicar *"}</label>
+              <label className={lbl}>Status *</label>
               <select name="status" value={form.status} onChange={handleChange} className={`${inp} appearance-none cursor-pointer`}>
                 {(isEdicao ? STATUS : STATUS.filter((s) => !STATUS_BLOQUEADOS_NO_CADASTRO.includes(s))).map((s) => <option key={s} value={s}>{s}</option>)}
               </select>
@@ -308,71 +257,21 @@ export default function AdminForm() {
               </div>
             </div>
 
-            {/* Botões do formulário (dados do imóvel) */}
+            {/* Botões */}
             <div className="flex flex-col-reverse sm:flex-row gap-3 sm:gap-4 mt-4 pt-6 border-t border-gray-100">
-              {isEdicao ? (
-                <button
-                  onClick={handleAtualizar}
-                  disabled={salvando || camposInvalidos}
-                  className="px-8 py-3 bg-[#EA580C] text-white text-sm font-semibold rounded-sm cursor-pointer hover:bg-[#C2410C] disabled:opacity-40 disabled:cursor-not-allowed transition-all"
-                >
-                  {salvando ? "Salvando..." : "Atualizar"}
-                </button>
-              ) : !salvoId ? (
-                <button
-                  onClick={handleCriarRascunho}
-                  disabled={salvando || camposInvalidos}
-                  className="px-8 py-3 bg-[#EA580C] text-white text-sm font-semibold rounded-sm cursor-pointer hover:bg-[#C2410C] disabled:opacity-40 disabled:cursor-not-allowed transition-all"
-                >
-                  {salvando ? "Salvando..." : "Criar rascunho"}
-                </button>
-              ) : (
-                <button
-                  onClick={handleSalvarRascunho}
-                  disabled={salvando || camposInvalidos}
-                  className="px-8 py-3 border border-[#EA580C] text-[#EA580C] text-sm font-semibold rounded-sm cursor-pointer hover:bg-[#EA580C]/5 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
-                >
-                  {salvando ? "Salvando..." : "Salvar alterações do rascunho"}
-                </button>
-              )}
+              <button
+                onClick={handleSalvar}
+                disabled={salvando || !form.titulo || !form.valorVenda || !form.cidade || !form.bairro || !form.areaM2}
+                className="px-8 py-3 bg-[#EA580C] text-white text-sm font-semibold rounded-sm cursor-pointer hover:bg-[#C2410C] disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+              >
+                {salvando ? "Salvando..." : isEdicao ? "Atualizar" : "Cadastrar"}
+              </button>
               <Link to="/admin" className="px-8 py-3 border border-gray-200 text-gray-500 no-underline text-sm font-medium rounded-sm hover:bg-gray-50 transition-all flex items-center justify-center">
-                {effectiveId ? "Sair" : "Cancelar"}
+                Cancelar
               </Link>
             </div>
           </div>
         </div>
-
-        {/* Seção de fotos — na mesma tela, após criar o rascunho (cadastro) ou na edição */}
-        {effectiveId ? (
-          <div className="mt-8">
-            <GaleriaFotos agenciamentoId={effectiveId} onCountChange={setQtdFotos} />
-          </div>
-        ) : (
-          <p className="mt-6 text-center text-sm text-gray-400">
-            Crie o rascunho acima para liberar o envio das fotos.
-          </p>
-        )}
-
-        {/* Barra de publicação — apenas no fluxo de cadastro (rascunho oculto) */}
-        {!isEdicao && salvoId && (
-          <div className="mt-6 bg-white rounded-lg border border-gray-100 shadow-sm p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
-              <p className="text-sm font-medium text-gray-900">Pronto para publicar?</p>
-              <p className="text-xs text-gray-400 mt-0.5">
-                {qtdFotos === 0
-                  ? "Este imóvel está oculto do site. Adicione ao menos uma foto para poder publicar."
-                  : `Ao publicar, o imóvel entra no site como "${form.status}".`}
-              </p>
-            </div>
-            <button
-              onClick={handlePublicar}
-              disabled={salvando || qtdFotos === 0}
-              className="px-8 py-3 bg-[#EA580C] text-white text-sm font-semibold rounded-sm cursor-pointer hover:bg-[#C2410C] disabled:opacity-40 disabled:cursor-not-allowed transition-all whitespace-nowrap"
-            >
-              {salvando ? "Publicando..." : "Publicar imóvel"}
-            </button>
-          </div>
-        )}
       </div>
     </div>
   );
