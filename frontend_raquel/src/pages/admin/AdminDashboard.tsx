@@ -166,7 +166,7 @@ export default function AdminDashboard() {
                     Editar
                   </Link>
                   <Link
-                    to={`/admin/editar/${im.id}`}
+                    to={`/admin/fotos/${im.id}`}
                     className="px-3 py-1.5 text-xs font-medium text-gray-500 border border-gray-200 rounded-sm no-underline hover:bg-gray-50 transition-colors"
                   >
                     Fotos
